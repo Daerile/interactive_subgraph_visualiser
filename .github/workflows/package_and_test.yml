@@ -16,10 +16,11 @@ jobs:
       uses: conda-incubator/setup-miniconda@v3
 
     - name: Test with pytest
-      run: |
-        pytest tests
       with:
         activate-environment: prod-env
         environment-file: prod-env.yml
         python-version: 3.11
         auto-activate-base: false
+      run: |
+        pytest tests
+      
