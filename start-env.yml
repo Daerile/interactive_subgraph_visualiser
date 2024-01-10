@@ -1,0 +1,6 @@
+name: interactive_subgraph_visualiser_0.1.0
+channels:
+  - conda-forge
+dependencies:
+  - pandas
+  - dash
