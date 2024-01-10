@@ -2,6 +2,8 @@ name: Recreating Prod Env
 
 on:
   workflow_dispatch:
+permissions:
+  contents: write
 
 jobs:
   update-environment:
@@ -34,4 +36,4 @@ jobs:
         
         git add prod-env.yml
         git commit -m "Recreated prod-env.yml from start-env.yml"
-        git push https://${{ secrets.RECREATE_PROD_ENV }}@github.com/Daerile/interactive_subgraph_visualiser
+        git push origin ${{ github.ref_name }}
