@@ -15,8 +15,6 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v3
-      with:
-        token: "${{ github.RECREATE_PROD_ENV }}"
 
     - name: Conda Incubator
       uses: conda-incubator/setup-miniconda@v3
