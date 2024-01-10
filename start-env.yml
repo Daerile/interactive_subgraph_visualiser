@@ -2,5 +2,9 @@ name: interactive_subgraph_visualiser_0.1.0
 channels:
   - conda-forge
 dependencies:
+  - python=3.11
   - pandas
   - dash
+  - pip
+  - pip:
+    - dash-cytoscape
