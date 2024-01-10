@@ -1,0 +1,26 @@
+name: Recreating Prod Env
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update-environment:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Create Prod Environment
+      run: |
+        conda create -f start-env.yml -n start_env
+        conda activate start_env
+        conda env export --no-builds > prod-env.yml
+        conda env deactivate
+        conda env remove -n start_env
+
+    - name: Commit Changes
+      run: |
+        git add prod-env.yml
+        git commit -m "Recreated prod-env.yml from start-env.yml"
+        git push
