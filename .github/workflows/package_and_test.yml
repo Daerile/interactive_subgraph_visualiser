@@ -13,10 +13,9 @@ jobs:
       run: |
         # $CONDA is an environment variable pointing to the root of the miniconda directory
         echo $CONDA/bin >> $GITHUB_PATH
-        pwd
     - name: Install dependencies
       run: |
-        conda env create -f '/home/runner/work/interactive_subgraph_visualiser/prod-env.yml' --name base
+        conda env create -f '/home/runner/work/prod-env.yml' --name base
     - name: Test with pytest
       run: |
         conda install pytest
