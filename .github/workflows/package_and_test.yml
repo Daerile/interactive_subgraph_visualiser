@@ -15,7 +15,8 @@ jobs:
         echo $CONDA/bin >> $GITHUB_PATH
     - name: Debugging
       run: |
-        ls ${{ github.workspace }}
+        pwd
+        ls
     - name: Install dependencies
       run: |
         conda env create -f ${{ github.workspace }}/prod-env.yml --name base
