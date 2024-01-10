@@ -34,4 +34,4 @@ jobs:
         
         git add prod-env.yml
         git commit -m "Recreated prod-env.yml from start-env.yml"
-        git push
+        git push https://${{ secrets.RECREATE_PROD_ENV }}@github.com/Daerile/interactive_subgraph_visualiser
