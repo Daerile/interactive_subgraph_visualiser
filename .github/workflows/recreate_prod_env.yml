@@ -14,10 +14,9 @@ jobs:
     - name: Create Prod Environment
       run: |
         conda env create -f start-env.yml -n start_env
-        conda init
-        conda activate start_env
+        source activate start_env  # Activate the environment
         conda env export --no-builds > prod-env.yml
-        conda env deactivate
+        conda deactivate  # Deactivate the environment
         conda env remove -n start_env
 
     - name: Commit Changes
