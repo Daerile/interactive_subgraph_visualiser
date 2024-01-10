@@ -14,13 +14,15 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v3
 
-    - name: Recreate Prod Env
+    - name: Conda Incubator
       uses: conda-incubator/setup-miniconda@v3
       with:
         activate-environment: starter-env
         environment-file: start-env.yml
         python-version: 3.11
         auto-activate-base: false
+
+    - name: Recreating Prod Env
       run: |
         conda env export --no-builds > prod-env.yml
 
