@@ -19,8 +19,7 @@ jobs:
         environment-file: prod-env.yml
         python-version: 3.11
         auto-activate-base: false
-      
+
     - name: Test with pytest
       run: |
-        conda install pytest
-        pytest
+        pytest tests
