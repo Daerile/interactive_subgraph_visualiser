@@ -5,6 +5,7 @@ dependencies:
   - python=3.11
   - pytest
   - pandas
+  - pygame
   - dash
   - pip
   - pip:
