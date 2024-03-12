@@ -6,7 +6,4 @@ dependencies:
   - pytest
   - pandas
   - pygame
-  - dash
   - pip
-  - pip:
-    - dash-cytoscape
