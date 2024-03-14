@@ -6,4 +6,5 @@ dependencies:
   - pytest
   - pandas
   - pygame
+  - networkx
   - pip
