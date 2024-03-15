@@ -6,7 +6,7 @@ dependencies:
   - _libgcc_mutex=0.1
   - _openmp_mutex=4.5
   - alsa-lib=1.2.11
-  - aom=3.8.1
+  - aom=3.8.2
   - attr=2.5.1
   - bzip2=1.0.8
   - ca-certificates=2024.2.2
@@ -15,7 +15,7 @@ dependencies:
   - dav1d=1.2.1
   - dbus=1.13.6
   - exceptiongroup=1.2.0
-  - expat=2.6.1
+  - expat=2.6.2
   - fluidsynth=2.3.4
   - font-ttf-dejavu-sans-mono=2.37
   - font-ttf-inconsolata=3.000
@@ -40,7 +40,7 @@ dependencies:
   - libcblas=3.9.0
   - libdb=6.2.32
   - libdeflate=1.19
-  - libexpat=2.6.1
+  - libexpat=2.6.2
   - libffi=3.4.2
   - libflac=1.4.3
   - libgcc-ng=13.2.0
@@ -73,6 +73,7 @@ dependencies:
   - lz4-c=1.9.4
   - mpg123=1.32.4
   - ncurses=6.4
+  - networkx=3.2.1
   - numpy=1.26.4
   - openssl=3.2.1
   - opusfile=0.12
@@ -99,9 +100,9 @@ dependencies:
   - sdl2_image=2.8.0
   - sdl2_mixer=2.6.3
   - sdl2_ttf=2.22.0
-  - setuptools=69.1.1
+  - setuptools=69.2.0
   - six=1.16.0
-  - svt-av1=1.8.0
+  - svt-av1=2.0.0
   - tk=8.6.13
   - tomli=2.0.1
   - tzdata=2024a
