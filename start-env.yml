@@ -7,5 +7,4 @@ dependencies:
   - pandas
   - pygame
   - networkx
-  # dummy line
   - pip
