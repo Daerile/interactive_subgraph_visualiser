@@ -1,5 +1,6 @@
 import networkx as nx
 import pandas as pd
+from collections import deque
 from src.backend.node import Node
 
 class GraphSystem:
@@ -30,8 +31,12 @@ class GraphSystem:
                             break
         return digraph
 
-
     def get_subgraph(self, node_id, depth):
-        NotImplemented
-    def BFS(self, root):
-        NotImplemented
+        starter_node = None
+        for node in self.digraph.nodes:
+            if node.id == node_id:
+                starter_node = node
+
+        shortest_path_lengths = nx.single_source_shortest_path_length(self.digraph, starter_node)
+        reachable_nodes = {node for node, distance in shortest_path_lengths.items() if distance <= depth}
+        return self.digraph.subgraph(reachable_nodes).copy()

@@ -9,6 +9,11 @@ class Node:
         self.id = node['csúcsid']
         self.sub_id = node['alcsúcsid']
         self.connections = self.get_connections(node)
+        self.attributes = {
+            'id': self.id,
+            'sub_id': self.sub_id,
+            'connections': self.connections
+        }
 
     def get_connections(self, node):
         try:
