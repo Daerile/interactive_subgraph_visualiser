@@ -1,6 +1,5 @@
 import networkx as nx
 import pandas as pd
-import matplotlib.pyplot as plt
 from src.backend.node import Node
 
 class GraphSystem:
@@ -29,7 +28,6 @@ class GraphSystem:
                         if node_in_graph.id == connection:
                             digraph.add_edge(node, node_in_graph)
                             break
-        print(digraph)
         return digraph
 
 
