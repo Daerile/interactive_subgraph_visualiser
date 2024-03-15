@@ -1,5 +1,5 @@
 import pandas as pd
-from backend.graph_system import GraphSystem
+from src.backend.graph_system import GraphSystem
 
 def main():
     data = read_data()
@@ -7,7 +7,6 @@ def main():
 
 def read_data():
     data = pd.read_csv('../data/allc_model_tulertkek_grafmegjeleníteshez.csv', sep=';')
-    data = data.dropna(how='all', subset=['kapcsolat'])
     return data
 
 
