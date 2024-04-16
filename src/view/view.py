@@ -1,4 +1,5 @@
 import pygame as pg
+import pygame_gui as pgui
 import random
 import math
 import sys
@@ -18,11 +19,13 @@ class View:
         self.REPULSIVE_FORCE = 10000
         self.DAMPING = 0.85
         self.window = pg.display.set_mode((self.WIDTH, self.HEIGHT))
+        self.manager = pgui.UIManager((self.WIDTH, self.HEIGHT))
         self.node_buttons = []
         self.positions = self.generate_random_positions()
         self.velocities = {node: (0, 0) for node in self.digraph.nodes}
         self.setup_positions()
-        self.ui_panel = UIPanel(self.window, self.PANEL_WIDTH, self.HEIGHT)
+        self.ui_panel = UIPanel(self.window,self.manager, self.PANEL_WIDTH, self.HEIGHT)
+        pg.display.set_caption('Interactive Subgraph Visualiser')
 
     def setup_positions(self):
         max_iterations = 1000
@@ -84,7 +87,10 @@ class View:
                 elif event.type == pg.MOUSEBUTTONDOWN:
                     for button in self.node_buttons:
                         if button.handle_click(event):
-                            print("Node clicked:", button.text)
+                            self.node_button_clicked(button)
+                elif event.type == pgui.UI_BUTTON_PRESSED:
+                    if event.ui_element == self.ui_panel.infos[3]:
+                        self.ui_panel.handle_popup_button_pressed()
                 self.ui_panel.process_events(event)
 
             self.window.fill((255, 255, 255))
@@ -94,6 +100,9 @@ class View:
             pg.display.update()
         pg.quit()
         sys.exit()
+
+    def node_button_clicked(self, button: NodeButton):
+        self.ui_panel.update_information_box(button.node)
 
     def distance(self, pos1, pos2):
         dist = math.sqrt((pos2[0] - pos1[0]) ** 2 + (pos2[1] - pos1[1]) ** 2)

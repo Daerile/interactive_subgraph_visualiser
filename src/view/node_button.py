@@ -15,6 +15,8 @@ class NodeButton:
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = event.pos
             if (mouse_x - self.x)**2 + (mouse_y - self.y)**2 <= self.radius**2:
-                print('clicked on', self.text)
                 return True
         return False
+
+    def information_dict(self):
+        return self.node.get_attributes()

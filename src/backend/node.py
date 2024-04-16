@@ -14,6 +14,9 @@ class Node:
             'sub_id': self.sub_id,
             'connections': self.connections
         }
+        self.other_attributes = {
+            'connections': self.connections
+        }
 
     def get_connections(self, node):
         try:
@@ -30,3 +33,6 @@ class Node:
 
     def get_attributes(self):
         return self.attributes
+
+    def get_other_attributes(self):
+        return self.other_attributes
