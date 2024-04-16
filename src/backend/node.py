@@ -21,3 +21,12 @@ class Node:
                 return None
         except TypeError:
             return node['kapcsolat'].split(',')
+
+    def get_id(self):
+        return self.id
+
+    def get_sub_id(self):
+        return self.sub_id
+
+    def get_attributes(self):
+        return self.attributes

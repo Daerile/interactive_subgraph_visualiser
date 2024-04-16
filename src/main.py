@@ -5,8 +5,8 @@ from src.view.view import View
 def main():
     data = read_data()
     graph = GraphSystem(data)
-    print(graph.get_subgraph('m1', 2))
-    View()
+    view = View(graph.get_subgraph('m1', 2))
+    view.run()
 
 def read_data():
     data = pd.read_csv('../data/allc_model_tulertkek_grafmegjeleníteshez.csv', sep=';')
