@@ -10,7 +10,31 @@ class UIPanel:
         self.manager = manager
         self.selected_node = None
         self.base_panel = self.create_base_panel()
+        self.create_search_box()
         self.infos = self.create_information_box()
+
+
+    def create_search_box(self):
+        search_box = pgui.elements.UIPanel(
+            relative_rect=pg.Rect(0, 0, self.width, 3 * self.height / 4),
+            starting_height=0,
+            manager=self.manager,
+            anchors={
+                'left': 'left',
+                'right': 'right',
+                'top': 'top',
+                'bottom': 'bottom'
+            },
+            container=self.base_panel
+        )
+
+        search_text = pgui.elements.UITextEntryLine(
+            relative_rect=pg.Rect(10, 10, self.width - 20, 30),
+            manager=self.manager,
+            container=search_box
+        )
+
+        # TODO finish this
 
     def create_information_box(self):
         # Adjust the information box to be at the bottom half of its container
