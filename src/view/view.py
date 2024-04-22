@@ -21,7 +21,7 @@ class View:
         self.window = pg.display.set_mode((self.WIDTH, self.HEIGHT))
         self.manager = pgui.UIManager((self.WIDTH, self.HEIGHT))
         self.node_buttons = []
-        self.ui_panel = UIPanel(self.window,self.manager, self.PANEL_WIDTH, self.HEIGHT)
+        self.ui_panel = UIPanel(self.window,self.manager, self.PANEL_WIDTH, self.HEIGHT, self.digraph)
         pg.display.set_caption('Interactive Subgraph Visualiser')
         self.positions = self.get_pos()
 
@@ -35,14 +35,19 @@ class View:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     running = False
-                elif event.type == pg.MOUSEBUTTONDOWN:
+
+                self.ui_panel.process_events(event)
+
+                if event.type == pg.MOUSEBUTTONDOWN:
                     for button in self.node_buttons:
                         if button.handle_click(event):
                             self.node_button_clicked(button)
                 elif event.type == pgui.UI_BUTTON_PRESSED:
                     if event.ui_element == self.ui_panel.infos[2]:
                         self.ui_panel.handle_popup_button_pressed()
-                self.ui_panel.process_events(event)
+                elif event.type == pgui.UI_TEXT_ENTRY_CHANGED:
+                    if event.ui_element == self.ui_panel.search_box[2]:
+                        self.ui_panel.handle_search_bar_changed()
 
             self.window.fill((255, 255, 255))
             self.draw_nodes()

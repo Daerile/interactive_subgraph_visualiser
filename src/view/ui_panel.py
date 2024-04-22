@@ -3,38 +3,92 @@ import pygame_gui as pgui
 
 
 class UIPanel:
-    def __init__(self, window, manager, width, height):
+    def __init__(self, window, manager, width, height, digraph):
+        self.results_panel = None
         self.window = window
         self.width = width
         self.height = height
         self.manager = manager
+        self.digraph = digraph
         self.selected_node = None
         self.base_panel = self.create_base_panel()
-        self.create_search_box()
         self.infos = self.create_information_box()
-
+        self.search_box = self.create_search_box()
 
     def create_search_box(self):
-        search_box = pgui.elements.UIPanel(
+        # Panel to contain the search elements
+        search_panel = pgui.elements.UIPanel(
             relative_rect=pg.Rect(0, 0, self.width, 3 * self.height / 4),
-            starting_height=0,
             manager=self.manager,
-            anchors={
-                'left': 'left',
-                'right': 'right',
-                'top': 'top',
-                'bottom': 'bottom'
-            },
             container=self.base_panel
         )
 
-        search_text = pgui.elements.UITextEntryLine(
-            relative_rect=pg.Rect(10, 10, self.width - 20, 30),
+        # Label for the search box
+        search_label = pgui.elements.UILabel(
+            relative_rect=pg.Rect(10, 10, 100, 30),
+            text="Search:",
             manager=self.manager,
-            container=search_box
+            container=search_panel
         )
 
-        # TODO finish this
+        # Text entry for searching nodes
+        search_text = pgui.elements.UITextEntryLine(
+            relative_rect=pg.Rect(120, 10, self.width - 130, 30),
+            manager=self.manager,
+            container=search_panel
+        )
+
+        # Dropdown menu initialized with all node IDs
+        all_ids = self.get_all_node_ids()
+
+        dropdown = self.create_drop_down_menu(
+            options_list=all_ids,
+            starting_option=all_ids[0] if all_ids else 'None',
+            relative_rect=pg.Rect(10, 50, self.width - 20, 30),
+            manager=self.manager,
+            container=search_panel,
+            update=False
+        )
+        return [search_panel, search_label, search_text, dropdown]
+
+    def get_all_node_ids(self):
+        return [node.id for node in self.digraph.nodes()]
+
+    def create_drop_down_menu(self, options_list, starting_option, relative_rect, manager, container, update):
+        if update:
+            self.search_box[3].kill()
+        dropdown = pgui.elements.UIDropDownMenu(
+            options_list=options_list,
+            starting_option=starting_option,
+            relative_rect=relative_rect,
+            manager=manager,
+            container=container
+        )
+        return dropdown
+
+    def filter_nodes_by_search(self, query):
+        all_node_ids = self.get_all_node_ids()
+        if query:
+            filtered_ids = [node_id for node_id in all_node_ids if query.lower() in node_id.lower()]
+            if not filtered_ids:
+                filtered_ids = ['No results found']
+            self.search_box[3] = self.create_drop_down_menu(
+                options_list=filtered_ids,
+                starting_option=filtered_ids[0] if filtered_ids else 'None',
+                relative_rect=pg.Rect(10, 50, self.width - 20, 30),
+                manager=self.manager,
+                container=self.search_box[0],
+                update=True
+            )
+        else:
+            self.search_box[3] = self.create_drop_down_menu(
+                options_list=all_node_ids,
+                starting_option=all_node_ids[0] if all_node_ids else 'None',
+                relative_rect=pg.Rect(10, 50, self.width - 20, 30),
+                manager=self.manager,
+                container=self.search_box[0],
+                update=True
+            )
 
     def create_information_box(self):
         information_box = pgui.elements.UIPanel(
@@ -65,6 +119,9 @@ class UIPanel:
         )
 
         return information_box, id_label, show_popup_button
+
+    def handle_search_bar_changed(self):
+        self.filter_nodes_by_search(self.search_box[2].get_text())
 
     def handle_popup_button_pressed(self):
         # Create a popup window with appropriate dimensions
@@ -167,11 +224,11 @@ class UIPanel:
     def process_events(self, event):
         self.manager.process_events(event)
 
-    def update(self, time_delta):
-        self.manager.update(time_delta)
-
     def draw_ui(self):
         self.manager.draw_ui(self.window)
 
     def get_manager(self):
         return self.manager
+
+    def update(self, time_delta):
+        self.manager.update(time_delta)
