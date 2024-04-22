@@ -20,5 +20,6 @@ class NodeButton:
     def draw(self, surface):
         pg.draw.circle(surface, self.color, (self.x, self.y), self.radius)
 
+
     def information_dict(self):
         return self.node.get_attributes()

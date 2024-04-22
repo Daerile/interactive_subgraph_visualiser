@@ -1,5 +1,6 @@
 import pygame as pg
 import pygame_gui as pgui
+import networkx as nx
 import random
 import math
 import sys
@@ -9,7 +10,7 @@ import src.utils.layout as layout
 
 
 class View:
-    def __init__(self, digraph):
+    def __init__(self, digraph: nx.DiGraph):
         pg.init()
         self.digraph = digraph
         self.WIDTH = 1280
@@ -17,7 +18,7 @@ class View:
         self.PANEL_WIDTH = 300
         self.GRAPH_WIDTH = self.WIDTH - self.PANEL_WIDTH  # Width available for the graph
         self.GRAPH_HEIGHT = self.HEIGHT
-        self.NODE_RADIUS = 3
+        self.NODE_RADIUS = 15
         self.window = pg.display.set_mode((self.WIDTH, self.HEIGHT))
         self.manager = pgui.UIManager((self.WIDTH, self.HEIGHT))
         self.node_buttons = []
@@ -63,6 +64,39 @@ class View:
     def draw_nodes(self):
         for button in self.node_buttons:
             button.draw(self.window)
+        self.draw_edges()
+
+    def draw_edges(self):
+        for edge in self.digraph.edges():
+            for button in self.node_buttons:
+                if button.node == edge[0]:
+                    start_pos = button.x, button.y
+                if button.node == edge[1]:
+                    end_pos = button.x, button.y
+            self.draw_arrow(self.window, (0, 0, 0), start_pos, end_pos,)
+
+    def draw_arrow(self, window, color, start, end, arrow_size=10):
+        # Vector from start to end
+        dx = end[0] - start[0]
+        dy = end[1] - start[1]
+        distance = math.sqrt(dx ** 2 + dy ** 2)
+
+        dx /= distance
+        dy /= distance
+
+        end_adj = (end[0] - self.NODE_RADIUS * dx, end[1] - self.NODE_RADIUS * dy)
+
+        pg.draw.line(window, color, start, end_adj, 2)
+
+        angle = math.atan2(dy, dx)
+
+        x1 = end_adj[0] - arrow_size * math.cos(angle - math.pi / 6)
+        y1 = end_adj[1] - arrow_size * math.sin(angle - math.pi / 6)
+        x2 = end_adj[0] - arrow_size * math.cos(angle + math.pi / 6)
+        y2 = end_adj[1] - arrow_size * math.sin(angle + math.pi / 6)
+
+        pg.draw.line(window, color, (x1, y1), end_adj, 2)
+        pg.draw.line(window, color, (x2, y2), end_adj, 2)
 
     def initialize_node_buttons(self):
         for (node, pos) in self.positions.items():
