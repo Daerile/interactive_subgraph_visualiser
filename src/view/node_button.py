@@ -5,6 +5,7 @@ class NodeButton:
     def __init__(self, surface, x, y, radius, node, color=(0, 0, 0)):
         self.x = x
         self.y = y
+        self.surface = surface
         self.radius = radius
         self.color = color
         self.node = node
@@ -20,6 +21,10 @@ class NodeButton:
     def draw(self, surface):
         pg.draw.circle(surface, self.color, (self.x, self.y), self.radius)
 
+    def move(self, dx, dy):
+        self.x += dx
+        self.y += dy
+        self.draw(self.surface)
 
     def information_dict(self):
         return self.node.get_attributes()
