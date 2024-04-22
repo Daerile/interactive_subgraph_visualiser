@@ -24,6 +24,9 @@ class View:
         self.ui_panel = UIPanel(self.window,self.manager, self.PANEL_WIDTH, self.HEIGHT, self.digraph)
         pg.display.set_caption('Interactive Subgraph Visualiser')
         self.positions = self.get_pos()
+        self.dragging = False
+        self.offset_x = 0
+        self.offset_y = 0
 
         self.initialize_node_buttons()
 
@@ -32,22 +35,7 @@ class View:
         running = True
         while running:
             time_delta = clock.tick(60) / 1000.0
-            for event in pg.event.get():
-                if event.type == pg.QUIT:
-                    running = False
-
-                self.ui_panel.process_events(event)
-
-                if event.type == pg.MOUSEBUTTONDOWN:
-                    for button in self.node_buttons:
-                        if button.handle_click(event):
-                            self.node_button_clicked(button)
-                elif event.type == pgui.UI_BUTTON_PRESSED:
-                    if event.ui_element == self.ui_panel.infos[2]:
-                        self.ui_panel.handle_popup_button_pressed()
-                elif event.type == pgui.UI_TEXT_ENTRY_CHANGED:
-                    if event.ui_element == self.ui_panel.search_box[2]:
-                        self.ui_panel.handle_search_bar_changed()
+            running = self.handle_events()
 
             self.window.fill((255, 255, 255))
             self.draw_nodes()
@@ -56,6 +44,46 @@ class View:
             pg.display.update()
         pg.quit()
         sys.exit()
+
+    def handle_events(self):
+        running = True
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                running = False
+
+            self.ui_panel.process_events(event)
+
+            if event.type == pg.MOUSEBUTTONDOWN:
+                was_button = False
+                for button in self.node_buttons:
+                    if button.handle_click(event):
+                        was_button = True
+                        self.node_button_clicked(button)
+                if not was_button:
+                    if event.button == 1:
+                        self.dragging = True
+                        mouse_x, mouse_y = event.pos
+                        self.offset_x = mouse_x
+                        self.offset_y = mouse_y
+            elif event.type == pg.MOUSEBUTTONUP:
+                if event.button == 1:
+                    self.dragging = False
+            elif event.type == pg.MOUSEMOTION:
+                if self.dragging:
+                    mouse_x, mouse_y = event.pos
+                    dx = mouse_x - self.offset_x
+                    dy = mouse_y - self.offset_y
+                    self.offset_x = mouse_x
+                    self.offset_y = mouse_y
+                    for button in self.node_buttons:
+                        button.move(dx, dy)
+            elif event.type == pgui.UI_BUTTON_PRESSED:
+                if event.ui_element == self.ui_panel.infos[2]:
+                    self.ui_panel.handle_popup_button_pressed()
+            elif event.type == pgui.UI_TEXT_ENTRY_CHANGED:
+                if event.ui_element == self.ui_panel.search_box[2]:
+                    self.ui_panel.handle_search_bar_changed()
+        return running
 
     def node_button_clicked(self, button: NodeButton):
         self.ui_panel.update_information_box(button.node)
