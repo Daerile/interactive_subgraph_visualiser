@@ -3,17 +3,24 @@ import pandas as pd
 from collections import deque
 from src.backend.node import Node
 
+
 class GraphSystem:
     def __init__(self, dataframe: pd.DataFrame):
         self.dataframe = dataframe
         self.nodes = self.create_nodes()
         self.digraph = self.create_graph()
 
-
     def create_nodes(self):
         nodes = []
         for index, next_node in self.dataframe.iterrows():
-            nodes.append(Node(next_node))
+            is_already_in = False
+            for node in nodes:
+                if node.id == next_node['csúcsid']:
+                    node.append_diff_subid(next_node)
+                    is_already_in = True
+                    break
+            if not is_already_in:
+                nodes.append(Node(next_node))
         return nodes
 
     def create_graph(self):
@@ -21,12 +28,12 @@ class GraphSystem:
         for node in self.nodes:
             digraph.add_node(node)
         for node in self.nodes:
-            if node.connections:
-                for connection in node.connections:
-                    if connection == node.id :
+            if node.get_connected_nodes():
+                for connected_node in node.get_connected_nodes():
+                    if connected_node == node.id:
                         continue
                     for node_in_graph in digraph.nodes:
-                        if node_in_graph.id == connection:
+                        if node_in_graph.id == connected_node:
                             digraph.add_edge(node, node_in_graph)
                             break
         return digraph
