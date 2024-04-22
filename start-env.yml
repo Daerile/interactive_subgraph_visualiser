@@ -7,4 +7,7 @@ dependencies:
   - pandas
   - pygame
   - networkx
+  - scipy
   - pip
+  - pip:
+      - pygame_gui
