@@ -1,10 +1,10 @@
-import pandas as pd
-from src.viewmodel.view_model import ViewModel
-
+from src.view.view import View
+import networkx as nx
 
 def main():
-    ViewModel()
-
+    nx_graph = nx.DiGraph()
+    view = View(nx_graph)
+    view.run()
 
 if __name__ == '__main__':
     main()

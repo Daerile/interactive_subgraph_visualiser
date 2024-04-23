@@ -3,13 +3,14 @@ import pygame_gui as pgui
 
 
 class UIPanel:
-    def __init__(self, window, manager, width, height, digraph):
+    def __init__(self, window, manager, width, height, digraph, header_height):
         self.results_panel = None
         self.window = window
         self.width = width
         self.height = height
         self.manager = manager
         self.digraph = digraph
+        self.header_height = header_height
         self.selected_node = None
         self.base_panel = self.create_base_panel()
         self.infos = self.create_information_box()
@@ -227,8 +228,8 @@ class UIPanel:
 
     def create_base_panel(self):
         base_panel = pgui.elements.UIPanel(
-            relative_rect=pg.Rect(0, 0, self.width, self.height),
-            starting_height=0,
+            relative_rect=pg.Rect(0, self.header_height - 5, self.width, self.height),
+            starting_height=self.header_height,
             manager=self.manager,
             anchors={'left': 'left',
                      'right': 'right',
@@ -236,6 +237,14 @@ class UIPanel:
                      'bottom': 'bottom'}
         )
         return base_panel
+
+    def killall(self):
+        for element in self.infos:
+            element.kill()
+        for element in self.search_box:
+            element.kill()
+        self.base_panel.kill()
+
 
     def process_events(self, event):
         self.manager.process_events(event)

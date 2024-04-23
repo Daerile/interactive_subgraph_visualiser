@@ -7,7 +7,6 @@ from random import random
 from src.view.node_button import NodeButton
 from src.view.canvas_element_manager import CanvasElementManager
 from src.backend.node import Node
-from src.view.view import View
 
 class Vector:
 
@@ -33,11 +32,11 @@ class Vector:
 
 
 class Layout:
-    def __init__(self, digraph: nx.DiGraph, cem: CanvasElementManager):
-
+    def __init__(self, digraph: nx.DiGraph, cem: CanvasElementManager, empty= False):
         self.WIDTH = 3000
         self.HEIGHT = 3000
-
+        if empty:
+            return
         self.nodes: list[Node] = [n for n in digraph.nodes]
         edge_list = [(lhs, rhs) for (lhs, rhs) in digraph.edges]
 
@@ -111,7 +110,7 @@ class Layout:
 
         print(f"nodes: {len(self.nodes)}, edges: {len(edge_list)}")
 
-    def draw(self, dt: float, window: pg.Surface):
+    def draw(self, window: pg.Surface):
 
         if self.t < 0.1:
             self.cem.draw_node_buttons()

@@ -7,7 +7,7 @@ from random import random
 from src.view.node_button import NodeButton
 from src.view.canvas_element_manager import CanvasElementManager
 from src.backend.node import Node
-from src.view.view import View
+from src.backend.graph_system import GraphSystem
 
 
 def read_data():
@@ -17,11 +17,8 @@ def read_data():
 
 class ViewModel:
     def __init__(self):
-        self.digraph = None
-        self.view = None
-        self.startup()
+        data = read_data()
+        self.graph_system = GraphSystem(data)
 
-    def startup(self):
-        self.digraph = nx.DiGraph()
-        self.view = View(self.digraph)
-        self.view.run()
+    def handle_load_button_pressed(self):
+        return self.graph_system.digraph
