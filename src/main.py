@@ -6,7 +6,7 @@ from src.view.view import View
 def main():
     data = read_data()
     graph = GraphSystem(data)
-    view = View(graph.get_subgraph('m1', 2))
+    view = View(graph.get_subgraph('m1',2))
     view.run()
 
 
