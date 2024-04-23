@@ -13,6 +13,8 @@ class GraphSystem:
     def create_nodes(self):
         nodes = []
         for index, next_node in self.dataframe.iterrows():
+            if next_node['csúcsid'] == '':
+                continue
             is_already_in = False
             for node in nodes:
                 if node.id == next_node['csúcsid']:

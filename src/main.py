@@ -1,18 +1,9 @@
 import pandas as pd
-from src.backend.graph_system import GraphSystem
-from src.view.view import View
+from src.viewmodel.view_model import ViewModel
 
 
 def main():
-    data = read_data()
-    graph = GraphSystem(data)
-    view = View(graph.get_subgraph('m1',2))
-    view.run()
-
-
-def read_data():
-    data = pd.read_csv('../data/allc_model_tulertkek_grafmegjeleníteshez.csv', sep=';')
-    return data
+    ViewModel()
 
 
 if __name__ == '__main__':

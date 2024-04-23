@@ -50,6 +50,8 @@ class Node:
         else:
             for key in self.connections.keys():
                 for value in self.connections[key]:
+                    if value == '' or value == key:
+                        continue
                     return_set.add(value)
             return return_set
 
