@@ -11,6 +11,10 @@ class NodeButton:
         self.node = node
         self.text = node.get_id()  # assuming get_id() returns a string
 
+        self.unscaled_radius = radius
+        self.unscaled_x = x
+        self.unscaled_y = y
+
     def handle_click(self, event):
         if event.type == pg.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = event.pos
@@ -24,6 +28,12 @@ class NodeButton:
     def move(self, dx, dy):
         self.x += dx
         self.y += dy
+        self.draw()
+
+    def zoom(self, zoom_scale):
+        self.x = int(self.unscaled_x * zoom_scale)
+        self.y = int(self.unscaled_y * zoom_scale)
+        self.radius = int(self.unscaled_radius * zoom_scale)
         self.draw()
 
     def information_dict(self):

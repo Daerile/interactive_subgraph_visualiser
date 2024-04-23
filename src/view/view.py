@@ -29,6 +29,7 @@ class View:
         self.dragging = False
         self.offset_x = 0
         self.offset_y = 0
+        self.zoom_scale = 1.0
 
         self.initialize_elements()
 
@@ -67,6 +68,14 @@ class View:
                         mouse_x, mouse_y = event.pos
                         self.offset_x = mouse_x
                         self.offset_y = mouse_y
+                    if event.button == 4:
+                        if self.zoom_scale < 3:
+                            self.zoom_scale *= 1.1
+                            self.CanvasElementManager.zoom_all(self.zoom_scale, 1.1, event.pos)
+                    if event.button == 5:
+                        if self.zoom_scale > 1/3:
+                            self.zoom_scale *= 0.9
+                            self.CanvasElementManager.zoom_all(self.zoom_scale, 0.9, event.pos)
             elif event.type == pg.MOUSEBUTTONUP:
                 if event.button == 1:
                     self.dragging = False

@@ -11,6 +11,8 @@ class CanvasElementManager:
         self.window = window
         self.manager = manager
         self.NODE_RADIUS = node_radius
+        self.offset_x = 0
+        self.offset_y = 0
 
         self.node_buttons = []
         self.arrows = []
@@ -20,6 +22,18 @@ class CanvasElementManager:
             button.move(dx, dy)
         for arrow in self.arrows:
             arrow[2].move(dx, dy)
+
+    def zoom_all(self, zoom_scale, scale_factor, cursor_pos):
+        cursor_x, cursor_y = cursor_pos
+        self.offset_x = cursor_x - (cursor_x - self.offset_x) * scale_factor
+        self.offset_y = cursor_y - (cursor_y - self.offset_y) * scale_factor
+
+        for node, button in self.node_buttons:
+            button.zoom(zoom_scale)
+        for arrow in self.arrows:
+            arrow[2].zoom(zoom_scale)
+
+        self.move_all(self.offset_x, self.offset_y)
 
     def create_node_button(self, x, y, node, color=(0, 0, 0)):
         button = NodeButton(self.window, x, y, self.NODE_RADIUS, node, color)
