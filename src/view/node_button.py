@@ -3,8 +3,8 @@ import pygame as pg
 
 class NodeButton:
     def __init__(self, surface, x, y, radius, node, color=(0, 0, 0)):
-        self.x = x
-        self.y = y
+        self.x = int(x)
+        self.y = int(y)
         self.surface = surface
         self.radius = radius
         self.color = color
@@ -18,13 +18,13 @@ class NodeButton:
                 return True
         return False
 
-    def draw(self, surface):
-        pg.draw.circle(surface, self.color, (self.x, self.y), self.radius)
+    def draw(self):
+        pg.draw.circle(self.surface, self.color, (self.x, self.y), self.radius)
 
     def move(self, dx, dy):
         self.x += dx
         self.y += dy
-        self.draw(self.surface)
+        self.draw()
 
     def information_dict(self):
         return self.node.get_attributes()
