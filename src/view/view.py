@@ -91,6 +91,8 @@ class View:
             elif event.type == pgui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.ui_panel.infos[2]:
                     self.ui_panel.handle_popup_button_pressed()
+                if event.ui_element == self.ui_panel.search_box[4]:
+                    self.ui_panel.handle_focus_button_pressed()
             elif event.type == pgui.UI_TEXT_ENTRY_CHANGED:
                 if event.ui_element == self.ui_panel.search_box[2]:
                     self.ui_panel.handle_search_bar_changed()

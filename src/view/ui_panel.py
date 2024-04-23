@@ -49,7 +49,14 @@ class UIPanel:
             container=search_panel,
             update=False
         )
-        return [search_panel, search_label, search_text, dropdown]
+
+        focus_button = pgui.elements.UIButton(
+            relative_rect=pg.Rect(10, 90, self.width - 20, 30),
+            text='Focus on Node',
+            manager=self.manager,
+            container=search_panel
+        )
+        return [search_panel, search_label, search_text, dropdown, focus_button]
 
     def get_all_node_ids(self):
         return [node.id for node in self.digraph.nodes()]
@@ -122,6 +129,15 @@ class UIPanel:
 
     def handle_search_bar_changed(self):
         self.filter_nodes_by_search(self.search_box[2].get_text())
+
+    def handle_focus_button_pressed(self):
+        selected_id = self.search_box[3].selected_option[0]
+        if selected_id == 'No results found':
+            return
+        for node in self.digraph.nodes():
+            if node.id == selected_id:
+                self.update_information_box(node)
+                break
 
     def handle_popup_button_pressed(self):
         # Create a popup window with appropriate dimensions

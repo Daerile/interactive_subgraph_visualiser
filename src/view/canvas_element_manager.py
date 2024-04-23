@@ -57,7 +57,7 @@ class CanvasElementManager:
                     end_pos = button.x, button.y
             self.create_arrow((0, 0, 0), start_pos, end_pos, edge[0], edge[1])
 
-    def create_arrow(self, color, start, end, node_start, node_end, arrow_size=2, arrowhead_size=5):
+    def create_arrow(self, color, start, end, node_start, node_end, arrow_size=2, arrowhead_size=3):
         dx = end[0] - start[0]
         dy = end[1] - start[1]
         distance = math.sqrt(dx ** 2 + dy ** 2)
