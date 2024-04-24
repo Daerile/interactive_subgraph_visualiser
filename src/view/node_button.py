@@ -10,17 +10,25 @@ class NodeButton:
         self.color = color
         self.node = node
         self.text = node.get_id()  # assuming get_id() returns a string
+        self.last_click_time = 0
+        self.last_click_pos = (0,0)
 
         self.unscaled_radius = radius
         self.unscaled_x = x
         self.unscaled_y = y
 
-    def handle_click(self, event):
+    def handle_click(self, event, time):
         if event.type == pg.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = event.pos
+            if time - self.last_click_time <= 0.3 and event.pos == self.last_click_pos:
+                self.last_click_pos = event.pos
+                self.last_click_time = time
+                return 2
             if (mouse_x - self.x)**2 + (mouse_y - self.y)**2 <= self.radius**2:
-                return True
-        return False
+                self.last_click_pos = event.pos
+                self.last_click_time = time
+                return 1
+        return 0
 
     def draw(self):
         pg.draw.circle(self.surface, self.color, (self.x, self.y), self.radius)
@@ -38,3 +46,4 @@ class NodeButton:
 
     def information_dict(self):
         return self.node.get_attributes()
+

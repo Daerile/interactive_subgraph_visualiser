@@ -8,6 +8,7 @@ from src.view.node_button import NodeButton
 from src.view.canvas_element_manager import CanvasElementManager
 from src.backend.node import Node
 from src.backend.graph_system import GraphSystem
+from src.viewmodel.loader import Loader
 
 
 def read_data():
@@ -21,4 +22,13 @@ class ViewModel:
         self.graph_system = GraphSystem(data)
 
     def handle_load_button_pressed(self):
-        return self.graph_system.digraph
+        data = Loader.load_file()
+        if data is None:
+            return None
+        else:
+            self.graph_system = GraphSystem(data).digraph
+            return self.graph_system
+
+    def handle_node_focused(self):
+        NotImplemented
+

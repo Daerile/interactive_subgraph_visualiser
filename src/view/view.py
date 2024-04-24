@@ -9,6 +9,7 @@ from src.view.ui_header import UIHeader
 from src.view.ui_graph import UIGraph
 from src.view.canvas_element_manager import CanvasElementManager
 from src.viewmodel.view_model import ViewModel
+import time
 
 
 class View:
@@ -83,23 +84,32 @@ class View:
             if event.type == pg.MOUSEBUTTONDOWN:
                 was_button = False
                 for node, button in self.canvas_element_manager.node_buttons:
-                    if button.handle_click(event):
+                    res = button.handle_click(event, time.time())
+                    if res > 0 and self.ui_panel.popup is None and event.button == 1:
                         was_button = True
-                        self.node_button_clicked(button)
+                        if res == 1:
+                            self.node_button_clicked(button)
+                        if res == 2:
+                            print(f'Double clicked button {button.text}')
                 if not was_button:
                     if event.button == 1:
-                        self.dragging = True
                         mouse_x, mouse_y = event.pos
-                        self.offset_x = mouse_x
-                        self.offset_y = mouse_y
+                        if self.ui_panel.popup is None and mouse_x > self.PANEL_WIDTH and mouse_y > self.HEADER_HEIGHT:
+                            self.dragging = True
+                            self.offset_x = mouse_x
+                            self.offset_y = mouse_y
                     if event.button == 4:
                         if self.zoom_scale < 3:
-                            self.zoom_scale *= 1.1
-                            self.canvas_element_manager.zoom_all(self.zoom_scale, 1.1, event.pos)
+                            mouse_x, mouse_y = event.pos
+                            if self.ui_panel.popup is None and mouse_x > self.PANEL_WIDTH and mouse_y > self.HEADER_HEIGHT:
+                                self.zoom_scale *= 1.1
+                                self.canvas_element_manager.zoom_all(self.zoom_scale, 1.1, event.pos)
                     if event.button == 5:
                         if self.zoom_scale > 1 / 3:
-                            self.zoom_scale *= 0.9
-                            self.canvas_element_manager.zoom_all(self.zoom_scale, 0.9, event.pos)
+                            mouse_x, mouse_y = event.pos
+                            if self.ui_panel.popup is None and mouse_x > self.PANEL_WIDTH and mouse_y > self.HEADER_HEIGHT:
+                                self.zoom_scale *= 0.9
+                                self.canvas_element_manager.zoom_all(self.zoom_scale, 0.9, event.pos)
             elif event.type == pg.MOUSEBUTTONUP:
                 if event.button == 1:
                     self.dragging = False
@@ -118,11 +128,17 @@ class View:
                 if event.ui_element == self.ui_panel.search_box[4]:
                     self.ui_panel.handle_focus_button_pressed()
                 if event.ui_element == self.ui_header.load_button:
-                    self.digraph = self.view_model.handle_load_button_pressed()
+                    new_digraph = self.view_model.handle_load_button_pressed()
+                    if new_digraph is None:
+                        continue
+                    self.digraph = new_digraph
                     self.digraph_changed()
             elif event.type == pgui.UI_TEXT_ENTRY_CHANGED:
                 if event.ui_element == self.ui_panel.search_box[2]:
                     self.ui_panel.handle_search_bar_changed()
+            elif event.type == pgui.UI_WINDOW_CLOSE:
+                if event.ui_element == self.ui_panel.popup:
+                    self.ui_panel.popup = None
         return running
 
     def node_button_clicked(self, button: NodeButton):

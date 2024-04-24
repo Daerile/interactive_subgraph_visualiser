@@ -15,6 +15,7 @@ class UIPanel:
         self.base_panel = self.create_base_panel()
         self.infos = self.create_information_box()
         self.search_box = self.create_search_box()
+        self.popup = None
 
     def create_search_box(self):
         # Panel to contain the search elements
@@ -60,14 +61,14 @@ class UIPanel:
         return [search_panel, search_label, search_text, dropdown, focus_button]
 
     def get_all_node_ids(self):
-        return [node.id for node in self.digraph.nodes()]
+        return [node.id for node in self.digraph.nodes]
 
     def create_drop_down_menu(self, options_list, starting_option, relative_rect, manager, container, update):
         if update:
             self.search_box[3].kill()
         dropdown = pgui.elements.UIDropDownMenu(
-            options_list=options_list,
-            starting_option=starting_option,
+            options_list=options_list if options_list else ['None'],
+            starting_option=starting_option if options_list else 'None',
             relative_rect=relative_rect,
             manager=manager,
             container=container
@@ -142,7 +143,7 @@ class UIPanel:
 
     def handle_popup_button_pressed(self):
         # Create a popup window with appropriate dimensions
-        popup = pgui.elements.UIWindow(
+        self.popup = pgui.elements.UIWindow(
             rect=pg.Rect(100, 100, 400, 400),  # Size of the window
             manager=self.manager,
             window_display_title='Node Information',
@@ -153,7 +154,7 @@ class UIPanel:
         scrolling_container = pgui.elements.UIScrollingContainer(
             relative_rect=pg.Rect(10, 10, 380, 380),  # Slightly reduced size for padding
             manager=self.manager,
-            container=popup
+            container=self.popup
         )
 
         y_offset = 0
@@ -220,7 +221,7 @@ class UIPanel:
         # Set the dimensions of the scrollable area based on content height
         scrolling_container.set_scrollable_area_dimensions((360, y_offset))
 
-        popup.set_blocking(True)
+        self.popup.set_blocking(True)
 
     def update_information_box(self, node):
         self.selected_node = node
@@ -240,14 +241,20 @@ class UIPanel:
 
     def killall(self):
         for element in self.infos:
+            element.disable()
             element.kill()
         for element in self.search_box:
+            element.disable()
             element.kill()
         self.base_panel.kill()
-
+        self.infos = []
+        self.search_box = []
+        self.base_panel = None
 
     def process_events(self, event):
-        self.manager.process_events(event)
+        # this works but I dont know why
+        # self.manager.process_events(event)
+        e = []
 
     def draw_ui(self):
         self.manager.draw_ui(self.window)

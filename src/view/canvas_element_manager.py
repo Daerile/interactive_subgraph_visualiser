@@ -3,6 +3,7 @@ import pygame_gui as pgui
 import math
 from src.view.node_button import NodeButton
 from src.view.arrow import Arrow
+from src.backend.node import Node
 
 
 class CanvasElementManager:
@@ -14,8 +15,8 @@ class CanvasElementManager:
         self.offset_x = 0
         self.offset_y = 0
 
-        self.node_buttons = []
-        self.arrows = []
+        self.node_buttons: [(Node, NodeButton)] = []
+        self.arrows: [(Node, Node, Arrow)] = []
 
     def move_all(self, dx, dy):
         for node, button in self.node_buttons:
