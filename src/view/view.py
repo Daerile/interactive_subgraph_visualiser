@@ -49,8 +49,6 @@ class View:
         self.offset_y = 0
         self.zoom_scale = 1.0
 
-        #self.graph = Graph(self.digraph, self.canvas_element_manager)
-
     def run(self):
         clock = pg.time.Clock()
         running = True
