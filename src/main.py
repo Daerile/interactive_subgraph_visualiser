@@ -3,7 +3,7 @@ import networkx as nx
 
 
 def main():
-    nx_graph = nx.DiGraph()
+    nx_graph = nx.empty_graph()
     view = View(nx_graph)
     view.run()
 

@@ -15,21 +15,19 @@ class UIGraph:
         self.panel_width = panel_width
         self.header_height = header_height
         self.canvas_element_manager = cem
-        self.empty = True
-        self.layout = Layout(self.digraph, self.canvas_element_manager, empty=self.empty)
+        self.layout = Layout(self.digraph, self.canvas_element_manager)
 
     def digraph_changed(self, digraph, cem):
         self.digraph = digraph
         self.canvas_element_manager = cem
-        self.empty = False
         self.layout = Layout(self.digraph, self.canvas_element_manager)
 
     def process_events(self, event):
         self.manager.process_events(event)
 
     def draw_ui(self):
-        if not self.empty:
-            self.layout.draw(self.window)
+        if len(self.digraph) != 0:
+            self.layout.draw()
         self.manager.draw_ui(self.window)
 
     def get_manager(self):

@@ -13,10 +13,12 @@ import time
 
 
 class View:
-    def __init__(self, digraph: nx.DiGraph):
+    def __init__(self, digraph: nx.DiGraph, focused_graph: nx.DiGraph = None, focused=False):
         pg.init()
 
         self.digraph = digraph
+        self.focused_graph = focused_graph
+        self.focused = focused
         self.view_model = ViewModel()
         self.WIDTH = 1280
         self.HEIGHT = 720
