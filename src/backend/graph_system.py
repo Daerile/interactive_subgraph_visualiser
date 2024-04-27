@@ -46,6 +46,10 @@ class GraphSystem:
             if node.id == node_id:
                 starter_node = node
 
-        shortest_path_lengths = nx.single_source_shortest_path_length(self.digraph, starter_node)
-        reachable_nodes = {node for node, distance in shortest_path_lengths.items() if distance <= depth}
-        return self.digraph.subgraph(reachable_nodes).copy()
+        forward_subgraph = nx.bfs_tree(self.digraph, starter_node, depth_limit=depth)
+        backward_subgraph = nx.bfs_tree(self.digraph.reverse(), starter_node, depth_limit=depth)
+        backward_subgraph = backward_subgraph.reverse()
+
+        full_subgraph = nx.compose(forward_subgraph, backward_subgraph)
+        return full_subgraph
+

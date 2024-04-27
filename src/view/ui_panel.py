@@ -251,6 +251,9 @@ class UIPanel:
         self.search_box = []
         self.base_panel = None
 
+    def get_focused_node(self):
+        return self.selected_node
+
     def process_events(self, event):
         # this works but I dont know why
         # self.manager.process_events(event)

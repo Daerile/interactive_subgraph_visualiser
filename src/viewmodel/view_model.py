@@ -26,9 +26,12 @@ class ViewModel:
         if data is None:
             return None
         else:
-            self.graph_system = GraphSystem(data).digraph
-            return self.graph_system
+            self.graph_system = GraphSystem(data)
+            digraph = self.graph_system.digraph
+            return digraph
 
-    def handle_node_focused(self):
-        NotImplemented
+    def handle_node_focused(self, focused_node):
+        focused_subgraph = self.graph_system.get_subgraph(focused_node.id, 3)
+        print(focused_subgraph.nodes)
+        return focused_subgraph
 
