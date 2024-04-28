@@ -7,16 +7,17 @@ from src.view.node_button import NodeButton
 from src.view.ui_panel import UIPanel
 from src.view.ui_header import UIHeader
 from src.view.ui_graph import UIGraph
-from src.view.canvas_element_manager import CanvasElementManager
 from src.viewmodel.view_model import ViewModel
 import time
 
 
 class View:
-    def __init__(self, digraph: nx.DiGraph):
+    def __init__(self, digraph: nx.DiGraph, focused_graph: nx.DiGraph = None, focused=False):
         pg.init()
 
         self.digraph = digraph
+        self.focused_graph = focused_graph
+        self.focused = focused
         self.view_model = ViewModel()
         self.WIDTH = 1280
         self.HEIGHT = 720
@@ -29,7 +30,6 @@ class View:
         self.NODE_RADIUS = 15
         self.window = pg.display.set_mode((self.WIDTH, self.HEIGHT))
         self.manager = pgui.UIManager((self.WIDTH, self.HEIGHT))
-        self.canvas_element_manager = CanvasElementManager(self.digraph, self.window, self.manager, self.NODE_RADIUS)
         self.ui_panel = UIPanel(self.window, self.manager, self.PANEL_WIDTH, self.PANEL_HEIGHT, self.digraph, self.HEADER_HEIGHT)
         self.ui_header = UIHeader(self.window, self.manager, self.HEADER_WIDTH, self.HEADER_HEIGHT, self.digraph)
         self.ui_graph = UIGraph(
@@ -41,7 +41,6 @@ class View:
             self.digraph,
             self.PANEL_WIDTH,
             self.HEADER_HEIGHT,
-            self.canvas_element_manager,
         )
         pg.display.set_caption("Interactive Subgraph Visualiser")
         self.dragging = False
@@ -81,7 +80,7 @@ class View:
 
             if event.type == pg.MOUSEBUTTONDOWN:
                 was_button = False
-                for node, button in self.canvas_element_manager.node_buttons:
+                for node, button in self.ui_graph.get_node_buttons():
                     res = button.handle_click(event, time.time())
                     if res > 0 and self.ui_panel.popup is None and event.button == 1:
                         was_button = True
@@ -89,6 +88,9 @@ class View:
                             self.node_button_clicked(button)
                         if res == 2:
                             print(f'Double clicked button {button.text}')
+                            focused_digraph = self.view_model.handle_node_focused(button.node)
+                            self.focus_changed(focused_digraph)
+                            self.ui_graph.handle_node_focused(focused_digraph, button.node)
                 if not was_button:
                     if event.button == 1:
                         mouse_x, mouse_y = event.pos
@@ -101,13 +103,13 @@ class View:
                             mouse_x, mouse_y = event.pos
                             if self.ui_panel.popup is None and mouse_x > self.PANEL_WIDTH and mouse_y > self.HEADER_HEIGHT:
                                 self.zoom_scale *= 1.1
-                                self.canvas_element_manager.zoom_all(self.zoom_scale, 1.1, event.pos)
+                                self.ui_graph.zoom_all(self.zoom_scale, 1.1, event.pos)
                     if event.button == 5:
                         if self.zoom_scale > 1 / 3:
                             mouse_x, mouse_y = event.pos
                             if self.ui_panel.popup is None and mouse_x > self.PANEL_WIDTH and mouse_y > self.HEADER_HEIGHT:
                                 self.zoom_scale *= 0.9
-                                self.canvas_element_manager.zoom_all(self.zoom_scale, 0.9, event.pos)
+                                self.ui_graph.zoom_all(self.zoom_scale, 0.9, event.pos)
             elif event.type == pg.MOUSEBUTTONUP:
                 if event.button == 1:
                     self.dragging = False
@@ -118,19 +120,23 @@ class View:
                     dy = mouse_y - self.offset_y
                     self.offset_x = mouse_x
                     self.offset_y = mouse_y
-                    self.canvas_element_manager.move_all(dx, dy)
+                    self.ui_graph.move_all(dx, dy)
 
             elif event.type == pgui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.ui_panel.infos[2]:
                     self.ui_panel.handle_popup_button_pressed()
                 if event.ui_element == self.ui_panel.search_box[4]:
                     self.ui_panel.handle_focus_button_pressed()
+                    focused_node = self.ui_panel.get_focused_node()
+                    focused_digraph = self.view_model.handle_node_focused(focused_node)
+                    self.focus_changed(focused_digraph)
+                    self.ui_graph.handle_node_focused(focused_digraph, focused_node)
                 if event.ui_element == self.ui_header.load_button:
                     new_digraph = self.view_model.handle_load_button_pressed()
                     if new_digraph is None:
                         continue
                     self.digraph = new_digraph
-                    self.digraph_changed()
+                    self.digraph_loaded()
             elif event.type == pgui.UI_TEXT_ENTRY_CHANGED:
                 if event.ui_element == self.ui_panel.search_box[2]:
                     self.ui_panel.handle_search_bar_changed()
@@ -142,12 +148,17 @@ class View:
     def node_button_clicked(self, button: NodeButton):
         self.ui_panel.update_information_box(button.node)
 
-    def digraph_changed(self):
+    def focus_changed(self, focused_digraph):
+        self.ui_panel.killall()
+        self.ui_panel = UIPanel(self.window, self.manager, self.PANEL_WIDTH, self.PANEL_HEIGHT, focused_digraph, self.HEADER_HEIGHT)
+        self.ui_panel.update(0)
+        self.ui_panel.draw_ui()
+
+    def digraph_loaded(self):
         self.ui_panel.killall()
         self.ui_header.killall()
-        self.canvas_element_manager = CanvasElementManager(self.digraph, self.window, self.manager, self.NODE_RADIUS)
         self.ui_panel = UIPanel(self.window, self.manager, self.PANEL_WIDTH, self.PANEL_HEIGHT, self.digraph, self.HEADER_HEIGHT)
-        self.ui_graph.digraph_changed(self.digraph, self.canvas_element_manager)
+        self.ui_graph.digraph_loaded(self.digraph)
         self.ui_header = UIHeader(self.window, self.manager, self.HEADER_WIDTH, self.HEADER_HEIGHT, self.digraph)
 
         self.ui_panel.update(0)
