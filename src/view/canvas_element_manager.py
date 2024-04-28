@@ -62,10 +62,6 @@ class CanvasElementManager:
             if start_button is not None and end_button is not None:
                 self.create_arrow(color, start_button, end_button, edge[0], edge[1])
 
-    def create_edges_specific(self, start_button, end_button, edge_0, edge_2, color=(0, 0, 0)):
-        self.create_arrow(color, start_button, end_button, edge_0, edge_1)
-
-
     def create_arrow(self, color, start_button, end_button, node_start, node_end, arrow_size=2, arrowhead_size=3):
         arrow = Arrow(self.window, start_button, end_button, color, arrow_size, arrowhead_size)
         self.arrows.append((node_start, node_end, arrow))

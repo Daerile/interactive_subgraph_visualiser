@@ -30,8 +30,10 @@ class ViewModel:
             digraph = self.graph_system.digraph
             return digraph
 
-    def handle_node_focused(self, focused_node):
-        focused_subgraph = self.graph_system.get_subgraph(focused_node.id, 3)
+    def handle_node_focused(self, focused_node, focused_depth):
+        if focused_node is None:
+            return None
+        focused_subgraph = self.graph_system.get_subgraph(focused_node.id, focused_depth)
         print(focused_subgraph.nodes)
         return focused_subgraph
 

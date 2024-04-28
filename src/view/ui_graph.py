@@ -36,14 +36,14 @@ class UIGraph:
             self.get_current_cem().draw_node_buttons()
         self.manager.draw_ui(self.window)
 
-    def handle_node_focused(self, focused_digraph, focused_node):
+    def handle_node_focused(self, focused_digraph, focused_node, focused_depth):
         self.focused_cem = CanvasElementManager(
             focused_digraph,
             self.window,
             self.manager,
             self.node_radius,
             focused=True,
-            focused_depth=3,
+            focused_depth=focused_depth,
             focused_node=focused_node
         )
 

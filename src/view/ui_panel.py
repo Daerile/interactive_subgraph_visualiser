@@ -3,13 +3,14 @@ import pygame_gui as pgui
 
 
 class UIPanel:
-    def __init__(self, window, manager, width, height, digraph, header_height):
+    def __init__(self, window, manager, width, height, digraph, focused_depth, header_height):
         self.results_panel = None
         self.window = window
         self.width = width
         self.height = height
         self.manager = manager
         self.digraph = digraph
+        self.focused_depth = focused_depth
         self.header_height = header_height
         self.selected_node = None
         self.base_panel = self.create_base_panel()
@@ -52,20 +53,44 @@ class UIPanel:
             update=False
         )
 
+        depth_label = pgui.elements.UILabel(
+            relative_rect=pg.Rect(10, 90, 100, 30),
+            text="Depth:",
+            manager=self.manager,
+            container=search_panel
+        )
+
+        depth_choose = pgui.elements.UIDropDownMenu(
+            options_list=[str(i) for i in range(1, 5)],
+            starting_option=str(self.focused_depth),
+            relative_rect=pg.Rect(120, 90, self.width - 130, 30),
+            manager=self.manager,
+            container=search_panel
+        )
+
         focus_button = pgui.elements.UIButton(
-            relative_rect=pg.Rect(10, 90, self.width - 20, 30),
+            relative_rect=pg.Rect(10, 130, self.width - 20, 30),
             text='Focus on Node',
             manager=self.manager,
             container=search_panel
         )
-        return [search_panel, search_label, search_text, dropdown, focus_button]
+        return_map = {
+            'search_panel': search_panel,
+            'search_label': search_label,
+            'search_text': search_text,
+            'dropdown': dropdown,
+            'focus_button': focus_button,
+            'depth_label': depth_label,
+            'depth_choose': depth_choose
+        }
+        return return_map
 
     def get_all_node_ids(self):
         return [node.id for node in self.digraph.nodes]
 
     def create_drop_down_menu(self, options_list, starting_option, relative_rect, manager, container, update):
         if update:
-            self.search_box[3].kill()
+            self.search_box['dropdown'].kill()
         dropdown = pgui.elements.UIDropDownMenu(
             options_list=options_list if options_list else ['None'],
             starting_option=starting_option if options_list else 'None',
@@ -81,21 +106,21 @@ class UIPanel:
             filtered_ids = [node_id for node_id in all_node_ids if query.lower() in node_id.lower()]
             if not filtered_ids:
                 filtered_ids = ['No results found']
-            self.search_box[3] = self.create_drop_down_menu(
+            self.search_box['dropdown'] = self.create_drop_down_menu(
                 options_list=filtered_ids,
                 starting_option=filtered_ids[0] if filtered_ids else 'None',
                 relative_rect=pg.Rect(10, 50, self.width - 20, 30),
                 manager=self.manager,
-                container=self.search_box[0],
+                container=self.search_box['search_panel'],
                 update=True
             )
         else:
-            self.search_box[3] = self.create_drop_down_menu(
+            self.search_box['dropdown'] = self.create_drop_down_menu(
                 options_list=all_node_ids,
                 starting_option=all_node_ids[0] if all_node_ids else 'None',
                 relative_rect=pg.Rect(10, 50, self.width - 20, 30),
                 manager=self.manager,
-                container=self.search_box[0],
+                container=self.search_box['search_panel'],
                 update=True
             )
 
@@ -130,11 +155,11 @@ class UIPanel:
         return information_box, id_label, show_popup_button
 
     def handle_search_bar_changed(self):
-        self.filter_nodes_by_search(self.search_box[2].get_text())
+        self.filter_nodes_by_search(self.search_box['search_text'].get_text())
 
     def handle_focus_button_pressed(self):
-        selected_id = self.search_box[3].selected_option[0]
-        if selected_id == 'No results found':
+        selected_id = self.search_box['dropdown'].selected_option[0]
+        if selected_id == 'No results found' or selected_id == 'None':
             return
         for node in self.digraph.nodes():
             if node.id == selected_id:
@@ -243,16 +268,19 @@ class UIPanel:
         for element in self.infos:
             element.disable()
             element.kill()
-        for element in self.search_box:
+        for element in self.search_box.values():
             element.disable()
             element.kill()
         self.base_panel.kill()
         self.infos = []
-        self.search_box = []
+        self.search_box = {}
         self.base_panel = None
 
     def get_focused_node(self):
         return self.selected_node
+
+    def get_focused_depth(self):
+        return int(self.search_box['depth_choose'].selected_option[0])
 
     def process_events(self, event):
         # this works but I dont know why
