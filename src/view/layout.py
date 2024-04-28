@@ -58,11 +58,6 @@ class Layout:
         self.create_from_layer(start_node, center_pos, x_breakpoints_forwards, x_breakpoints_backwards, forward=True)
         self.create_from_layer(start_node, center_pos, x_breakpoints_forwards, x_breakpoints_backwards, forward=False)
 
-        # Debugging outputs
-        pprint.pprint(self.node_map)
-        pprint.pprint(self.adjacency_list)
-        pprint.pprint(self.complement_adjacency_list)
-
         self.cem.create_node_button(center_pos[0], center_pos[1], self.cem.focused_node)
         self.cem.create_edges(color=(150, 0, 0))
 
@@ -132,21 +127,18 @@ class Layout:
                 y = random() * rest_height
                 pos[node.id] = (x, y)
                 self.cem.create_node_button(x, y, node)
-                print(f"isolated: {node.id} at {x}, {y}")
                 continue
 
             x = random() * width
             y = random() * rest_height + rest_height
             pos[node.id] = (x, y)
             self.cem.create_node_button(x, y, node)
-            print(f"normal: {node.id} at {x}, {y}")
         return pos
 
     def fruchterman_reingold(self, width, height, nodes, edge_list, pos, k=None, t=1000, shift=0, focused=False):
         if k is None:
             k = (width * height / len(self.nodes)) ** 0.5
         k_sq = k ** 2
-        print(f"nodes: {len(nodes)}, edges: {len(edge_list)}")
 
         pos_values = np.array(list(pos.values()))
 

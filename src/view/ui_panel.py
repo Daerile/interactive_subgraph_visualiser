@@ -74,6 +74,14 @@ class UIPanel:
             manager=self.manager,
             container=search_panel
         )
+
+        return_button = pgui.elements.UIButton(
+            relative_rect=pg.Rect(10, 170, self.width - 20, 30),
+            text='Return to Full Graph',
+            manager=self.manager,
+            container=search_panel
+        )
+
         return_map = {
             'search_panel': search_panel,
             'search_label': search_label,
@@ -81,7 +89,8 @@ class UIPanel:
             'dropdown': dropdown,
             'focus_button': focus_button,
             'depth_label': depth_label,
-            'depth_choose': depth_choose
+            'depth_choose': depth_choose,
+            'return_button': return_button
         }
         return return_map
 

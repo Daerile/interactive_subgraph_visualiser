@@ -18,6 +18,7 @@ class Arrow:
         start, end = (self.button_start.x, self.button_start.y), (self.button_end.x, self.button_end.y)
         pg.draw.line(self.window, self.color, start, end, self.size)
 
+
     def zoom(self, zoom_scale):
         self.size = int(self.unzoomed_size * zoom_scale) if self.unzoomed_size * zoom_scale > 1 else 1
         self.arrowhead_size = int(self.unzoomed_arrowhead_size * zoom_scale) if self.unzoomed_arrowhead_size * zoom_scale > 1 else 1
