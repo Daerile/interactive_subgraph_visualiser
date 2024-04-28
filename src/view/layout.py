@@ -58,7 +58,8 @@ class Layout:
         self.create_from_layer(start_node, center_pos, x_breakpoints_forwards, x_breakpoints_backwards, forward=True)
         self.create_from_layer(start_node, center_pos, x_breakpoints_forwards, x_breakpoints_backwards, forward=False)
 
-        self.cem.create_node_button(center_pos[0], center_pos[1], self.cem.focused_node)
+        child_num = len(self.adjacency_list[start_node]) + len(self.complement_adjacency_list[start_node])
+        self.cem.create_node_button(center_pos[0], center_pos[1], self.cem.focused_node, child_num=child_num)
         self.cem.create_edges(color=(150, 0, 0))
 
     def create_from_layer(self, start_node, center_pos, x_breakpoints_forwards, x_breakpoints_backwards, forward=True):
@@ -101,7 +102,8 @@ class Layout:
                 x = (box_left + box_right) / 2
                 y = y_br - 0.5 * (box_bottom - box_top) / n
                 y_breakpoints.append(y_br)
-                self.cem.create_node_button(x, y, self.nodes[node_idx])
+                child_num = len(self.adjacency_list[node_idx]) + len(self.complement_adjacency_list[node_idx])
+                self.cem.create_node_button(x, y, self.nodes[node_idx], child_num=child_num)
                 print(f"node: {self.nodes[node_idx].id}, pos: {x}, {y}")
         print(f'breakpoints: {y_breakpoints}')
         return y_breakpoints
@@ -126,13 +128,16 @@ class Layout:
                 x = random() * width
                 y = random() * rest_height
                 pos[node.id] = (x, y)
-                self.cem.create_node_button(x, y, node)
+                child_num = len(self.adjacency_list[self.node_map[node.id]]) + len(self.complement_adjacency_list[self.node_map[node.id]])
+                self.cem.create_node_button(x, y, node, child_num=child_num)
                 continue
 
             x = random() * width
             y = random() * rest_height + rest_height
             pos[node.id] = (x, y)
-            self.cem.create_node_button(x, y, node)
+            child_num = len(self.adjacency_list[self.node_map[node.id]]) + len(
+                self.complement_adjacency_list[self.node_map[node.id]])
+            self.cem.create_node_button(x, y, node, child_num=child_num)
         return pos
 
     def fruchterman_reingold(self, width, height, nodes, edge_list, pos, k=None, t=1000, shift=0, focused=False):

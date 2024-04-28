@@ -47,8 +47,8 @@ class CanvasElementManager:
         for arrow in self.arrows:
             arrow[2].draw()
 
-    def create_node_button(self, x, y, node, color=(0, 0, 0)):
-        button = NodeButton(self.window, x, y, self.NODE_RADIUS, node, color)
+    def create_node_button(self, x, y, node, color=(0, 0, 0), child_num=0):
+        button = NodeButton(self.window, x, y, self.NODE_RADIUS + (child_num * 5), node, color)
         self.node_buttons.append((node, button))
 
     def create_edges(self, color=(0, 0, 0)):
