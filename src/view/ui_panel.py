@@ -13,15 +13,67 @@ class UIPanel:
         self.focused_depth = focused_depth
         self.header_height = header_height
         self.selected_node = None
+        self.selected_mode = 'search'
         self.base_panel = self.create_base_panel()
+        self.switch_panel = self.create_switch_panel()
         self.infos = self.create_information_box()
         self.search_box = self.create_search_box()
+        self.edit_box = self.create_edit_box()
         self.popup = None
 
+    def create_switch_panel(self):
+        switch_panel = pgui.elements.UIPanel(
+            relative_rect=pg.Rect(0, 0, self.width, 50),
+            manager=self.manager,
+            container=self.base_panel
+        )
+
+        button_width = (self.width - 30) // 2
+
+        # Define the Search button
+        switch_search = pgui.elements.UIButton(
+            relative_rect=pg.Rect(10, 10, button_width, 30),
+            text='Search',
+            manager=self.manager,
+            container=switch_panel
+        )
+
+        switch_edit = pgui.elements.UIButton(
+            relative_rect=pg.Rect(20 + button_width, 10, button_width, 30),
+            text='Edit',
+            manager=self.manager,
+            container=switch_panel
+        )
+
+        item_map = {
+            'panel': switch_panel,
+            'search': switch_search,
+            'edit': switch_edit
+        }
+
+        return item_map
+
+    def create_edit_box(self):
+        starting_height = self.switch_panel['panel'].get_relative_rect().height
+        edit_panel = pgui.elements.UIPanel(
+            relative_rect=pg.Rect(0, starting_height, self.width, self.height / 2),
+            starting_height=starting_height,
+            manager=self.manager,
+            container=self.base_panel
+        )
+        edit_panel.hide()
+        items_map = {
+            'edit_panel': edit_panel
+        }
+
+        return items_map
+
     def create_search_box(self):
+        starting_height = self.switch_panel['panel'].get_relative_rect().height
         # Panel to contain the search elements
         search_panel = pgui.elements.UIPanel(
-            relative_rect=pg.Rect(0, 0, self.width, 3 * self.height / 4),
+            relative_rect=pg.Rect(0, starting_height, self.width, self.height / 2),
+            starting_height=starting_height,
             manager=self.manager,
             container=self.base_panel
         )
@@ -174,6 +226,20 @@ class UIPanel:
             if node.id == selected_id:
                 self.update_information_box(node)
                 break
+
+    def handle_switch_search_pressed(self):
+        if self.selected_mode == 'search':
+            return
+        self.selected_mode = 'search'
+        self.search_box['search_panel'].show()
+        self.edit_box['edit_panel'].hide()
+
+    def handle_switch_edit_pressed(self):
+        if self.selected_mode == 'edit':
+            return
+        self.selected_mode = 'edit'
+        self.search_box['search_panel'].hide()
+        self.edit_box['edit_panel'].show()
 
     def handle_popup_button_pressed(self):
         # Create a popup window with appropriate dimensions

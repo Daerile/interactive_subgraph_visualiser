@@ -23,9 +23,9 @@ class CanvasElementManager:
         self.arrows: [(Node, Node, Arrow)] = []
         self.layout = Layout(self.digraph, self)
 
-    def move_all(self, dx, dy):
+    def move_all(self, dx, dy, zoom=False):
         for node, button in self.node_buttons:
-            button.move(dx, dy)
+            button.move(dx, dy, zoom)
 
     def zoom_all(self, zoom_scale, scale_factor, cursor_pos):
         cursor_x, cursor_y = cursor_pos
@@ -37,7 +37,14 @@ class CanvasElementManager:
         for arrow in self.arrows:
             arrow[2].zoom(zoom_scale)
 
-        self.move_all(self.offset_x, self.offset_y)
+        self.move_all(self.offset_x, self.offset_y, zoom=True)
+
+    def center_around(self, x, y):
+        diff_x = ((1280 + 300) / 2) - x
+        diff_y = (720 / 2) - y
+        for node, button in self.node_buttons:
+            button.move(diff_x, diff_y)
+            button.reset_moved()
 
     def draw_node_buttons(self):
         for node, button in self.node_buttons:

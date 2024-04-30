@@ -123,6 +123,10 @@ class View:
                     self.ui_graph.move_all(dx, dy)
 
             elif event.type == pgui.UI_BUTTON_PRESSED:
+                if event.ui_element == self.ui_panel.switch_panel['search']:
+                    self.ui_panel.handle_switch_search_pressed()
+                if event.ui_element == self.ui_panel.switch_panel['edit']:
+                    self.ui_panel.handle_switch_edit_pressed()
                 if event.ui_element == self.ui_panel.search_box['return_button']:
                     self.ui_graph.handle_return_button_pressed()
                 if event.ui_element == self.ui_panel.infos[2]:

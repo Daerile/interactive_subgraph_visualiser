@@ -60,6 +60,7 @@ class Layout:
 
         self.cem.create_node_button(center_pos[0], center_pos[1], self.cem.focused_node)
         self.cem.create_edges(color=(150, 0, 0))
+        self.cem.center_around(center_pos[0], center_pos[1])
 
     def create_from_layer(self, start_node, center_pos, x_breakpoints_forwards, x_breakpoints_backwards, forward=True):
         layer_before = []

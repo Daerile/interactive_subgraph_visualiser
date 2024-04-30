@@ -16,7 +16,7 @@ class UIGraph:
         self.focused_cem = None
         self.full_cem = CanvasElementManager(self.digraph, self.window, self.manager, self.node_radius)
 
-    def digraph_loaded(self, digraph, ):
+    def digraph_loaded(self, digraph):
         self.digraph = digraph
         self.full_cem = CanvasElementManager(self.digraph, self.window, self.manager, self.node_radius)
         self.focused_cem = None

@@ -23,6 +23,9 @@ class NodeButton:
         self.last_click_time = 0
         self.last_click_pos = (0,0)
 
+        self.moved_x = 0
+        self.moved_y = 0
+
         self.unscaled_font_size = self.font_size
         self.unscaled_radius = radius
         self.unscaled_x = x
@@ -61,15 +64,18 @@ class NodeButton:
             text_rect = text_surface.get_rect(center=(self.x, self.y))
             self.surface.blit(text_surface, text_rect)
 
-    def move(self, dx, dy):
+    def move(self, dx, dy, zoom=False):
         self.x += dx
         self.y += dy
+        if not zoom:
+            self.unscaled_x += dx
+            self.unscaled_y += dy
         self.draw()
 
     def zoom(self, zoom_scale):
         self.radius = int(self.unscaled_radius * zoom_scale)
-        self.x = int(self.unscaled_x * zoom_scale)
-        self.y = int(self.unscaled_y * zoom_scale)
+        self.x = int(self.unscaled_x * zoom_scale) + self.moved_x
+        self.y = int(self.unscaled_y * zoom_scale) + self.moved_y
 
         new_font_size = int(self.unscaled_font_size * zoom_scale)
         if abs(new_font_size - self.font_size) >= 3:  # Update font only on significant changes
@@ -77,6 +83,10 @@ class NodeButton:
             self.font = self.get_font(self.font_size)
 
         self.draw()
+
+    def reset_moved(self):
+        self.moved_x = 0
+        self.moved_y = 0
 
     def information_dict(self):
         return self.node.get_attributes()
