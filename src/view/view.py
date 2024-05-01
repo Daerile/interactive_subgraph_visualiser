@@ -46,9 +46,12 @@ class View:
         )
         pg.display.set_caption("Interactive Subgraph Visualiser")
         self.dragging = False
+        self.dragged_button = None
+        self.res = None
         self.offset_x = 0
         self.offset_y = 0
-        self.zoom_scale = 1.0
+        self.zoom_lvl = 0
+        self.zoom_scale = 1.1 ** self.zoom_lvl
 
     def run(self):
         clock = pg.time.Clock()
@@ -86,13 +89,9 @@ class View:
                     res = button.handle_click(event, time.time())
                     if res > 0 and self.ui_panel.popup is None and event.button == 1:
                         was_button = True
-                        if res == 1:
-                            self.node_button_clicked(button)
-                        if res == 2:
-                            print(f'Double clicked button {button.text}')
-                            focused_digraph = self.view_model.handle_node_focused(button.node, self.ui_panel.get_focused_depth())
-                            self.focus_changed(focused_digraph)
-                            self.ui_graph.handle_node_focused(focused_digraph, button.node, self.ui_panel.get_focused_depth())
+                        self.dragged_button = button
+                        self.res = res
+                        break
                 if not was_button:
                     if event.button == 1:
                         mouse_x, mouse_y = event.pos
@@ -104,18 +103,35 @@ class View:
                         if self.zoom_scale < 3:
                             mouse_x, mouse_y = event.pos
                             if self.ui_panel.popup is None and mouse_x > self.PANEL_WIDTH and mouse_y > self.HEADER_HEIGHT:
-                                self.zoom_scale *= 1.1
-                                self.ui_graph.zoom_all(self.zoom_scale, 1.1, event.pos)
+                                self.zoom_lvl += 1
+                                self.zoom_scale = 1.1 ** self.zoom_lvl
+                                self.ui_graph.zoom_all(self.zoom_lvl,1.1, event.pos)
                     if event.button == 5:
                         if self.zoom_scale > 1 / 3:
                             mouse_x, mouse_y = event.pos
                             if self.ui_panel.popup is None and mouse_x > self.PANEL_WIDTH and mouse_y > self.HEADER_HEIGHT:
-                                self.zoom_scale *= 0.9
-                                self.ui_graph.zoom_all(self.zoom_scale, 0.9, event.pos)
+                                self.zoom_lvl -= 1
+                                self.zoom_scale = 1.1 ** self.zoom_lvl
+                                self.ui_graph.zoom_all(self.zoom_lvl, 100/110, event.pos)
             elif event.type == pg.MOUSEBUTTONUP:
                 if event.button == 1:
                     self.dragging = False
+                    button = self.dragged_button
+                    self.dragged_button = None
+                    if self.res == 1:
+                        self.node_button_clicked(button)
+                    if self.res == 2:
+                        print(f'Double clicked button {button.text}')
+                        focused_digraph = self.view_model.handle_node_focused(button.node,
+                                                                              self.ui_panel.get_focused_depth())
+                        self.focus_changed(focused_digraph)
+                        self.ui_graph.handle_node_focused(focused_digraph, button.node,
+                                                          self.ui_panel.get_focused_depth())
+                    self.res = None
             elif event.type == pg.MOUSEMOTION:
+                if self.dragged_button is not None:
+                    mouse_x, mouse_y = event.pos
+                    self.dragged_button.set_position(mouse_x, mouse_y)
                 if self.dragging:
                     mouse_x, mouse_y = event.pos
                     dx = mouse_x - self.offset_x
@@ -179,6 +195,7 @@ class View:
         self.ui_panel.update_information_box(button.node)
 
     def focus_changed(self, focused_digraph):
+        self.zoom_lvl = 0
         focused_depth = self.ui_panel.get_focused_depth()
         self.ui_panel.killall()
         self.ui_panel = UIPanel(self.window, self.manager, self.PANEL_WIDTH, self.PANEL_HEIGHT, focused_digraph, focused_depth, self.HEADER_HEIGHT)
@@ -186,6 +203,7 @@ class View:
         self.ui_panel.draw_ui()
 
     def digraph_loaded(self):
+        self.zoom_lvl = 0
         self.ui_panel.killall()
         self.ui_header.killall()
         self.ui_panel = UIPanel(self.window, self.manager, self.PANEL_WIDTH, self.PANEL_HEIGHT, self.digraph, 2, self.HEADER_HEIGHT)

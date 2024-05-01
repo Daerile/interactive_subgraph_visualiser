@@ -25,8 +25,8 @@ class UIGraph:
     def move_all(self, dx, dy):
         self.get_current_cem().move_all(dx, dy)
 
-    def zoom_all(self, zoom_scale, scale_factor, cursor_pos):
-        self.get_current_cem().zoom_all(zoom_scale, scale_factor, cursor_pos)
+    def zoom_all(self, zoom_lvl, scale_factor, cursor_pos):
+        self.get_current_cem().zoom_all(zoom_lvl, scale_factor, cursor_pos)
 
     def change_colors(self, colors):
         self.colors = colors

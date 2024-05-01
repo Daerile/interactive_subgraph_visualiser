@@ -17,28 +17,21 @@ class CanvasElementManager:
         self.focused = focused
         self.focused_node = focused_node
         self.focused_depth = focused_depth
-        self.offset_x = 0
-        self.offset_y = 0
 
         self.node_buttons: [(Node, NodeButton)] = []
         self.arrows: [(Node, Node, Arrow)] = []
         self.layout = Layout(self.digraph, self)
 
-    def move_all(self, dx, dy, zoom=False):
+    def move_all(self, dx, dy):
         for node, button in self.node_buttons:
-            button.move(dx, dy, zoom)
+            button.move(dx, dy)
 
-    def zoom_all(self, zoom_scale, scale_factor, cursor_pos):
-        cursor_x, cursor_y = cursor_pos
-        self.offset_x = cursor_x - (cursor_x - self.offset_x) * scale_factor
-        self.offset_y = cursor_y - (cursor_y - self.offset_y) * scale_factor
+    def zoom_all(self, zoom_lvl, scale_factor, cursor_pos):
 
         for node, button in self.node_buttons:
-            button.zoom(zoom_scale)
+            button.zoom(zoom_lvl, scale_factor, cursor_pos)
         for arrow in self.arrows:
-            arrow[2].zoom(zoom_scale)
-
-        self.move_all(self.offset_x, self.offset_y, zoom=True)
+            arrow[2].zoom(scale_factor)
 
     def change_colors(self, colors):
         self.colors = colors
@@ -52,7 +45,6 @@ class CanvasElementManager:
         diff_y = (720 / 2) - y
         for node, button in self.node_buttons:
             button.move(diff_x, diff_y)
-            button.reset_moved()
 
     def draw_node_buttons(self):
         for node, button in self.node_buttons:

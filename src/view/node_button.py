@@ -24,13 +24,8 @@ class NodeButton:
         self.last_click_time = 0
         self.last_click_pos = (0,0)
 
-        self.moved_x = 0
-        self.moved_y = 0
-
         self.unscaled_font_size = self.font_size
         self.unscaled_radius = radius
-        self.unscaled_x = x
-        self.unscaled_y = y
 
     def handle_click(self, event, time):
         if event.type == pg.MOUSEBUTTONDOWN:
@@ -59,24 +54,33 @@ class NodeButton:
         return int(font_size - 3)
 
     def draw(self):
-        pg.draw.circle(self.surface, self.color, (self.x, self.y), self.radius)
+        pg.draw.circle(self.surface, self.color, (self.x, self.y), int(self.radius))
         if self.radius > 10:
             text_surface = self.font.render(self.text, True, self.text_color)
             text_rect = text_surface.get_rect(center=(self.x, self.y))
             self.surface.blit(text_surface, text_rect)
 
-    def move(self, dx, dy, zoom=False):
-        self.x += dx
-        self.y += dy
-        if not zoom:
-            self.unscaled_x += dx
-            self.unscaled_y += dy
+    def set_position(self, x, y):
+        self.x = x
+        self.y = y
         self.draw()
 
-    def zoom(self, zoom_scale):
-        self.radius = int(self.unscaled_radius * zoom_scale)
-        self.x = int(self.unscaled_x * zoom_scale) + self.moved_x
-        self.y = int(self.unscaled_y * zoom_scale) + self.moved_y
+    def move(self, dx, dy):
+        self.x += dx
+        self.y += dy
+        self.draw()
+
+    def zoom(self, zoom_lvl, zoom_scale, zoom_center=(0, 0)):
+        print(f'1: zoom_lvl: {zoom_lvl}, zoom_scale: {zoom_scale}, radius: {self.radius}')
+        self.radius = self.radius * zoom_scale
+        print(f'2: zoom_lvl: {zoom_lvl}, zoom_scale: {zoom_scale}, radius: {self.radius}')
+        delta_x = self.x - zoom_center[0]
+        delta_y = self.y - zoom_center[1]
+        delta_x2 = zoom_scale * delta_x
+        delta_y2 = zoom_scale * delta_y
+        self.x = int(zoom_center[0] + delta_x2)
+        self.y = int(zoom_center[1] + delta_y2)
+
 
         new_font_size = int(self.unscaled_font_size * zoom_scale)
         if abs(new_font_size - self.font_size) >= 3:  # Update font only on significant changes
@@ -89,10 +93,6 @@ class NodeButton:
         self.color = colors['node']
         self.text_color = colors['text']
         self.draw()
-
-    def reset_moved(self):
-        self.moved_x = 0
-        self.moved_y = 0
 
     def information_dict(self):
         return self.node.get_attributes()

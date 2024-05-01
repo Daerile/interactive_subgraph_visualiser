@@ -114,8 +114,9 @@ class Layout:
 
     def create_full_elems(self):
         height = 600 + 3 * len(self.nodes) + len(self.edge_list)
-        width = height
+        width = 600 + 3 * len(self.nodes) + len(self.edge_list)
         pos = self.init_positions(height, width)
+        pprint.pprint(pos)
         self.fruchterman_reingold(width, height, self.nodes, self.edge_list, pos)
         self.cem.create_edges()
 
@@ -201,10 +202,11 @@ class Layout:
                     continue
 
                 pos = np.multiply(np.divide(disp, disp_norm), min(disp_norm, t))
+                pprint.pprint(pos)
 
                 pos = (min(max(nb.x + pos[0], 0), width), min(max(nb.y + pos[1], 0), height))
 
-                nb.x = pos[0] + 300 + shift
-                nb.y = pos[1]
+                nb.set_position(pos[0] + 300 + shift, pos[1])
+                print(f"node: {n.id}, pos: {nb.x}, {nb.y}")
             t *= 0.9
         print(f"done")
