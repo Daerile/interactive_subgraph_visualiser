@@ -129,6 +129,7 @@ class View:
                     self.ui_panel.handle_switch_edit_pressed()
                 if event.ui_element == self.ui_panel.search_box['return_button']:
                     self.ui_graph.handle_return_button_pressed()
+                    self.focus_changed(self.digraph)
                 if event.ui_element == self.ui_panel.infos[2]:
                     self.ui_panel.handle_popup_button_pressed()
                 if event.ui_element == self.ui_panel.search_box['focus_button']:
@@ -145,6 +146,11 @@ class View:
                         continue
                     self.digraph = new_digraph
                     self.digraph_loaded()
+                if event.ui_element == self.ui_header.save_button:
+                    export_digraph = self.ui_graph.get_focused_digraph()
+                    if export_digraph is None:
+                        continue
+                    self.view_model.handle_save_button_pressed(export_digraph)
             elif event.type == pgui.UI_TEXT_ENTRY_CHANGED:
                 if event.ui_element == self.ui_panel.search_box['search_text']:
                     self.ui_panel.handle_search_bar_changed()

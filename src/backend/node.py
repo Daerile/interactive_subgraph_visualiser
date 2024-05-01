@@ -39,9 +39,29 @@ class Node:
             'connections': self.connections
         }
 
+        self.focused_connections = None
+
+    def create_focused_connections(self, edges):
+        self.focused_connections = {}
+        for sub_id in self.sub_ids:
+            connections = []
+            for edge in edges:
+                if edge[0].id == self.id and edge[1].id in self.connections[sub_id]:
+                    connections.append(edge[1].id)
+            self.focused_connections.update({sub_id: connections})
+
     def append_diff_subid(self, node: pd.Series):
         self.sub_ids.append(node['alcsúcsid'])
         self.connections = add_connections(node, self.connections)
+
+    def focused_connections_to_csv(self):
+        if self.focused_connections is None:
+            return None
+        else:
+            res = ""
+            for key in self.focused_connections.keys():
+                res += f"{self.id};{key};{','.join(self.focused_connections[key])}\n"
+            return res
 
     def get_connected_nodes(self):
         return_set = set()
@@ -62,6 +82,8 @@ class Node:
         return self.sub_id
 
     def get_attributes(self):
+        if self.focused_connections is not None:
+            return {'connections': self.focused_connections}
         return self.attributes
 
     def get_other_attributes(self):

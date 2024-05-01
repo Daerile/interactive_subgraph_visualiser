@@ -1,7 +1,7 @@
 import pandas as pd
 import tkinter as tk
 from tkinter import filedialog
-
+from io import StringIO
 
 class Loader:
 
@@ -10,6 +10,22 @@ class Loader:
         if not hasattr(cls, 'root'):
             cls.root = tk.Tk()
             cls.root.withdraw()
+
+    @classmethod
+    def save_file(cls, data_string):
+        cls.init_root()
+        file_path = filedialog.asksaveasfilename(
+            filetypes=(('CSV files', '*.csv'),),
+            defaultextension=".csv"
+        )
+        if file_path:
+            # Assuming data_string is a CSV formatted string
+            df = pd.read_csv(StringIO(data_string), sep=';')
+            df.to_csv(file_path, index=False, sep=';')
+            print(f"File has been saved to: {file_path}")
+        else:
+            print("No file selected. File not saved.")
+
 
     @classmethod
     def load_file(cls):

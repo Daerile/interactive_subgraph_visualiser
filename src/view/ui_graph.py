@@ -48,7 +48,15 @@ class UIGraph:
         )
 
     def handle_return_button_pressed(self):
+        for node, button in self.get_node_buttons():
+            node.focused_connections = None
         self.focused_cem = None
+
+    def get_focused_digraph(self):
+        if self.focused_cem is not None:
+            return self.focused_cem.digraph
+        else:
+            return None
 
     def get_node_buttons(self):
         return self.get_current_cem().node_buttons

@@ -37,3 +37,8 @@ class ViewModel:
         print(focused_subgraph.nodes)
         return focused_subgraph
 
+    def handle_save_button_pressed(self, export_digraph: nx.DiGraph):
+        to_save = "csúcsid;alcsúcsid;kapcsolat\n"
+        for node in export_digraph.nodes:
+            to_save += node.focused_connections_to_csv()
+        Loader.save_file(to_save)

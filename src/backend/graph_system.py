@@ -51,5 +51,7 @@ class GraphSystem:
         backward_subgraph = backward_subgraph.reverse()
 
         full_subgraph = nx.compose(forward_subgraph, backward_subgraph)
+        for node in full_subgraph.nodes:
+            node.create_focused_connections(full_subgraph.edges)
         return full_subgraph
 
