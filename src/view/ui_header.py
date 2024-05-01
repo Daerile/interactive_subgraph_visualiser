@@ -41,14 +41,6 @@ class UIHeader:
             manager=self.manager,
             container=self.base_panel)
 
-        start_x += button_width + button_spacing
-
-        self.options_button = pgui.elements.UIButton(
-            relative_rect=pg.Rect(start_x, 5, button_width, button_height),
-            text='Options',
-            manager=self.manager,
-            container=self.base_panel)
-
     def create_base_panel(self):
         base_panel = pgui.elements.UIPanel(
             relative_rect=pg.Rect(0, 0, self.width, self.height),
