@@ -71,9 +71,7 @@ class NodeButton:
         self.draw()
 
     def zoom(self, zoom_lvl, zoom_scale, zoom_center=(0, 0)):
-        print(f'1: zoom_lvl: {zoom_lvl}, zoom_scale: {zoom_scale}, radius: {self.radius}')
         self.radius = self.radius * zoom_scale
-        print(f'2: zoom_lvl: {zoom_lvl}, zoom_scale: {zoom_scale}, radius: {self.radius}')
         delta_x = self.x - zoom_center[0]
         delta_y = self.y - zoom_center[1]
         delta_x2 = zoom_scale * delta_x
