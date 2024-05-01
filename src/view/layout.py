@@ -116,7 +116,6 @@ class Layout:
         height = 600 + 3 * len(self.nodes) + len(self.edge_list)
         width = 600 + 3 * len(self.nodes) + len(self.edge_list)
         pos = self.init_positions(height, width)
-        pprint.pprint(pos)
         self.fruchterman_reingold(width, height, self.nodes, self.edge_list, pos)
         self.cem.create_edges()
 
@@ -150,63 +149,43 @@ class Layout:
             k = (width * height / len(self.nodes)) ** 0.5
         k_sq = k ** 2
 
-        pos_values = np.array(list(pos.values()))
+        pos_array = np.array(list(pos.values()))
+        node_indices = {node.id: idx for idx, node in enumerate(nodes)}
 
         while t > 0.1:
             print(f"at step: {t}")
 
-            disps = np.zeros((len(nodes), 2))
+            disps = np.zeros_like(pos_array)
 
             # Repell
-            for i in range(len(nodes)):
-                n, nb = self.cem.node_buttons[i]
-                x, y = nb.x, nb.y
-
-                delta = np.subtract(pos_values, [x, y])
-                distance = np.linalg.norm(delta, axis=1)
-                mask = (distance > 0.05)
-                delta_norm = np.where(mask[:, np.newaxis], delta / distance[:, np.newaxis], np.zeros_like(delta))
-                disps += np.where(mask[:, np.newaxis], delta_norm * k_sq / distance[:, np.newaxis], np.zeros_like(delta))
+            # Calculate repulsive forces
+            delta = pos_array[:, np.newaxis, :] - pos_array[np.newaxis, :, :]
+            distance = np.linalg.norm(delta, axis=2)
+            safe_distance = np.where(distance > 0, distance, 1)  # Avoid division by zero
+            repulsive_force = k_sq / safe_distance ** (2.3)
+            displacement = np.sum(delta * (repulsive_force[:, :, np.newaxis]), axis=1)
 
             # Attract
-            for i, neighbours in enumerate(self.adjacency_list):
-                for j in neighbours:
-                    v = self.cem.node_buttons[i][1]
-                    u = self.cem.node_buttons[j][1]
-
-                    delta = np.subtract([v.x, v.y], [u.x, u.y])
-                    (delta_x, delta_y) = delta
-                    delta_norm = (delta_x ** 2 + delta_y ** 2) ** 0.5
-
-                    if delta_norm < 0.05:
-                        continue
-
-                    delta = np.divide(delta, delta_norm)
-
-                    disps[i] = np.subtract(disps[i], np.multiply(delta, k_sq / delta_norm))
-                    disps[j] = np.subtract(disps[i], np.multiply(delta, k_sq / delta_norm))
+            for i, j in edge_list:
+                idx_i = node_indices[i.id]
+                idx_j = node_indices[j.id]
+                delta = pos_array[idx_i] - pos_array[idx_j]
+                dist = np.linalg.norm(delta)
+                if dist > 0:
+                    attractive_force = (dist ** 2 / k) * (delta / dist)
+                    displacement[idx_i] -= attractive_force
+                    displacement[idx_j] += attractive_force
 
             # Cool
-            for i in range(len(nodes)):
-                n, nb = self.cem.node_buttons[i]
+            # Limit displacement
+            disp_norm = np.linalg.norm(displacement, axis=1)
+            limited_disp = (np.minimum(disp_norm, t) / disp_norm)[:, np.newaxis] * displacement
+            pos_array += limited_disp
+            pos_array = np.clip(pos_array, [0, 0], [width, height])
 
-                x, y = nb.x, nb.y
-                disp = disps[i]
-                (disp_x, disp_y) = disp
-                disp_norm = (disp_x ** 2 + disp_y ** 2) ** 0.5
-
-                if disp_norm < 0.05:
-                    continue
-
-                if min(disp_norm, t) == 0:
-                    continue
-
-                pos = np.multiply(np.divide(disp, disp_norm), min(disp_norm, t))
-                pprint.pprint(pos)
-
-                pos = (min(max(nb.x + pos[0], 0), width), min(max(nb.y + pos[1], 0), height))
-
-                nb.set_position(pos[0] + 300 + shift, pos[1])
-                print(f"node: {n.id}, pos: {nb.x}, {nb.y}")
             t *= 0.9
+
+        for i, pos in enumerate(pos_array):
+            n, nb = self.cem.node_buttons[i]
+            nb.set_position(pos[0], pos[1])
         print(f"done")
