@@ -46,6 +46,8 @@ class Node:
         for sub_id in self.sub_ids:
             connections = []
             for edge in edges:
+                if self.connections is None or sub_id not in self.connections.keys():
+                    continue
                 if edge[0].id == self.id and edge[1].id in self.connections[sub_id]:
                     connections.append(edge[1].id)
             self.focused_connections.update({sub_id: connections})

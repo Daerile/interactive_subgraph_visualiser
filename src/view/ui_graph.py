@@ -4,7 +4,7 @@ import pygame_gui as pgui
 from src.view.canvas_element_manager import CanvasElementManager
 
 class UIGraph:
-    def __init__(self, window, manager, width, height, node_radius, digraph, panel_width, header_height):
+    def __init__(self, window, manager, width, height, node_radius, digraph, panel_width, header_height, colors):
         self.window = window
         self.width = width
         self.height = height
@@ -14,11 +14,12 @@ class UIGraph:
         self.panel_width = panel_width
         self.header_height = header_height
         self.focused_cem = None
-        self.full_cem = CanvasElementManager(self.digraph, self.window, self.manager, self.node_radius)
+        self.colors = colors
+        self.full_cem = CanvasElementManager(self.digraph, self.window, self.manager, self.colors, self.node_radius)
 
     def digraph_loaded(self, digraph):
         self.digraph = digraph
-        self.full_cem = CanvasElementManager(self.digraph, self.window, self.manager, self.node_radius)
+        self.full_cem = CanvasElementManager(self.digraph, self.window, self.manager, self.colors, self.node_radius)
         self.focused_cem = None
 
     def move_all(self, dx, dy):
@@ -26,6 +27,12 @@ class UIGraph:
 
     def zoom_all(self, zoom_scale, scale_factor, cursor_pos):
         self.get_current_cem().zoom_all(zoom_scale, scale_factor, cursor_pos)
+
+    def change_colors(self, colors):
+        self.colors = colors
+        if self.focused_cem is not None:
+            self.focused_cem.change_colors(colors)
+        self.full_cem.change_colors(colors)
 
     def process_events(self, event):
         self.manager.process_events(event)
@@ -41,6 +48,7 @@ class UIGraph:
             focused_digraph,
             self.window,
             self.manager,
+            self.colors,
             self.node_radius,
             focused=True,
             focused_depth=focused_depth,

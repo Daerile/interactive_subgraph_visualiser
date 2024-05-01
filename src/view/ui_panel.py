@@ -61,9 +61,27 @@ class UIPanel:
             manager=self.manager,
             container=self.base_panel
         )
+
+        button_width = (self.width - 30) // 2  # Divides the available width into two, leaving some space between buttons
+
+        dark_mode_button = pgui.elements.UIButton(
+            relative_rect=pg.Rect(10, 10, button_width, 30),  # Positioned on the left
+            text='Toggle Dark Mode',
+            manager=self.manager,
+            container=edit_panel
+        )
+
+        light_mode_button = pgui.elements.UIButton(
+            relative_rect=pg.Rect(20 + button_width, 10, button_width, 30),  # Positioned on the right
+            text='Toggle Light Mode',
+            manager=self.manager,
+            container=edit_panel
+        )
         edit_panel.hide()
         items_map = {
-            'edit_panel': edit_panel
+            'edit_panel': edit_panel,
+            'dark_mode': dark_mode_button,
+            'light_mode': light_mode_button
         }
 
         return items_map
@@ -214,6 +232,26 @@ class UIPanel:
         )
 
         return information_box, id_label, show_popup_button
+
+    def handle_light_mode_pressed(self):
+        colors = {
+            'background': (240,240,240),
+            'text': pg.Color('white'),
+            'node': (0, 156, 235),
+            'edge': (136,136,136),
+        }
+
+        return colors
+
+    def handle_dark_mode_pressed(self):
+        colors = {
+            'background': (1, 28, 39),
+            'text': pg.Color('black'),
+            'node': (131, 119, 209),
+            'edge': (136,136,136),
+        }
+
+        return colors
 
     def handle_search_bar_changed(self):
         self.filter_nodes_by_search(self.search_box['search_text'].get_text())

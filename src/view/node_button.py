@@ -10,7 +10,7 @@ class NodeButton:
             cls.font_cache[size] = pg.font.Font(None, size)
         return cls.font_cache[size]
 
-    def __init__(self, surface, x, y, radius, node, color=(0, 0, 0)):
+    def __init__(self, surface, x, y, radius, node, color=(0, 92, 37), text_color=(255, 255, 255)):
         self.x = int(x)
         self.y = int(y)
         self.surface = surface
@@ -18,6 +18,7 @@ class NodeButton:
         self.color = color
         self.node = node
         self.text = node.get_id()
+        self.text_color = text_color
         self.font_size = self.calculate_font_size()
         self.font = pg.font.Font(None, self.font_size)  # Initialize font; None for default font
         self.last_click_time = 0
@@ -60,7 +61,7 @@ class NodeButton:
     def draw(self):
         pg.draw.circle(self.surface, self.color, (self.x, self.y), self.radius)
         if self.radius > 10:
-            text_surface = self.font.render(self.text, True, (255, 255, 255))
+            text_surface = self.font.render(self.text, True, self.text_color)
             text_rect = text_surface.get_rect(center=(self.x, self.y))
             self.surface.blit(text_surface, text_rect)
 
@@ -82,6 +83,11 @@ class NodeButton:
             self.font_size = new_font_size
             self.font = self.get_font(self.font_size)
 
+        self.draw()
+
+    def change_colors(self, colors):
+        self.color = colors['node']
+        self.text_color = colors['text']
         self.draw()
 
     def reset_moved(self):

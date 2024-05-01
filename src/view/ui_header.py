@@ -57,7 +57,6 @@ class UIHeader:
         self.load_button.kill()
         self.save_button.kill()
         self.help_button.kill()
-        self.options_button.kill()
         self.base_panel.kill()
 
     def process_events(self, event):

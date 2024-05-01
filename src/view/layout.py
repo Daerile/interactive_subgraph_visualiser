@@ -38,29 +38,32 @@ class Layout:
             self.create_focused_elems(digraph)
 
     def create_focused_elems(self, digraph: nx.DiGraph):
-        self.WIDTH = len(self.cem.digraph.nodes) * 150
-        self.HEIGHT = len(self.cem.digraph.nodes) * 150
+        self.WIDTH = len(self.cem.digraph.nodes) * 100 # 1000
+        self.HEIGHT = len(self.cem.digraph.nodes) * 100 # 1000
         center_pos = (int(self.WIDTH / 2), int(self.HEIGHT / 2))
         start_node = self.node_map[self.cem.focused_node.id]
         nodes = {self.node_map[node.id]: node for node in self.cem.digraph.nodes}
         pos_map = {self.node_map[node.id]: (0, 0) for node in self.cem.digraph.nodes}
         pos_map[self.node_map[self.cem.focused_node.id]] = center_pos
 
-
-
         # Create layers based on path length
+
         x_breakpoints_forwards = []
         x_breakpoints_backwards = []
         for i in range(1, self.cem.focused_depth + 1):
-            x_breakpoints_forwards.append(center_pos[0] + i * (center_pos[0] / self.cem.focused_depth))
-            x_breakpoints_backwards.append(center_pos[0] - i * (center_pos[0] / self.cem.focused_depth))
+            if i == 1:
+                x_breakpoints_forwards.append(center_pos[0] + 2*i * (center_pos[0] / self.cem.focused_depth + 1))
+                x_breakpoints_backwards.append(center_pos[0] - 2*i * (center_pos[0] / self.cem.focused_depth + 1))
+            else:
+                x_breakpoints_forwards.append(x_breakpoints_forwards[-1] + i * (center_pos[0] / self.cem.focused_depth + 3))
+                x_breakpoints_backwards.append(x_breakpoints_backwards[-1] - i * (center_pos[0] / self.cem.focused_depth + 3))
 
         self.create_from_layer(start_node, center_pos, x_breakpoints_forwards, x_breakpoints_backwards, forward=True)
         self.create_from_layer(start_node, center_pos, x_breakpoints_forwards, x_breakpoints_backwards, forward=False)
 
         child_num = len(self.adjacency_list[start_node]) + len(self.complement_adjacency_list[start_node])
         self.cem.create_node_button(center_pos[0], center_pos[1], self.cem.focused_node, child_num=child_num)
-        self.cem.create_edges(color=(150, 0, 0))
+        self.cem.create_edges()
         self.cem.center_around(center_pos[0], center_pos[1])
 
     def create_from_layer(self, start_node, center_pos, x_breakpoints_forwards, x_breakpoints_backwards, forward=True):
@@ -114,7 +117,7 @@ class Layout:
         width = height
         pos = self.init_positions(height, width)
         self.fruchterman_reingold(width, height, self.nodes, self.edge_list, pos)
-        self.cem.create_edges(color=(150, 0, 0))
+        self.cem.create_edges()
 
     def init_positions(self, height, width):
         pos = {node.id: (0, 0) for node in self.nodes}

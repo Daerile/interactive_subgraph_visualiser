@@ -31,6 +31,7 @@ class View:
         self.window = pg.display.set_mode((self.WIDTH, self.HEIGHT))
         self.manager = pgui.UIManager((self.WIDTH, self.HEIGHT))
         self.ui_panel = UIPanel(self.window, self.manager, self.PANEL_WIDTH, self.PANEL_HEIGHT, self.digraph, 2, self.HEADER_HEIGHT)
+        self.colors = self.ui_panel.handle_light_mode_pressed()
         self.ui_header = UIHeader(self.window, self.manager, self.HEADER_WIDTH, self.HEADER_HEIGHT, self.digraph)
         self.ui_graph = UIGraph(
             self.window,
@@ -41,6 +42,7 @@ class View:
             self.digraph,
             self.PANEL_WIDTH,
             self.HEADER_HEIGHT,
+            self.colors
         )
         pg.display.set_caption("Interactive Subgraph Visualiser")
         self.dragging = False
@@ -57,7 +59,7 @@ class View:
             time_delta = clock.tick(60) / 1000.0
             running = self.handle_events()
 
-            self.window.fill((255, 255, 255))
+            self.window.fill(self.colors['background'])
             self.ui_graph.draw_ui()
             self.ui_header.update(time_delta)
             self.ui_header.draw_ui()
@@ -123,6 +125,10 @@ class View:
                     self.ui_graph.move_all(dx, dy)
 
             elif event.type == pgui.UI_BUTTON_PRESSED:
+                if event.ui_element == self.ui_panel.edit_box['dark_mode']:
+                    self.dark_mode_pressed()
+                if event.ui_element == self.ui_panel.edit_box['light_mode']:
+                    self.light_mode_pressed()
                 if event.ui_element == self.ui_panel.switch_panel['search']:
                     self.ui_panel.handle_switch_search_pressed()
                 if event.ui_element == self.ui_panel.switch_panel['edit']:
@@ -158,6 +164,16 @@ class View:
                 if event.ui_element == self.ui_panel.popup:
                     self.ui_panel.popup = None
         return running
+
+    def light_mode_pressed(self):
+        colors = self.ui_panel.handle_light_mode_pressed()
+        self.colors = colors
+        self.ui_graph.change_colors(colors)
+
+    def dark_mode_pressed(self):
+        colors = self.ui_panel.handle_dark_mode_pressed()
+        self.colors = colors
+        self.ui_graph.change_colors(colors)
 
     def node_button_clicked(self, button: NodeButton):
         self.ui_panel.update_information_box(button.node)

@@ -8,11 +8,12 @@ from src.view.layout import Layout
 
 
 class CanvasElementManager:
-    def __init__(self, digraph, window, manager, node_radius=15, focused=False, focused_depth=None, focused_node=None):
+    def __init__(self, digraph, window, manager, colors, node_radius=15, focused=False, focused_depth=None, focused_node=None):
         self.digraph = digraph
         self.window = window
         self.manager = manager
         self.NODE_RADIUS = node_radius
+        self.colors = colors
         self.focused = focused
         self.focused_node = focused_node
         self.focused_depth = focused_depth
@@ -39,6 +40,13 @@ class CanvasElementManager:
 
         self.move_all(self.offset_x, self.offset_y, zoom=True)
 
+    def change_colors(self, colors):
+        self.colors = colors
+        for node, button in self.node_buttons:
+            button.change_colors(colors)
+        for arrow in self.arrows:
+            arrow[2].change_color(colors['edge'])
+
     def center_around(self, x, y):
         diff_x = ((1280 + 300) / 2) - x
         diff_y = (720 / 2) - y
@@ -54,11 +62,11 @@ class CanvasElementManager:
         for arrow in self.arrows:
             arrow[2].draw()
 
-    def create_node_button(self, x, y, node, color=(0, 0, 0), child_num=0):
-        button = NodeButton(self.window, x, y, self.NODE_RADIUS + (child_num * 5), node, color)
+    def create_node_button(self, x, y, node, child_num=0):
+        button = NodeButton(self.window, x, y, self.NODE_RADIUS + (child_num * 5), node, self.colors['node'], self.colors['text'])
         self.node_buttons.append((node, button))
 
-    def create_edges(self, color=(0, 0, 0)):
+    def create_edges(self):
         for edge in self.digraph.edges():
             start_button, end_button = None, None
             for node, button in self.node_buttons:
@@ -67,7 +75,7 @@ class CanvasElementManager:
                 if node == edge[1]:
                     end_button = button
             if start_button is not None and end_button is not None:
-                self.create_arrow(color, start_button, end_button, edge[0], edge[1])
+                self.create_arrow(self.colors['edge'], start_button, end_button, edge[0], edge[1])
 
     def create_arrow(self, color, start_button, end_button, node_start, node_end, arrow_size=2, arrowhead_size=3):
         arrow = Arrow(self.window, start_button, end_button, color, arrow_size, arrowhead_size)
