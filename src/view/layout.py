@@ -116,11 +116,11 @@ class Layout:
         height = 600 + 3 * len(self.nodes) + len(self.edge_list)
         width = 600 + 3 * len(self.nodes) + len(self.edge_list)
         pos = self.init_positions(height, width)
-        self.fruchterman_reingold(width, height, self.nodes, self.edge_list, pos)
+        self.fruchterman_reingold(width, height, self.edge_list, pos)
         self.cem.create_edges()
 
     def init_positions(self, height, width):
-        pos = {node.id: (0, 0) for node in self.nodes}
+        pos = {}
         rest_height = height / 2
 
         # DAG -> BFS TODO
@@ -131,26 +131,25 @@ class Layout:
             ):
                 x = random() * width
                 y = random() * rest_height
-                pos[node.id] = (x, y)
                 child_num = len(self.adjacency_list[self.node_map[node.id]]) + len(self.complement_adjacency_list[self.node_map[node.id]])
                 self.cem.create_node_button(x, y, node, child_num=child_num)
                 continue
 
             x = random() * width
             y = random() * rest_height + rest_height
-            pos[node.id] = (x, y)
+            pos[node] = (x, y)
             child_num = len(self.adjacency_list[self.node_map[node.id]]) + len(
                 self.complement_adjacency_list[self.node_map[node.id]])
             self.cem.create_node_button(x, y, node, child_num=child_num)
         return pos
 
-    def fruchterman_reingold(self, width, height, nodes, edge_list, pos, k=None, t=1000, shift=0, focused=False):
+    def fruchterman_reingold(self, width, height, edge_list, pos, k=None, t=1000, shift=0, focused=False):
         if k is None:
-            k = (width * height / len(self.nodes)) ** 0.5
+            k = (width * height / len(pos.keys())) ** 0.5
         k_sq = k ** 2
 
         pos_array = np.array(list(pos.values()))
-        node_indices = {node.id: idx for idx, node in enumerate(nodes)}
+        node_indices = {node.id: idx for idx, node in enumerate(pos.keys())}
 
         while t > 0.1:
             print(f"at step: {t}")
@@ -162,11 +161,13 @@ class Layout:
             delta = pos_array[:, np.newaxis, :] - pos_array[np.newaxis, :, :]
             distance = np.linalg.norm(delta, axis=2)
             safe_distance = np.where(distance > 0, distance, 1)  # Avoid division by zero
-            repulsive_force = k_sq / safe_distance ** (2.3)
+            repulsive_force = k_sq / safe_distance ** 3
             displacement = np.sum(delta * (repulsive_force[:, :, np.newaxis]), axis=1)
 
             # Attract
             for i, j in edge_list:
+                if i not in pos.keys() or j not in pos.keys():
+                    continue
                 idx_i = node_indices[i.id]
                 idx_j = node_indices[j.id]
                 delta = pos_array[idx_i] - pos_array[idx_j]
@@ -185,7 +186,10 @@ class Layout:
 
             t *= 0.9
 
-        for i, pos in enumerate(pos_array):
-            n, nb = self.cem.node_buttons[i]
-            nb.set_position(pos[0], pos[1])
+        pos_key_list = [node for node in pos.keys()]
+        for i, pos_end in enumerate(pos_array):
+            for n, nb in self.cem.node_buttons:
+                if n == pos_key_list[i]:
+                    nb.set_position(pos_end[0], height+pos_end[1])
+                    break
         print(f"done")
