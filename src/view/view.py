@@ -85,6 +85,7 @@ class View:
 
             if event.type == pg.MOUSEBUTTONDOWN:
                 was_button = False
+                was_edge = False
                 for node, button in self.ui_graph.get_node_buttons():
                     res = button.handle_click(event, time.time())
                     if res > 0 and self.ui_panel.popup is None and event.button == 1:
@@ -93,6 +94,13 @@ class View:
                         self.res = res
                         break
                 if not was_button:
+                    for arrow in self.ui_graph.get_arrows():
+                        res = arrow[2].handle_click(event)
+                        if res == 1:
+                            self.edge_clicked(arrow)
+                            was_edge = True
+                            break
+                if not was_button and not was_edge:
                     if event.button == 1:
                         mouse_x, mouse_y = event.pos
                         if self.ui_panel.popup is None and mouse_x > self.PANEL_WIDTH and mouse_y > self.HEADER_HEIGHT:
@@ -175,7 +183,8 @@ class View:
                     self.view_model.handle_save_button_pressed(export_digraph)
             elif event.type == pgui.UI_TEXT_ENTRY_CHANGED:
                 if event.ui_element == self.ui_panel.search_box['search_text']:
-                    self.ui_panel.handle_search_bar_changed()
+                    filtered_ids = self.ui_panel.handle_search_bar_changed()
+                    self.ui_graph.handle_searched_nodes_changed(filtered_ids)
             elif event.type == pgui.UI_WINDOW_CLOSE:
                 if event.ui_element == self.ui_panel.popup:
                     self.ui_panel.popup = None
@@ -193,6 +202,11 @@ class View:
 
     def node_button_clicked(self, button: NodeButton):
         self.ui_panel.update_information_box(button.node)
+        self.ui_graph.handle_node_selected(button)
+
+    def edge_clicked(self, arrow):
+        self.ui_panel.update_information_box(arrow, edge=True)
+        self.ui_graph.handle_edge_selected(arrow)
 
     def focus_changed(self, focused_digraph):
         self.zoom_lvl = 0

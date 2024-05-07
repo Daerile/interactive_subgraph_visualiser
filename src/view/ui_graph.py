@@ -60,6 +60,21 @@ class UIGraph:
             node.focused_connections = None
         self.focused_cem = None
 
+    def handle_node_selected(self, button):
+        if self.focused_cem is not None:
+            self.focused_cem.selected_node_changed(button)
+        self.full_cem.selected_node_changed(button)
+
+    def handle_edge_selected(self, arrow):
+        if self.focused_cem is not None:
+            self.focused_cem.selected_edge_changed(arrow)
+        self.full_cem.selected_edge_changed(arrow)
+
+    def handle_searched_nodes_changed(self, filtered_ids):
+        if self.focused_cem is not None:
+            self.focused_cem.searched_nodes_changed(filtered_ids)
+        self.full_cem.searched_nodes_changed(filtered_ids)
+
     def get_focused_digraph(self):
         if self.focused_cem is not None:
             return self.focused_cem.digraph

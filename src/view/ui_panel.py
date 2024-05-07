@@ -13,6 +13,7 @@ class UIPanel:
         self.focused_depth = focused_depth
         self.header_height = header_height
         self.selected_node = None
+        self.selected_edge = None
         self.selected_mode = 'search'
         self.base_panel = self.create_base_panel()
         self.switch_panel = self.create_switch_panel()
@@ -77,6 +78,7 @@ class UIPanel:
             manager=self.manager,
             container=edit_panel
         )
+
         edit_panel.hide()
         items_map = {
             'edit_panel': edit_panel,
@@ -193,6 +195,9 @@ class UIPanel:
                 container=self.search_box['search_panel'],
                 update=True
             )
+            if not filtered_ids:
+                return None
+            return filtered_ids
         else:
             self.search_box['dropdown'] = self.create_drop_down_menu(
                 options_list=all_node_ids,
@@ -202,6 +207,7 @@ class UIPanel:
                 container=self.search_box['search_panel'],
                 update=True
             )
+            return None
 
     def create_information_box(self):
         information_box = pgui.elements.UIPanel(
@@ -238,7 +244,10 @@ class UIPanel:
             'background': (240,240,240),
             'text': pg.Color('white'),
             'node': (0, 156, 235),
-            'edge': (136,136,136),
+            'edge': (136, 136, 136),
+            'selected_node': (220, 247, 99),
+            'searched_node': (255, 155, 113),
+            'selected_edge': (0, 0, 0)
         }
 
         return colors
@@ -249,12 +258,15 @@ class UIPanel:
             'text': pg.Color('black'),
             'node': (131, 119, 209),
             'edge': (136,136,136),
+            'selected_node': (252, 163, 17),
+            'searched_node': (228, 187, 151),
+            'selected_edge': (255, 255, 255)
         }
 
         return colors
 
     def handle_search_bar_changed(self):
-        self.filter_nodes_by_search(self.search_box['search_text'].get_text())
+        return self.filter_nodes_by_search(self.search_box['search_text'].get_text())
 
     def handle_focus_button_pressed(self):
         selected_id = self.search_box['dropdown'].selected_option[0]
@@ -284,7 +296,7 @@ class UIPanel:
         self.popup = pgui.elements.UIWindow(
             rect=pg.Rect(100, 100, 400, 400),  # Size of the window
             manager=self.manager,
-            window_display_title='Node Information',
+            window_display_title='Additional Information',
             element_id='popup_window'
         )
 
@@ -297,7 +309,7 @@ class UIPanel:
 
         y_offset = 0
 
-        if self.selected_node is None:
+        if self.selected_node is None and self.selected_edge is None:
             text = '<p>No node selected!</p>'
             popup_text = pgui.elements.UITextBox(
                 relative_rect=pg.Rect(0, y_offset, 360, 30),  # Adjust width to fit within scrolling container
@@ -306,7 +318,7 @@ class UIPanel:
                 container=scrolling_container
             )
             y_offset += 35
-        else:
+        elif self.selected_node is not None:
             attributes = self.selected_node.get_attributes()
             if not attributes:
                 text = '<p>No attributes!</p>'
@@ -355,15 +367,30 @@ class UIPanel:
                             container=scrolling_container
                         )
                         y_offset += 35
+        else:
+            text = f'<p>Edge: {self.selected_edge[0].id} - {self.selected_edge[1].id}</p>'
+            popup_text = pgui.elements.UITextBox(
+                relative_rect=pg.Rect(0, y_offset, 360, 30),
+                html_text=text,
+                manager=self.manager,
+                container=scrolling_container
+            )
+            y_offset += 35
 
         # Set the dimensions of the scrollable area based on content height
         scrolling_container.set_scrollable_area_dimensions((360, y_offset))
 
         self.popup.set_blocking(True)
 
-    def update_information_box(self, node):
-        self.selected_node = node
-        self.infos[1].set_text(f'ID: {node.get_id()}')
+    def update_information_box(self, selected_item, edge=False):
+        if edge:
+            self.infos[1].set_text(f'Edge: {selected_item[0].id} - {selected_item[1].id}')
+            self.selected_node = None
+            self.selected_edge = selected_item
+        else:
+            self.selected_node = selected_item
+            self.infos[1].set_text(f'ID: {selected_item.get_id()}')
+            self.selected_edge = None
 
     def create_base_panel(self):
         base_panel = pgui.elements.UIPanel(
