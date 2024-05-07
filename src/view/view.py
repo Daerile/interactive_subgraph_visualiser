@@ -231,5 +231,4 @@ class View:
         self.ui_header.update(0)
         self.ui_header.draw_ui()
         pg.display.update()
-        sleep(0.1)
         self.run()

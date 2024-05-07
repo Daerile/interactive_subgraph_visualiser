@@ -20,6 +20,7 @@ class UIPanel:
         self.infos = self.create_information_box()
         self.search_box = self.create_search_box()
         self.edit_box = self.create_edit_box()
+        self.action_information = self.create_action_information_box()
         self.popup = None
 
     def create_switch_panel(self):
@@ -57,7 +58,7 @@ class UIPanel:
     def create_edit_box(self):
         starting_height = self.switch_panel['panel'].get_relative_rect().height
         edit_panel = pgui.elements.UIPanel(
-            relative_rect=pg.Rect(0, starting_height, self.width, self.height / 2),
+            relative_rect=pg.Rect(0, starting_height, self.width, self.height / 2 + 50),
             starting_height=starting_height,
             manager=self.manager,
             container=self.base_panel
@@ -92,7 +93,7 @@ class UIPanel:
         starting_height = self.switch_panel['panel'].get_relative_rect().height
         # Panel to contain the search elements
         search_panel = pgui.elements.UIPanel(
-            relative_rect=pg.Rect(0, starting_height, self.width, self.height / 2),
+            relative_rect=pg.Rect(0, starting_height, self.width, self.height / 2 + 50),
             starting_height=starting_height,
             manager=self.manager,
             container=self.base_panel
@@ -239,7 +240,31 @@ class UIPanel:
 
         return information_box, id_label, show_popup_button
 
+    def create_action_information_box(self):
+        # Determine the height position based on the previous element, e.g., search box
+        starting_height = self.switch_panel['panel'].get_relative_rect().height + self.search_box[
+            'search_panel'].get_relative_rect().height
+
+        # Create a panel for action information messages
+        action_panel = pgui.elements.UIPanel(
+            relative_rect=pg.Rect(0, starting_height - 5, self.width, 82),  # Adjust the height as needed
+            manager=self.manager,
+            container=self.base_panel
+        )
+
+        # Label for displaying messages
+        action_label = pgui.elements.UILabel(
+            relative_rect=pg.Rect(10, 10, self.width - 20, 30),
+            text="No actions or errors",
+            manager=self.manager,
+            container=action_panel
+        )
+
+        return {'action_panel': action_panel, 'action_label': action_label}
+
+
     def handle_light_mode_pressed(self):
+        self.set_action_label('Theme set to light mode')
         colors = {
             'background': (240,240,240),
             'text': pg.Color('white'),
@@ -253,6 +278,7 @@ class UIPanel:
         return colors
 
     def handle_dark_mode_pressed(self):
+        self.set_action_label('Theme set to dark mode')
         colors = {
             'background': (1, 28, 39),
             'text': pg.Color('black'),
@@ -271,14 +297,17 @@ class UIPanel:
     def handle_focus_button_pressed(self):
         selected_id = self.search_box['dropdown'].selected_option[0]
         if selected_id == 'No results found' or selected_id == 'None':
+            self.set_action_label('Cannot set focus to no node in dropdown!')
             return
         for node in self.digraph.nodes():
             if node.id == selected_id:
+                self.set_action_label(f'Focus set to {node.id}')
                 self.update_information_box(node)
                 break
 
     def handle_switch_search_pressed(self):
         if self.selected_mode == 'search':
+            self.set_action_label('Already in search mode!')
             return
         self.selected_mode = 'search'
         self.search_box['search_panel'].show()
@@ -286,6 +315,7 @@ class UIPanel:
 
     def handle_switch_edit_pressed(self):
         if self.selected_mode == 'edit':
+            self.set_action_label('Already in edit mode!')
             return
         self.selected_mode = 'edit'
         self.search_box['search_panel'].hide()
@@ -403,6 +433,9 @@ class UIPanel:
                      'bottom': 'bottom'}
         )
         return base_panel
+
+    def set_action_label(self, text):
+        self.action_information['action_label'].set_text(text)
 
     def killall(self):
         for element in self.infos:
