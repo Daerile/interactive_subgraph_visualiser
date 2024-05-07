@@ -193,6 +193,9 @@ class UIPanel:
                 container=self.search_box['search_panel'],
                 update=True
             )
+            if not filtered_ids:
+                return None
+            return filtered_ids
         else:
             self.search_box['dropdown'] = self.create_drop_down_menu(
                 options_list=all_node_ids,
@@ -202,6 +205,7 @@ class UIPanel:
                 container=self.search_box['search_panel'],
                 update=True
             )
+            return None
 
     def create_information_box(self):
         information_box = pgui.elements.UIPanel(
@@ -238,7 +242,9 @@ class UIPanel:
             'background': (240,240,240),
             'text': pg.Color('white'),
             'node': (0, 156, 235),
-            'edge': (136,136,136),
+            'edge': (136, 136, 136),
+            'selected_node': (220, 247, 99),
+            'searched_node': (255, 155, 113)
         }
 
         return colors
@@ -249,12 +255,14 @@ class UIPanel:
             'text': pg.Color('black'),
             'node': (131, 119, 209),
             'edge': (136,136,136),
+            'selected_node': (252, 163, 17),
+            'searched_node': (228, 187, 151)
         }
 
         return colors
 
     def handle_search_bar_changed(self):
-        self.filter_nodes_by_search(self.search_box['search_text'].get_text())
+        return self.filter_nodes_by_search(self.search_box['search_text'].get_text())
 
     def handle_focus_button_pressed(self):
         selected_id = self.search_box['dropdown'].selected_option[0]

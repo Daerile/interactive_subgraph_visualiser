@@ -87,8 +87,13 @@ class NodeButton:
 
         self.draw()
 
-    def change_colors(self, colors):
-        self.color = colors['node']
+    def change_colors(self, colors, selected=False, searched=False):
+        if selected:
+            self.color = colors['selected_node']
+        elif searched:
+            self.color = colors['searched_node']
+        else:
+            self.color = colors['node']
         self.text_color = colors['text']
         self.draw()
 

@@ -175,7 +175,8 @@ class View:
                     self.view_model.handle_save_button_pressed(export_digraph)
             elif event.type == pgui.UI_TEXT_ENTRY_CHANGED:
                 if event.ui_element == self.ui_panel.search_box['search_text']:
-                    self.ui_panel.handle_search_bar_changed()
+                    filtered_ids = self.ui_panel.handle_search_bar_changed()
+                    self.ui_graph.handle_searched_nodes_changed(filtered_ids)
             elif event.type == pgui.UI_WINDOW_CLOSE:
                 if event.ui_element == self.ui_panel.popup:
                     self.ui_panel.popup = None
@@ -193,6 +194,7 @@ class View:
 
     def node_button_clicked(self, button: NodeButton):
         self.ui_panel.update_information_box(button.node)
+        self.ui_graph.handle_node_selected(button)
 
     def focus_changed(self, focused_digraph):
         self.zoom_lvl = 0

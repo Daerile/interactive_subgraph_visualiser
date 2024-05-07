@@ -17,6 +17,7 @@ class CanvasElementManager:
         self.focused = focused
         self.focused_node = focused_node
         self.focused_depth = focused_depth
+        self.selected_button = None
 
         self.node_buttons: [(Node, NodeButton)] = []
         self.arrows: [(Node, Node, Arrow)] = []
@@ -39,6 +40,33 @@ class CanvasElementManager:
             button.change_colors(colors)
         for arrow in self.arrows:
             arrow[2].change_color(colors['edge'])
+
+    def selected_node_changed(self, selected_button):
+        if selected_button == self.selected_button:
+            return
+        for node, button in self.node_buttons:
+            if button == selected_button:
+                button.change_colors(self.colors, selected=True)
+            if self.selected_button is not None and button == self.selected_button:
+                button.change_colors(self.colors)
+        self.selected_button = selected_button
+
+    def searched_nodes_changed(self, filtered_ids):
+        if filtered_ids is None:
+            for node, button in self.node_buttons:
+                if button != self.selected_button:
+                    button.change_colors(self.colors)
+                else:
+                    button.change_colors(self.colors, selected=True)
+        else:
+            for node, button in self.node_buttons:
+                if button == self.selected_button:
+                    button.change_colors(self.colors, selected=True)
+                    continue
+                if node.id in filtered_ids:
+                    button.change_colors(self.colors, searched=True)
+                else:
+                    button.change_colors(self.colors)
 
     def center_around(self, x, y):
         diff_x = ((1280 + 300) / 2) - x
