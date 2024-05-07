@@ -190,6 +190,6 @@ class Layout:
         for i, pos_end in enumerate(pos_array):
             for n, nb in self.cem.node_buttons:
                 if n == pos_key_list[i]:
-                    nb.set_position(pos_end[0], height+pos_end[1])
+                    nb.set_position(pos_end[0], pos_end[1])
                     break
         print(f"done")
