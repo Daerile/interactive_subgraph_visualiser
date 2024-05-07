@@ -51,6 +51,7 @@ class CanvasElementManager:
             if self.selected_button is not None and button == self.selected_button:
                 button.change_colors(self.colors)
         self.selected_button = selected_button
+        self.unset_selected_edge()
 
     def selected_edge_changed(self, selected_arrow):
         if selected_arrow == self.selected_arrow:
@@ -61,6 +62,7 @@ class CanvasElementManager:
             if self.selected_arrow is not None and arrow == self.selected_arrow:
                 arrow[2].change_color(self.colors['edge'])
         self.selected_arrow = selected_arrow
+        self.unset_selected_node()
 
 
     def searched_nodes_changed(self, filtered_ids):
@@ -79,6 +81,16 @@ class CanvasElementManager:
                     button.change_colors(self.colors, searched=True)
                 else:
                     button.change_colors(self.colors)
+
+    def unset_selected_node(self):
+        if self.selected_button is not None:
+            self.selected_button.change_colors(self.colors)
+            self.selected_button = None
+
+    def unset_selected_edge(self):
+        if self.selected_arrow is not None:
+            self.selected_arrow[2].change_color(self.colors['edge'])
+            self.selected_arrow = None
 
     def center_around(self, x, y):
         diff_x = ((1280 + 300) / 2) - x
