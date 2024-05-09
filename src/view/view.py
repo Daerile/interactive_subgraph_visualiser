@@ -153,6 +153,8 @@ class View:
                     self.dark_mode_pressed()
                 if event.ui_element == self.ui_panel.edit_box['light_mode']:
                     self.light_mode_pressed()
+                if event.ui_element == self.ui_panel.edit_box['personal_mode']:
+                    self.personal_mode_pressed()
                 if event.ui_element == self.ui_panel.switch_panel['search']:
                     self.ui_panel.handle_switch_search_pressed()
                 if event.ui_element == self.ui_panel.switch_panel['edit']:
@@ -200,6 +202,11 @@ class View:
         self.colors = colors
         self.ui_graph.change_colors(colors)
 
+    def personal_mode_pressed(self):
+        colors = self.ui_panel.handle_personal_mode_pressed()
+        self.colors = colors
+        self.ui_graph.change_colors(colors)
+
     def node_button_clicked(self, button: NodeButton):
         self.ui_panel.update_information_box(button.node)
         self.ui_graph.handle_node_selected(button)
@@ -212,7 +219,7 @@ class View:
         self.zoom_lvl = 0
         focused_depth = self.ui_panel.get_focused_depth()
         self.ui_panel.killall()
-        self.ui_panel = UIPanel(self.window, self.manager, self.PANEL_WIDTH, self.PANEL_HEIGHT, focused_digraph, focused_depth, self.HEADER_HEIGHT)
+        self.ui_panel = UIPanel(self.window, self.manager, self.PANEL_WIDTH, self.PANEL_HEIGHT, focused_digraph, focused_depth, self.HEADER_HEIGHT, colors=self.colors)
         self.ui_panel.update(0)
         self.ui_panel.draw_ui()
 
@@ -220,7 +227,7 @@ class View:
         self.zoom_lvl = 0
         self.ui_panel.killall()
         self.ui_header.killall()
-        self.ui_panel = UIPanel(self.window, self.manager, self.PANEL_WIDTH, self.PANEL_HEIGHT, self.digraph, 2, self.HEADER_HEIGHT)
+        self.ui_panel = UIPanel(self.window, self.manager, self.PANEL_WIDTH, self.PANEL_HEIGHT, self.digraph, 2, self.HEADER_HEIGHT, colors=self.colors)
         self.ui_graph.digraph_loaded(self.digraph)
         self.ui_header = UIHeader(self.window, self.manager, self.HEADER_WIDTH, self.HEADER_HEIGHT, self.digraph)
 

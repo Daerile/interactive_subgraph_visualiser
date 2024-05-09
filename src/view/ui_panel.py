@@ -3,7 +3,19 @@ import pygame_gui as pgui
 
 
 class UIPanel:
-    def __init__(self, window, manager, width, height, digraph, focused_depth, header_height):
+    def __init__(self, window, manager, width, height, digraph, focused_depth, header_height, colors=None):
+        if colors is not None:
+            self.colors = colors
+        else:
+            self.colors = {
+                'background': (240, 240, 240),
+                'text': pg.Color('black'),
+                'node': (0, 156, 235),
+                'edge': (136, 136, 136),
+                'selected_node': (220, 247, 99),
+                'searched_node': (255, 155, 113),
+                'selected_edge': (0, 0, 0)
+            }
         self.results_panel = None
         self.window = window
         self.width = width
@@ -42,7 +54,7 @@ class UIPanel:
 
         switch_edit = pgui.elements.UIButton(
             relative_rect=pg.Rect(20 + button_width, 10, button_width, 30),
-            text='Edit',
+            text='Edit colors',
             manager=self.manager,
             container=switch_panel
         )
@@ -80,11 +92,54 @@ class UIPanel:
             container=edit_panel
         )
 
+        needed_colors = ['background', 'text', 'node', 'edge', 'selected_node', 'searched_node', 'selected_edge']
+        color_dict = {}
+        for color in needed_colors:
+            color_label = pgui.elements.UILabel(
+                relative_rect=pg.Rect(10, 50 + 40 * needed_colors.index(color), 100, 30),
+                text=f'{color.capitalize()}:',
+                manager=self.manager,
+                container=edit_panel
+            )
+            color_text_red = pgui.elements.UITextEntryLine(
+                relative_rect=pg.Rect(120, 50 + 40 * needed_colors.index(color), 50, 30),
+                manager=self.manager,
+                initial_text=str(self.colors[color][0]),
+                container=edit_panel
+            )
+            color_text_green = pgui.elements.UITextEntryLine(
+                relative_rect=pg.Rect(180, 50 + 40 * needed_colors.index(color), 50, 30),
+                manager=self.manager,
+                initial_text=str(self.colors[color][1]),
+                container=edit_panel
+            )
+            color_text_blue = pgui.elements.UITextEntryLine(
+                relative_rect=pg.Rect(240, 50 + 40 * needed_colors.index(color), 50, 30),
+                manager=self.manager,
+                initial_text=str(self.colors[color][2]),
+                container=edit_panel
+            )
+
+            color_dict[color] = {
+                'red': color_text_red,
+                'green': color_text_green,
+                'blue': color_text_blue
+            }
+
+        personal_colors_button = pgui.elements.UIButton(
+            relative_rect=pg.Rect(10, 50 + 40 * len(needed_colors), self.width - 20, 30),
+            text='Set Colors',
+            manager=self.manager,
+            container=edit_panel
+        )
+
         edit_panel.hide()
         items_map = {
             'edit_panel': edit_panel,
             'dark_mode': dark_mode_button,
-            'light_mode': light_mode_button
+            'light_mode': light_mode_button,
+            'colors': color_dict,
+            'personal_mode': personal_colors_button
         }
 
         return items_map
@@ -265,7 +320,7 @@ class UIPanel:
 
     def handle_light_mode_pressed(self):
         self.set_action_label('Theme set to light mode')
-        colors = {
+        self.colors = {
             'background': (240,240,240),
             'text': pg.Color('white'),
             'node': (0, 156, 235),
@@ -274,12 +329,13 @@ class UIPanel:
             'searched_node': (255, 155, 113),
             'selected_edge': (0, 0, 0)
         }
+        self.change_color_text_entry_texts()
 
-        return colors
+        return self.colors
 
     def handle_dark_mode_pressed(self):
         self.set_action_label('Theme set to dark mode')
-        colors = {
+        self.colors = {
             'background': (1, 28, 39),
             'text': pg.Color('black'),
             'node': (131, 119, 209),
@@ -288,8 +344,24 @@ class UIPanel:
             'searched_node': (228, 187, 151),
             'selected_edge': (255, 255, 255)
         }
+        self.change_color_text_entry_texts()
 
-        return colors
+        return self.colors
+
+    def handle_personal_mode_pressed(self):
+        for color, text_entries in self.edit_box['colors'].items():
+            red = int(text_entries['red'].get_text())
+            green = int(text_entries['green'].get_text())
+            blue = int(text_entries['blue'].get_text())
+            self.colors[color] = (red, green, blue)
+        self.set_action_label('Personal colors set!')
+        return self.colors
+
+    def change_color_text_entry_texts(self):
+        for color, text_entries in self.edit_box['colors'].items():
+            text_entries['red'].set_text(str(self.colors[color][0]))
+            text_entries['green'].set_text(str(self.colors[color][1]))
+            text_entries['blue'].set_text(str(self.colors[color][2]))
 
     def handle_search_bar_changed(self):
         return self.filter_nodes_by_search(self.search_box['search_text'].get_text())
