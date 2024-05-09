@@ -21,6 +21,7 @@ class UIGraph:
         self.digraph = digraph
         self.full_cem = CanvasElementManager(self.digraph, self.window, self.manager, self.colors, self.node_radius)
         self.focused_cem = None
+        self.full_cem.center_around(0, 0, full_cem=True)
 
     def move_all(self, dx, dy):
         self.get_current_cem().move_all(dx, dy)

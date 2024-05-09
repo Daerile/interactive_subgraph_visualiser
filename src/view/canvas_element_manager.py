@@ -92,11 +92,18 @@ class CanvasElementManager:
             self.selected_arrow[2].change_color(self.colors['edge'])
             self.selected_arrow = None
 
-    def center_around(self, x, y):
-        diff_x = ((1280 + 300) / 2) - x
-        diff_y = (720 / 2) - y
-        for node, button in self.node_buttons:
-            button.move(diff_x, diff_y)
+    def center_around(self, x, y, full_cem=False):
+        if full_cem:
+            center_node = self.node_buttons[0][1]
+            diff_x = ((1280 + 300) / 2) - center_node.x
+            diff_y = (720 / 2) - center_node.y
+            for node, button in self.node_buttons:
+                button.move(diff_x, diff_y)
+        else:
+            diff_x = ((1280 + 300) / 2) - x
+            diff_y = (720 / 2) - y
+            for node, button in self.node_buttons:
+                button.move(diff_x, diff_y)
 
     def draw_node_buttons(self):
         for node, button in self.node_buttons:

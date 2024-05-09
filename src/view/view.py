@@ -79,7 +79,6 @@ class View:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 running = False
-
             self.ui_panel.process_events(event)
             self.ui_header.process_events(event)
 
