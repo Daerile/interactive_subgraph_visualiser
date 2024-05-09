@@ -8,7 +8,7 @@ from src.view.layout import Layout
 
 
 class CanvasElementManager:
-    def __init__(self, digraph, window, manager, colors, node_radius=15, focused=False, focused_depth=None, focused_node=None):
+    def __init__(self, digraph, window, manager, colors, node_radius=15, focused=False, focused_depth=None, focused_node=None, vertical_scatter=3, horizontal_scatter=3):
         self.digraph = digraph
         self.window = window
         self.manager = manager
@@ -17,6 +17,8 @@ class CanvasElementManager:
         self.focused = focused
         self.focused_node = focused_node
         self.focused_depth = focused_depth
+        self.vertical_scatter = vertical_scatter
+        self.horizontal_scatter = horizontal_scatter
         self.selected_button = None
         self.selected_arrow = None
 

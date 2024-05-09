@@ -30,7 +30,7 @@ class View:
         self.NODE_RADIUS = 15
         self.window = pg.display.set_mode((self.WIDTH, self.HEIGHT))
         self.manager = pgui.UIManager((self.WIDTH, self.HEIGHT))
-        self.ui_panel = UIPanel(self.window, self.manager, self.PANEL_WIDTH, self.PANEL_HEIGHT, self.digraph, 2, self.HEADER_HEIGHT)
+        self.ui_panel = UIPanel(self.window, self.manager, self.PANEL_WIDTH, self.PANEL_HEIGHT, self.digraph, 2, 3, 3, self.HEADER_HEIGHT)
         self.colors = self.ui_panel.handle_light_mode_pressed()
         self.ui_header = UIHeader(self.window, self.manager, self.HEADER_WIDTH, self.HEADER_HEIGHT, self.digraph)
         self.ui_graph = UIGraph(
@@ -132,8 +132,11 @@ class View:
                         focused_digraph = self.view_model.handle_node_focused(button.node,
                                                                               self.ui_panel.get_focused_depth())
                         self.focus_changed(focused_digraph)
-                        self.ui_graph.handle_node_focused(focused_digraph, button.node,
-                                                          self.ui_panel.get_focused_depth())
+                        focused_depth = self.ui_panel.get_focused_depth()
+                        vertical_scatter = self.ui_panel.get_vertical_scatter()
+                        horizontal_scatter = self.ui_panel.get_horizontal_scatter()
+                        self.ui_graph.handle_node_focused(focused_digraph, button.node, focused_depth, vertical_scatter,
+                                                          horizontal_scatter)
                     self.res = None
             elif event.type == pg.MOUSEMOTION:
                 if self.dragged_button is not None:
@@ -170,7 +173,10 @@ class View:
                         continue
                     focused_digraph = self.view_model.handle_node_focused(focused_node, self.ui_panel.get_focused_depth())
                     self.focus_changed(focused_digraph)
-                    self.ui_graph.handle_node_focused(focused_digraph, focused_node, self.ui_panel.get_focused_depth())
+                    focused_depth = self.ui_panel.get_focused_depth()
+                    vertical_scatter = self.ui_panel.get_vertical_scatter()
+                    horizontal_scatter = self.ui_panel.get_horizontal_scatter()
+                    self.ui_graph.handle_node_focused(focused_digraph, focused_node, focused_depth, vertical_scatter, horizontal_scatter)
                 if event.ui_element == self.ui_header.load_button:
                     new_digraph = self.view_model.handle_load_button_pressed()
                     if new_digraph is None:
@@ -217,8 +223,10 @@ class View:
     def focus_changed(self, focused_digraph):
         self.zoom_lvl = 0
         focused_depth = self.ui_panel.get_focused_depth()
+        horizontal_scatter = self.ui_panel.get_horizontal_scatter()
+        vertical_scatter = self.ui_panel.get_vertical_scatter()
         self.ui_panel.killall()
-        self.ui_panel = UIPanel(self.window, self.manager, self.PANEL_WIDTH, self.PANEL_HEIGHT, focused_digraph, focused_depth, self.HEADER_HEIGHT, colors=self.colors)
+        self.ui_panel = UIPanel(self.window, self.manager, self.PANEL_WIDTH, self.PANEL_HEIGHT, focused_digraph, focused_depth, vertical_scatter, horizontal_scatter,self.HEADER_HEIGHT, colors=self.colors)
         self.ui_panel.update(0)
         self.ui_panel.draw_ui()
 
@@ -226,7 +234,7 @@ class View:
         self.zoom_lvl = 0
         self.ui_panel.killall()
         self.ui_header.killall()
-        self.ui_panel = UIPanel(self.window, self.manager, self.PANEL_WIDTH, self.PANEL_HEIGHT, self.digraph, 2, self.HEADER_HEIGHT, colors=self.colors)
+        self.ui_panel = UIPanel(self.window, self.manager, self.PANEL_WIDTH, self.PANEL_HEIGHT, self.digraph, 2, 3, 3, self.HEADER_HEIGHT, colors=self.colors)
         self.ui_graph.digraph_loaded(self.digraph)
         self.ui_header = UIHeader(self.window, self.manager, self.HEADER_WIDTH, self.HEADER_HEIGHT, self.digraph)
 

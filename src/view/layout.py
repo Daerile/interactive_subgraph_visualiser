@@ -38,8 +38,8 @@ class Layout:
             self.create_focused_elems(digraph)
 
     def create_focused_elems(self, digraph: nx.DiGraph):
-        self.WIDTH = len(self.cem.digraph.nodes) * 50
-        self.HEIGHT = len(self.cem.digraph.nodes) * 50
+        self.WIDTH = len(self.cem.digraph.nodes) * (self.cem.horizontal_scatter * 50)
+        self.HEIGHT = len(self.cem.digraph.nodes) * (self.cem.vertical_scatter * 50)
         center_pos = (int(self.WIDTH / 2), int(self.HEIGHT / 2))
         start_node = self.node_map[self.cem.focused_node.id]
         nodes = {self.node_map[node.id]: node for node in self.cem.digraph.nodes}

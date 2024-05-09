@@ -3,7 +3,7 @@ import pygame_gui as pgui
 
 
 class UIPanel:
-    def __init__(self, window, manager, width, height, digraph, focused_depth, header_height, colors=None):
+    def __init__(self, window, manager, width, height, digraph, focused_depth, vertical_scatter, horizontal_scatter, header_height, colors=None):
         if colors is not None:
             self.colors = colors
         else:
@@ -23,6 +23,8 @@ class UIPanel:
         self.manager = manager
         self.digraph = digraph
         self.focused_depth = focused_depth
+        self.vertical_scatter = vertical_scatter
+        self.horizontal_scatter = horizontal_scatter
         self.header_height = header_height
         self.selected_node = None
         self.selected_edge = None
@@ -182,29 +184,59 @@ class UIPanel:
         )
 
         depth_label = pgui.elements.UILabel(
-            relative_rect=pg.Rect(10, 90, 100, 30),
+            relative_rect=pg.Rect(10, 90, 200, 30),
             text="Depth:",
             manager=self.manager,
             container=search_panel
         )
 
         depth_choose = pgui.elements.UIDropDownMenu(
-            options_list=[str(i) for i in range(1, 5)],
+            options_list=[str(i) for i in range(1, 6)],
             starting_option=str(self.focused_depth),
-            relative_rect=pg.Rect(120, 90, self.width - 130, 30),
+            relative_rect=pg.Rect(220, 90, self.width - 230, 30),
+            manager=self.manager,
+            container=search_panel
+        )
+
+        horizontal_scatter_label = pgui.elements.UILabel(
+            relative_rect=pg.Rect(10, 130, 200, 30),
+            text="Horizontal Scatter:",
+            manager=self.manager,
+            container=search_panel
+        )
+
+        horizontal_scatter_choose = pgui.elements.UIDropDownMenu(
+            options_list=[str(i) for i in range(1, 6)],
+            starting_option=str(self.horizontal_scatter),
+            relative_rect=pg.Rect(220, 130, self.width - 230, 30),
+            manager=self.manager,
+            container=search_panel
+        )
+
+        vertical_scatter_label = pgui.elements.UILabel(
+            relative_rect=pg.Rect(10, 170, 200, 30),
+            text="Vertical Scatter:",
+            manager=self.manager,
+            container=search_panel
+        )
+
+        vertical_scatter_choose = pgui.elements.UIDropDownMenu(
+            options_list=[str(i) for i in range(1, 6)],
+            starting_option=str(self.vertical_scatter),
+            relative_rect=pg.Rect(220, 170, self.width - 230, 30),
             manager=self.manager,
             container=search_panel
         )
 
         focus_button = pgui.elements.UIButton(
-            relative_rect=pg.Rect(10, 130, self.width - 20, 30),
+            relative_rect=pg.Rect(10, 210, self.width - 20, 30),
             text='Focus on Node',
             manager=self.manager,
             container=search_panel
         )
 
         return_button = pgui.elements.UIButton(
-            relative_rect=pg.Rect(10, 170, self.width - 20, 30),
+            relative_rect=pg.Rect(10, 250, self.width - 20, 30),
             text='Return to Full Graph',
             manager=self.manager,
             container=search_panel
@@ -218,6 +250,10 @@ class UIPanel:
             'focus_button': focus_button,
             'depth_label': depth_label,
             'depth_choose': depth_choose,
+            'horizontal_scatter_label': horizontal_scatter_label,
+            'horizontal_scatter_choose': horizontal_scatter_choose,
+            'vertical_scatter_label': vertical_scatter_label,
+            'vertical_scatter_choose': vertical_scatter_choose,
             'return_button': return_button
         }
         return return_map
@@ -526,6 +562,12 @@ class UIPanel:
 
     def get_focused_depth(self):
         return int(self.search_box['depth_choose'].selected_option[0])
+
+    def get_horizontal_scatter(self):
+        return int(self.search_box['horizontal_scatter_choose'].selected_option[0])
+
+    def get_vertical_scatter(self):
+        return int(self.search_box['vertical_scatter_choose'].selected_option[0])
 
     def process_events(self, event):
         # this works but I dont know why

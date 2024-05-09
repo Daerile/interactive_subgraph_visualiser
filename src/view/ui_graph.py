@@ -44,7 +44,7 @@ class UIGraph:
             self.get_current_cem().draw_node_buttons()
         self.manager.draw_ui(self.window)
 
-    def handle_node_focused(self, focused_digraph, focused_node, focused_depth):
+    def handle_node_focused(self, focused_digraph, focused_node, focused_depth, vertical_scatter, horizontal_scatter):
         self.focused_cem = CanvasElementManager(
             focused_digraph,
             self.window,
@@ -53,7 +53,9 @@ class UIGraph:
             self.node_radius,
             focused=True,
             focused_depth=focused_depth,
-            focused_node=focused_node
+            focused_node=focused_node,
+            vertical_scatter=vertical_scatter,
+            horizontal_scatter=horizontal_scatter
         )
 
     def handle_return_button_pressed(self):
