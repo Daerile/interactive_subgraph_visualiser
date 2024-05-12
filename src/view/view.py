@@ -89,7 +89,7 @@ class View:
                 was_edge = False
                 for node, button in self.ui_graph.get_node_buttons():
                     res = button.handle_click(event, time.time())
-                    if res > 0 and self.ui_panel.popup is None and event.button == 1:
+                    if res > 0 and self.ui_panel.popup is None and self.ui_header.popup is None and event.button == 1:
                         was_button = True
                         self.dragged_button = button
                         self.dragged_button_x = button.x
@@ -106,21 +106,21 @@ class View:
                 if not was_button and not was_edge:
                     if event.button == 1:
                         mouse_x, mouse_y = event.pos
-                        if self.ui_panel.popup is None and mouse_x > self.PANEL_WIDTH and mouse_y > self.HEADER_HEIGHT:
+                        if self.ui_panel.popup is None and self.ui_header.popup is None and mouse_x > self.PANEL_WIDTH and mouse_y > self.HEADER_HEIGHT:
                             self.dragging = True
                             self.offset_x = mouse_x
                             self.offset_y = mouse_y
                     if event.button == 4:
                         if self.zoom_scale < 3:
                             mouse_x, mouse_y = event.pos
-                            if self.ui_panel.popup is None and mouse_x > self.PANEL_WIDTH and mouse_y > self.HEADER_HEIGHT:
+                            if self.ui_panel.popup is None and self.ui_header.popup is None and mouse_x > self.PANEL_WIDTH and mouse_y > self.HEADER_HEIGHT:
                                 self.zoom_lvl += 1
                                 self.zoom_scale = 1.1 ** self.zoom_lvl
                                 self.ui_graph.zoom_all(self.zoom_lvl,1.1, event.pos)
                     if event.button == 5:
                         if self.zoom_scale > 1 / 3:
                             mouse_x, mouse_y = event.pos
-                            if self.ui_panel.popup is None and mouse_x > self.PANEL_WIDTH and mouse_y > self.HEADER_HEIGHT:
+                            if self.ui_panel.popup is None and self.ui_header.popup is None and mouse_x > self.PANEL_WIDTH and mouse_y > self.HEADER_HEIGHT:
                                 self.zoom_lvl -= 1
                                 self.zoom_scale = 1.1 ** self.zoom_lvl
                                 self.ui_graph.zoom_all(self.zoom_lvl, 100/110, event.pos)
@@ -194,6 +194,10 @@ class View:
                     if export_digraph is None:
                         continue
                     self.view_model.handle_save_button_pressed(export_digraph)
+                if event.ui_element == self.ui_header.help_button:
+                    self.ui_header.handle_help_button_pressed()
+                if self.ui_header.menu_buttons is not None and event.ui_element in self.ui_header.menu_buttons.values():
+                    self.ui_header.handle_menu_button_pressed(event.ui_element)
             elif event.type == pgui.UI_TEXT_ENTRY_CHANGED:
                 if event.ui_element == self.ui_panel.search_box['search_text']:
                     filtered_ids = self.ui_panel.handle_search_bar_changed()
