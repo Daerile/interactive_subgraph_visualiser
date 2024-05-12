@@ -1,0 +1,34 @@
+{
+    "defaults":
+    {
+        "colours":
+        {
+            "normal_bg": "#f2f",
+            "hovered_bg": "#ff7a",
+            "disabled_bg": "rgb(200, 150, 60)",
+            "selected_bg": "rgba(20, 50, 89, 225)",
+            "dark_bg": "rgb(216, 140, 48)", // Assuming conversion from HSL
+            "normal_text": "rgba(217, 52, 35, 0.9)", // Assuming conversion from HSLA
+            "hovered_text": "#FFFFFF",
+            "selected_text": "purple",
+            "disabled_text": "rgb(40, 70, 90)",
+            "link_text": "rgb(128, 102, 64)", // Assuming conversion from HSV
+            "link_hover": "rgb(128, 178, 179)", // Assuming conversion
+            "link_selected": "teal",
+            "text_shadow": "skyblue",
+            "normal_border": "gold"
+        }
+    },
+
+    "#hello_button":
+    {
+        "images": {
+            "normal_image": {
+                "path": "src/view/assets/close.jpeg"
+            },
+            "selected_image": {
+                "path": "src/view/assets/open.jpeg"
+            }
+        }
+    }
+}

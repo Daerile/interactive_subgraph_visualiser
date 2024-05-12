@@ -30,11 +30,13 @@ class UIPanel:
         self.selected_edge = None
         self.selected_mode = 'search'
         self.base_panel = self.create_base_panel()
+        self.closed = False
         self.switch_panel = self.create_switch_panel()
         self.infos = self.create_information_box()
         self.search_box = self.create_search_box()
         self.edit_box = self.create_edit_box()
         self.action_information = self.create_action_information_box()
+        self.close_button = self.create_close_button()
         self.popup = None
 
     def create_switch_panel(self):
@@ -257,6 +259,37 @@ class UIPanel:
             'return_button': return_button
         }
         return return_map
+
+    def create_close_button(self):
+        # Make sure this panel is very close to the top of the z-order by recreating it last
+        close_button_panel = pgui.elements.UIPanel(
+            relative_rect=pg.Rect(0, self.height - 40, 30, 40),
+            starting_height=self.height - 40,  # Ensure it's towards the bottom of the window
+            manager=self.manager
+        )
+        close_button = pgui.elements.UIButton(
+            relative_rect=pg.Rect(0, 5, 30, 30),  # Small adjustment for vertical centering in the panel
+            text='X',
+            manager=self.manager,
+            container=close_button_panel
+        )
+
+        return close_button
+
+    def handle_close_button_pressed(self):
+        if self.closed:
+            self.closed = False
+            self.close_button.set_text('X')
+            self.base_panel.show()
+            if self.selected_mode == 'search':
+                self.edit_box['edit_panel'].hide()
+            else:
+                self.search_box['search_panel'].hide()
+        else:
+            self.closed = True
+            self.close_button.set_text('O')
+            self.base_panel.hide()
+
 
     def get_all_node_ids(self):
         return [node.id for node in self.digraph.nodes]
@@ -552,6 +585,9 @@ class UIPanel:
         for element in self.search_box.values():
             element.disable()
             element.kill()
+        self.close_button.disable()
+        self.close_button.kill()
+        self.close_button = None
         self.base_panel.kill()
         self.infos = []
         self.search_box = {}

@@ -47,6 +47,8 @@ class View:
         pg.display.set_caption("Interactive Subgraph Visualiser")
         self.dragging = False
         self.dragged_button = None
+        self.dragged_button_x = 0
+        self.dragged_button_y = 0
         self.res = None
         self.offset_x = 0
         self.offset_y = 0
@@ -90,6 +92,8 @@ class View:
                     if res > 0 and self.ui_panel.popup is None and event.button == 1:
                         was_button = True
                         self.dragged_button = button
+                        self.dragged_button_x = button.x
+                        self.dragged_button_y = button.y
                         self.res = res
                         break
                 if not was_button:
@@ -125,7 +129,7 @@ class View:
                     self.dragging = False
                     button = self.dragged_button
                     self.dragged_button = None
-                    if self.res == 1:
+                    if self.res == 1 and button.x == self.dragged_button_x and button.y == self.dragged_button_y:
                         self.node_button_clicked(button)
                     if self.res == 2:
                         print(f'Double clicked button {button.text}')
@@ -151,6 +155,8 @@ class View:
                     self.ui_graph.move_all(dx, dy)
 
             elif event.type == pgui.UI_BUTTON_PRESSED:
+                if event.ui_element == self.ui_panel.close_button:
+                    self.ui_panel.handle_close_button_pressed()
                 if event.ui_element == self.ui_panel.edit_box['dark_mode']:
                     self.dark_mode_pressed()
                 if event.ui_element == self.ui_panel.edit_box['light_mode']:
@@ -225,8 +231,11 @@ class View:
         focused_depth = self.ui_panel.get_focused_depth()
         horizontal_scatter = self.ui_panel.get_horizontal_scatter()
         vertical_scatter = self.ui_panel.get_vertical_scatter()
+        ui_panel_closed = self.ui_panel.closed
         self.ui_panel.killall()
         self.ui_panel = UIPanel(self.window, self.manager, self.PANEL_WIDTH, self.PANEL_HEIGHT, focused_digraph, focused_depth, vertical_scatter, horizontal_scatter,self.HEADER_HEIGHT, colors=self.colors)
+        if ui_panel_closed:
+            self.ui_panel.handle_close_button_pressed()
         self.ui_panel.update(0)
         self.ui_panel.draw_ui()
 
