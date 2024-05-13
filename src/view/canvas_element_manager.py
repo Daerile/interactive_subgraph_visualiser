@@ -66,7 +66,6 @@ class CanvasElementManager:
         self.selected_arrow = selected_arrow
         self.unset_selected_node()
 
-
     def searched_nodes_changed(self, filtered_ids):
         if filtered_ids is None:
             for node, button in self.node_buttons:
@@ -107,6 +106,64 @@ class CanvasElementManager:
             for node, button in self.node_buttons:
                 button.move(diff_x, diff_y)
 
+    def update_focus(self, digraph, focused_depth=None, focused_node=None, vertical_scatter=3, horizontal_scatter=3):
+        temp_cem = CanvasElementManager(
+            digraph,
+            self.window,
+            self.manager,
+            self.colors,
+            focused=True,
+            focused_depth=focused_depth,
+            focused_node=focused_node,
+            vertical_scatter=vertical_scatter,
+            horizontal_scatter=horizontal_scatter
+        )
+        self.interpolate(self.node_buttons, temp_cem.node_buttons)
+        self.node_buttons = temp_cem.node_buttons
+        self.arrows = temp_cem.arrows
+        self.vertical_scatter = vertical_scatter
+        self.horizontal_scatter = horizontal_scatter
+        self.focused_depth = focused_depth
+        self.focused_node = focused_node
+        self.digraph = digraph
+
+    def interpolate(self, old_node_buttons, new_node_buttons):
+        nodes_to_remove = []
+        for node, button in old_node_buttons:
+            if node not in [node2 for node2, button2 in new_node_buttons]:
+                nodes_to_remove.append((node, button))
+        for node, button in nodes_to_remove:
+            old_node_buttons.remove((node, button))
+
+        new_nodes = []
+        for node, button in new_node_buttons:
+            if node not in [node2 for node2, button2 in old_node_buttons]:
+                new_nodes.append((node, button))
+
+        for edge in self.arrows:
+            self.arrows.remove(edge)
+
+        clock = pg.time.Clock()
+        all_close = False
+        while not all_close:
+            self.window.fill(self.colors['background'])
+            all_close = True
+            for node, button in old_node_buttons:
+                for node2, button2 in new_node_buttons:
+                    if node == node2:
+                        old_x, old_y = button.x, button.y
+                        new_x, new_y = button2.x, button2.y
+                        diff_x = new_x - old_x
+                        diff_y = new_y - old_y
+                        if math.isclose(old_x, new_x, abs_tol=1) and math.isclose(old_y, new_y, abs_tol=1):
+                            all_close = all_close and True
+                        else:
+                            all_close = all_close and False
+                        button.move(diff_x / 10, diff_y / 10)
+                    self.draw_node_buttons()
+            pg.display.flip()
+            clock.tick(30)
+
     def draw_node_buttons(self):
         for node, button in self.node_buttons:
             button.draw()
@@ -115,7 +172,7 @@ class CanvasElementManager:
         for arrow in self.arrows:
             arrow[2].draw()
 
-    def create_node_button(self, x, y, node, child_num=0):
+    def create_node_button(self, x, y, node):
         button = NodeButton(self.window, x, y, self.NODE_RADIUS, node, self.colors['node'], self.colors['text'])
         self.node_buttons.append((node, button))
 
