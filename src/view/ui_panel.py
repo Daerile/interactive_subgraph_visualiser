@@ -4,7 +4,7 @@ import pygame_gui as pgui
 
 class UIPanel:
     def __init__(self, window, manager, width, height, digraph, focused_depth, vertical_scatter, horizontal_scatter,
-                 header_height, colors=None):
+                 header_height, colors=None, optional_pairings=None):
         if colors is not None:
             self.colors = colors
         else:
@@ -17,6 +17,8 @@ class UIPanel:
                 'searched_node': (255, 155, 113),
                 'selected_edge': (0, 0, 0)
             }
+        self.search_mode = 'id'
+        self.optional_pairings = optional_pairings
         self.results_panel = None
         self.window = window
         self.width = width
@@ -159,9 +161,29 @@ class UIPanel:
             container=self.base_panel
         )
 
+        button_width = (self.width - 30) // 2
+
+        search_by_id_button = pgui.elements.UIButton(
+            relative_rect=pg.Rect(10, 10, button_width, 30),
+            text='Search by ID',
+            manager=self.manager,
+            container=search_panel
+        )
+
+        search_by_name_button = pgui.elements.UIButton(
+            relative_rect=pg.Rect(20 + button_width, 10, button_width, 30),
+            text='Search by Name',
+            manager=self.manager,
+            container=search_panel
+        )
+
+        search_by_id_button.disable()
+        if self.optional_pairings is None or self.optional_pairings['node_name'] == 'None':
+            search_by_name_button.disable()
+
         # Label for the search box
         search_label = pgui.elements.UILabel(
-            relative_rect=pg.Rect(10, 10, 100, 30),
+            relative_rect=pg.Rect(10, 50, 100, 30),
             text="Search:",
             manager=self.manager,
             container=search_panel
@@ -169,25 +191,25 @@ class UIPanel:
 
         # Text entry for searching nodes
         search_text = pgui.elements.UITextEntryLine(
-            relative_rect=pg.Rect(120, 10, self.width - 130, 30),
+            relative_rect=pg.Rect(120, 50, self.width - 130, 30),
             manager=self.manager,
             container=search_panel
         )
 
         # Dropdown menu initialized with all node IDs
-        all_ids = self.get_all_node_ids()
+        all_infos = self.get_all_node_info()
 
         dropdown = self.create_drop_down_menu(
-            options_list=all_ids,
-            starting_option=all_ids[0] if all_ids else 'None',
-            relative_rect=pg.Rect(10, 50, self.width - 20, 30),
+            options_list=all_infos,
+            starting_option=all_infos[0] if all_infos else 'None',
+            relative_rect=pg.Rect(10, 90, self.width - 20, 30),
             manager=self.manager,
             container=search_panel,
             update=False
         )
 
         depth_label = pgui.elements.UILabel(
-            relative_rect=pg.Rect(10, 90, 200, 30),
+            relative_rect=pg.Rect(10, 130, 200, 30),
             text="Depth:",
             manager=self.manager,
             container=search_panel
@@ -196,13 +218,13 @@ class UIPanel:
         depth_choose = pgui.elements.UIDropDownMenu(
             options_list=[str(i) for i in range(1, 6)],
             starting_option=str(self.focused_depth),
-            relative_rect=pg.Rect(220, 90, self.width - 230, 30),
+            relative_rect=pg.Rect(220, 130, self.width - 230, 30),
             manager=self.manager,
             container=search_panel
         )
 
         horizontal_scatter_label = pgui.elements.UILabel(
-            relative_rect=pg.Rect(10, 130, 200, 30),
+            relative_rect=pg.Rect(10, 170, 200, 30),
             text="Horizontal Scatter:",
             manager=self.manager,
             container=search_panel
@@ -211,13 +233,13 @@ class UIPanel:
         horizontal_scatter_choose = pgui.elements.UIDropDownMenu(
             options_list=[str(i) for i in range(1, 6)],
             starting_option=str(self.horizontal_scatter),
-            relative_rect=pg.Rect(220, 130, self.width - 230, 30),
+            relative_rect=pg.Rect(220, 170, self.width - 230, 30),
             manager=self.manager,
             container=search_panel
         )
 
         vertical_scatter_label = pgui.elements.UILabel(
-            relative_rect=pg.Rect(10, 170, 200, 30),
+            relative_rect=pg.Rect(10, 210, 200, 30),
             text="Vertical Scatter:",
             manager=self.manager,
             container=search_panel
@@ -226,20 +248,20 @@ class UIPanel:
         vertical_scatter_choose = pgui.elements.UIDropDownMenu(
             options_list=[str(i) for i in range(1, 6)],
             starting_option=str(self.vertical_scatter),
-            relative_rect=pg.Rect(220, 170, self.width - 230, 30),
+            relative_rect=pg.Rect(220, 210, self.width - 230, 30),
             manager=self.manager,
             container=search_panel
         )
 
         focus_button = pgui.elements.UIButton(
-            relative_rect=pg.Rect(10, 210, self.width - 20, 30),
+            relative_rect=pg.Rect(10, 250, self.width - 20, 30),
             text='Focus on Node',
             manager=self.manager,
             container=search_panel
         )
 
         return_button = pgui.elements.UIButton(
-            relative_rect=pg.Rect(10, 250, self.width - 20, 30),
+            relative_rect=pg.Rect(10, 290, self.width - 20, 30),
             text='Return to Full Graph',
             manager=self.manager,
             container=search_panel
@@ -257,7 +279,9 @@ class UIPanel:
             'horizontal_scatter_choose': horizontal_scatter_choose,
             'vertical_scatter_label': vertical_scatter_label,
             'vertical_scatter_choose': vertical_scatter_choose,
-            'return_button': return_button
+            'return_button': return_button,
+            'search_by_id_button': search_by_id_button,
+            'search_by_name_button': search_by_name_button
         }
         return return_map
 
@@ -291,11 +315,16 @@ class UIPanel:
             self.close_button.set_text('O')
             self.base_panel.hide()
 
-    def get_all_node_ids(self):
-        return [node.id for node in self.digraph.nodes]
+    def get_all_node_info(self):
+        if self.search_mode == 'id':
+            return [node.id for node in self.digraph.nodes]
+        else:
+            ret = [node.name for node in self.digraph.nodes if isinstance(node.name, str)]
+            return ret
 
     def create_drop_down_menu(self, options_list, starting_option, relative_rect, manager, container, update):
         if update:
+            self.search_box['dropdown'].hide()
             self.search_box['dropdown'].kill()
         dropdown = pgui.elements.UIDropDownMenu(
             options_list=options_list if options_list else ['None'],
@@ -307,32 +336,37 @@ class UIPanel:
         return dropdown
 
     def filter_nodes_by_search(self, query):
-        all_node_ids = self.get_all_node_ids()
+        all_node_info = self.get_all_node_info()
         if query:
-            filtered_ids = [node_id for node_id in all_node_ids if query.lower() in node_id.lower()]
-            if not filtered_ids:
-                filtered_ids = ['No results found']
+            if self.search_mode == 'id':
+                filtered_info = [node_id for node_id in all_node_info if query.lower() in node_id.lower()]
+            else:
+                filtered_info = [node_name for node_name in all_node_info if query.lower() in node_name.lower()]
+            if not filtered_info:
+                filtered_info = ['No results found']
             self.search_box['dropdown'] = self.create_drop_down_menu(
-                options_list=filtered_ids,
-                starting_option=filtered_ids[0] if filtered_ids else 'None',
-                relative_rect=pg.Rect(10, 50, self.width - 20, 30),
+                options_list=filtered_info,
+                starting_option=filtered_info[0] if filtered_info else 'None',
+                relative_rect=pg.Rect(10, 90, self.width - 20, 30),
                 manager=self.manager,
                 container=self.search_box['search_panel'],
                 update=True
             )
-            if not filtered_ids:
-                return None
-            return filtered_ids
+            if not filtered_info:
+                return None, None
+            return filtered_info, self.search_mode
         else:
+            self.search_box['dropdown'].hide()
+            self.search_box['dropdown'].kill()
             self.search_box['dropdown'] = self.create_drop_down_menu(
-                options_list=all_node_ids,
-                starting_option=all_node_ids[0] if all_node_ids else 'None',
-                relative_rect=pg.Rect(10, 50, self.width - 20, 30),
+                options_list=all_node_info,
+                starting_option=all_node_info[0] if all_node_info else 'None',
+                relative_rect=pg.Rect(10, 90, self.width - 20, 30),
                 manager=self.manager,
                 container=self.search_box['search_panel'],
                 update=True
             )
-            return None
+            return None, None
 
     def create_information_box(self):
         information_box = pgui.elements.UIPanel(
@@ -449,15 +483,55 @@ class UIPanel:
         return self.filter_nodes_by_search(self.search_box['search_text'].get_text())
 
     def handle_focus_button_pressed(self):
-        selected_id = self.search_box['dropdown'].selected_option[0]
-        if selected_id == 'No results found' or selected_id == 'None':
+        selected_info = self.search_box['dropdown'].selected_option[0]
+        if selected_info == 'No results found' or selected_info == 'None':
             self.set_action_label('Cannot set focus to no node in dropdown!')
             return
-        for node in self.digraph.nodes():
-            if node.id == selected_id:
-                self.set_action_label(f'Focus set to {node.id}')
-                self.update_information_box(node)
-                break
+        if self.search_mode == 'id':
+            for node in self.digraph.nodes():
+                if node.id == selected_info:
+                    self.set_action_label(f'Focus set to {node.id}')
+                    self.update_information_box(node)
+                    break
+        else:
+            for node in self.digraph.nodes():
+                if node.name == selected_info:
+                    self.set_action_label(f'Focus set to {node.name}')
+                    self.update_information_box(node)
+                    break
+
+    def handle_search_by_id_button_pressed(self):
+        self.search_mode = 'id'
+        if not (self.optional_pairings is None or self.optional_pairings['node_name'] == 'None'):
+            self.search_box['search_by_name_button'].enable()
+        self.search_box['search_by_id_button'].disable()
+        all_node_info = self.get_all_node_info()
+        self.search_box['dropdown'].hide()
+        self.search_box['dropdown'].kill()
+        self.search_box['dropdown'] = self.create_drop_down_menu(
+            options_list=all_node_info,
+            starting_option=all_node_info[0] if all_node_info else 'None',
+            relative_rect=pg.Rect(10, 90, self.width - 20, 30),
+            manager=self.manager,
+            container=self.search_box['search_panel'],
+            update=True
+        )
+
+    def handle_search_by_name_button_pressed(self):
+        self.search_mode = 'name'
+        self.search_box['search_by_id_button'].enable()
+        self.search_box['search_by_name_button'].disable()
+        all_node_info = self.get_all_node_info()
+        self.search_box['dropdown'].hide()
+        self.search_box['dropdown'].kill()
+        self.search_box['dropdown'] = self.create_drop_down_menu(
+            options_list=all_node_info,
+            starting_option=all_node_info[0] if all_node_info else 'None',
+            relative_rect=pg.Rect(10, 90, self.width - 20, 30),
+            manager=self.manager,
+            container=self.search_box['search_panel'],
+            update=True
+        )
 
     def handle_switch_search_pressed(self):
         if self.selected_mode == 'search':

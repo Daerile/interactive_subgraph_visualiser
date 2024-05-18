@@ -66,8 +66,8 @@ class CanvasElementManager:
         self.selected_arrow = selected_arrow
         self.unset_selected_node()
 
-    def searched_nodes_changed(self, filtered_ids):
-        if filtered_ids is None:
+    def searched_nodes_changed(self, filtered_info, mode):
+        if filtered_info is None:
             for node, button in self.node_buttons:
                 if button != self.selected_button:
                     button.change_colors(self.colors)
@@ -78,10 +78,16 @@ class CanvasElementManager:
                 if button == self.selected_button:
                     button.change_colors(self.colors, selected=True)
                     continue
-                if node.id in filtered_ids:
-                    button.change_colors(self.colors, searched=True)
+                if mode == 'id':
+                    if node.id in filtered_info:
+                        button.change_colors(self.colors, searched=True)
+                    else:
+                        button.change_colors(self.colors)
                 else:
-                    button.change_colors(self.colors)
+                    if node.name in filtered_info:
+                        button.change_colors(self.colors, searched=True)
+                    else:
+                        button.change_colors(self.colors)
 
     def unset_selected_node(self):
         if self.selected_button is not None:

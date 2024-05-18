@@ -6,9 +6,9 @@ import pandas as pd
 class Node:
     def __init__(self, node: pd.Series, column_names, must_have_pairings, optional_pairings):
         self.column_names = column_names
-        self.id = node[must_have_pairings['node_id']]
-        self.sub_ids = [node[must_have_pairings['sub_id']]]
-        self.sub_id = node[must_have_pairings['sub_id']]
+        self.id = str(node[must_have_pairings['node_id']])
+        self.sub_ids = [str(node[must_have_pairings['sub_id']])]
+        self.sub_id = str(node[must_have_pairings['sub_id']])
         if optional_pairings['node_name'] != 'None':
             self.name = node[optional_pairings['node_name']]
             self.names = [node[optional_pairings['node_name']]]

@@ -172,7 +172,7 @@ class Layout:
                 delta = pos_array[idx_i] - pos_array[idx_j]
                 dist = np.linalg.norm(delta)
                 if dist > 0:
-                    attractive_force = (dist ** 2 / k) * (delta / dist)
+                    attractive_force = (dist ** 1.6 / k) * (delta / dist)
                     displacement[idx_i] -= attractive_force
                     displacement[idx_j] += attractive_force
 

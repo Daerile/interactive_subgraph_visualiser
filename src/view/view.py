@@ -155,6 +155,10 @@ class View:
                     self.ui_graph.move_all(dx, dy)
 
             elif event.type == pgui.UI_BUTTON_PRESSED:
+                if event.ui_element == self.ui_panel.search_box['search_by_id_button']:
+                    self.ui_panel.handle_search_by_id_button_pressed()
+                if event.ui_element == self.ui_panel.search_box['search_by_name_button']:
+                    self.ui_panel.handle_search_by_name_button_pressed()
                 if event.ui_element == self.ui_panel.close_button:
                     self.ui_panel.handle_close_button_pressed()
                 if event.ui_element == self.ui_panel.edit_box['dark_mode']:
@@ -188,8 +192,6 @@ class View:
                     if column_names is None:
                         continue
                     self.ui_header.handle_load_button_pressed(column_names)
-                    #self.digraph = new_digraph
-                    #self.digraph_loaded()
                 if event.ui_element == self.ui_header.save_button:
                     export_digraph = self.ui_graph.get_focused_digraph()
                     if export_digraph is None:
@@ -202,14 +204,14 @@ class View:
                 if self.ui_header.load_popup_items is not None and event.ui_element == self.ui_header.load_popup_items['okay_button']:
                     (must_have_pairings, optional_pairings) = self.ui_header.handle_load_popup_okay_button_pressed()
                     self.digraph = self.view_model.create_digraph(must_have_pairings, optional_pairings)
-                    self.digraph_loaded()
+                    self.digraph_loaded(optional_pairings)
                 if self.ui_header.load_popup_items is not None and event.ui_element == self.ui_header.load_popup_items['cancel_button']:
                     self.ui_header.handle_load_popup_cancel_button_pressed()
 
             elif event.type == pgui.UI_TEXT_ENTRY_CHANGED:
                 if event.ui_element == self.ui_panel.search_box['search_text']:
-                    filtered_ids = self.ui_panel.handle_search_bar_changed()
-                    self.ui_graph.handle_searched_nodes_changed(filtered_ids)
+                    filtered_info, mode = self.ui_panel.handle_search_bar_changed()
+                    self.ui_graph.handle_searched_nodes_changed(filtered_info, mode)
             elif event.type == pgui.UI_WINDOW_CLOSE:
                 if event.ui_element == self.ui_panel.popup:
                     self.ui_panel.popup = None
@@ -249,18 +251,20 @@ class View:
         horizontal_scatter = self.ui_panel.get_horizontal_scatter()
         vertical_scatter = self.ui_panel.get_vertical_scatter()
         ui_panel_closed = self.ui_panel.closed
+        optional_pairings = self.ui_panel.optional_pairings
         self.ui_panel.killall()
-        self.ui_panel = UIPanel(self.window, self.manager, self.PANEL_WIDTH, self.PANEL_HEIGHT, focused_digraph, focused_depth, vertical_scatter, horizontal_scatter,self.HEADER_HEIGHT, colors=self.colors)
+        self.ui_panel = UIPanel(self.window, self.manager, self.PANEL_WIDTH, self.PANEL_HEIGHT, focused_digraph, focused_depth, vertical_scatter, horizontal_scatter,self.HEADER_HEIGHT, colors=self.colors, optional_pairings=optional_pairings)
         if ui_panel_closed:
             self.ui_panel.handle_close_button_pressed()
         self.ui_panel.update(0)
         self.ui_panel.draw_ui()
 
-    def digraph_loaded(self):
+    def digraph_loaded(self, optional_pairings):
         self.zoom_lvl = 0
         self.ui_panel.killall()
         self.ui_header.killall()
-        self.ui_panel = UIPanel(self.window, self.manager, self.PANEL_WIDTH, self.PANEL_HEIGHT, self.digraph, 2, 3, 3, self.HEADER_HEIGHT, colors=self.colors)
+
+        self.ui_panel = UIPanel(self.window, self.manager, self.PANEL_WIDTH, self.PANEL_HEIGHT, self.digraph, 2, 3, 3, self.HEADER_HEIGHT, colors=self.colors, optional_pairings=optional_pairings)
         self.ui_graph.digraph_loaded(self.digraph)
         self.ui_header = UIHeader(self.window, self.manager, self.HEADER_WIDTH, self.HEADER_HEIGHT, self.digraph)
 

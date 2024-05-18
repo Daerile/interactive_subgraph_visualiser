@@ -1,4 +1,4 @@
-csúcsid;alcsúcsid;kapcsolat;nev;mertekegyseg
+azonosito;alcsúcsid;kapcsolat;nev;mertekegyseg
 m1;0;m2,m3,m4,;páciens neme;NULL
 m2;0;m4,;életkor;Év
 m3;0;m5,m8,m9,;testmagasság;cm
@@ -8,3 +8,4 @@ m6;0;;Dohányzik?;NULL
 m7;0;m8,;Vérnyomás felső;Hgmm
 m8;0;;Vérnyomás alsó;Hgmm
 m9;0;;;
+m10;0;m11;dohányzik;méter

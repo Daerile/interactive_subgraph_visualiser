@@ -82,10 +82,10 @@ class UIGraph:
             self.focused_cem.selected_edge_changed(arrow)
         self.full_cem.selected_edge_changed(arrow)
 
-    def handle_searched_nodes_changed(self, filtered_ids):
+    def handle_searched_nodes_changed(self, filtered_info, mode):
         if self.focused_cem is not None:
-            self.focused_cem.searched_nodes_changed(filtered_ids)
-        self.full_cem.searched_nodes_changed(filtered_ids)
+            self.focused_cem.searched_nodes_changed(filtered_info, mode)
+        self.full_cem.searched_nodes_changed(filtered_info, mode)
 
     def get_focused_digraph(self):
         if self.focused_cem is not None:
