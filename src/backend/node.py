@@ -3,43 +3,46 @@ import math
 import networkx as nx
 import pandas as pd
 
-
-def init_connections(node):
-    try:
-        if math.isnan(node['kapcsolat']):
-            return None
-    except TypeError:
-        ret_dict = {
-            node['alcsúcsid']: node['kapcsolat'].split(',')
-        }
-        return ret_dict
-
-
-def add_connections(node, connections):
-    try:
-        if math.isnan(node['kapcsolat']):
-            return connections
-    except TypeError:
-        new_dict = {
-            node['alcsúcsid']: node['kapcsolat'].split(',')
-        }
-        if connections is not None:
-            return connections.update(new_dict)
-        else:
-            return new_dict
-
-
 class Node:
-    def __init__(self, node: pd.Series):
-        self.id = node['csúcsid']
-        self.sub_ids = [node['alcsúcsid']]
-        self.sub_id = node['alcsúcsid']
-        self.connections = init_connections(node)
-        self.attributes = {
+    def __init__(self, node: pd.Series, column_names, must_have_pairings, optional_pairings):
+        self.column_names = column_names
+        self.id = node[must_have_pairings['node_id']]
+        self.sub_ids = [node[must_have_pairings['sub_id']]]
+        self.sub_id = node[must_have_pairings['sub_id']]
+        if optional_pairings['node_name'] != 'None':
+            self.name = node[optional_pairings['node_name']]
+            self.names = [node[optional_pairings['node_name']]]
+        else:
+            self.name = None
+            self.names = []
+        self.must_have_pairings = must_have_pairings
+        self.optional_pairings = optional_pairings
+        self.connections = self.init_connections(node)
+
+        self.attributes = self.init_attributes(node)
+
+        self.focused_connections = None
+
+    def init_attributes(self, node):
+        starter_dict = {
             'connections': self.connections
         }
 
-        self.focused_connections = None
+        for column_name in self.column_names:
+            if column_name not in self.must_have_pairings.values() and column_name not in self.optional_pairings.values():
+                starter_dict.update({column_name: node[column_name]})
+
+        return starter_dict
+
+    def init_connections(self, node):
+        try:
+            if math.isnan(node[self.must_have_pairings['connections']]):
+                return None
+        except TypeError:
+            ret_dict = {
+                node[self.must_have_pairings['sub_id']]: node[self.must_have_pairings['connections']].split(',')
+            }
+            return ret_dict
 
     def create_focused_connections(self, edges):
         self.focused_connections = {}
@@ -52,9 +55,24 @@ class Node:
                     connections.append(edge[1].id)
             self.focused_connections.update({sub_id: connections})
 
-    def append_diff_subid(self, node: pd.Series):
-        self.sub_ids.append(node['alcsúcsid'])
-        self.connections = add_connections(node, self.connections)
+    def add_connections(self, node):
+        try:
+            if math.isnan(node[self.must_have_pairings['connections']]):
+                return self.connections
+        except TypeError:
+            new_dict = {
+                node[self.must_have_pairings['sub_id']]: node[self.must_have_pairings['connections']].split(',')
+            }
+            if self.connections is not None:
+                return self.connections.update(new_dict)
+            else:
+                return new_dict
+
+    def append_diff_sub_id(self, node: pd.Series):
+        self.sub_ids.append(node[self.must_have_pairings['sub_id']])
+        if self.names:
+            self.names.append(node[self.optional_pairings['node_name']])
+        self.connections = self.add_connections(node)
 
     def focused_connections_to_csv(self):
         if self.focused_connections is None:

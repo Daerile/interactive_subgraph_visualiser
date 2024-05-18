@@ -15,6 +15,8 @@ class UIHeader:
         self.base_panel = self.create_base_panel()
         self.create_buttons()
         self.popup = None
+        self.load_popup = None
+        self.load_popup_items = None
 
     def create_buttons(self):
         button_width = 100
@@ -137,6 +139,163 @@ class UIHeader:
 
         # Set the text of the text box in the right panel
         self.text_box.set_text(menu_text)
+
+    def handle_load_button_pressed(self, column_names):
+        must_have_columns = ['node_id', 'sub_id', 'connections']
+        optional_columns = ['node_name']
+
+        # Initialize the load popup window
+        self.load_popup = pgui.elements.UIWindow(
+            rect=pg.Rect(0, 0, 450, 500),
+            manager=self.manager,
+            window_display_title='Load a Graph'
+        )
+
+        # Create a panel inside the popup window
+        panel = pgui.elements.UIPanel(
+            relative_rect=pg.Rect(0, 0, 450, 500),
+            starting_height=0,
+            manager=self.manager,
+            container=self.load_popup,
+            anchors={
+                'left': 'left',
+                'right': 'right',
+                'top': 'top',
+                'bottom': 'bottom'
+            }
+        )
+
+        # Add description text area
+        description_text_area = pgui.elements.UITextBox(
+            relative_rect=pg.Rect(10, 10, 430, 80),
+            html_text='<b>Please pair the row names.</b><br>Every row that\'s not paired will be in the "other" category.',
+            manager=self.manager,
+            container=panel
+        )
+
+        # Create a list of items to populate the dropdowns
+        items = ['None']
+        for column in column_names:
+            items.append(column)
+
+        y_position = 100
+        must_have_dropdowns = []
+
+        # Create dropdowns for must-have columns
+        for i, column_name in enumerate(must_have_columns):
+            label = pgui.elements.UILabel(
+                relative_rect=pg.Rect(10, y_position + i * 40, 200, 30),
+                text=column_name,
+                manager=self.manager,
+                container=panel
+            )
+
+            dropdown = pgui.elements.UIDropDownMenu(
+                relative_rect=pg.Rect(220, y_position + i * 40, 200, 30),
+                options_list=items,
+                starting_option=items[0],
+                manager=self.manager,
+                container=panel
+            )
+            must_have_dropdowns.append(dropdown)
+            last_pos = y_position + i * 40
+
+        optional_dropdowns = []
+
+        # Create dropdowns for optional columns
+        for i, column_name in enumerate(optional_columns):
+            label = pgui.elements.UILabel(
+                relative_rect=pg.Rect(10, last_pos + 40 + i * 40, 200, 30),
+                text=column_name + ' (optional)',
+                manager=self.manager,
+                container=panel
+            )
+
+            dropdown = pgui.elements.UIDropDownMenu(
+                relative_rect=pg.Rect(220, last_pos + 40 + i * 40, 200, 30),
+                options_list=items,
+                starting_option=items[0],
+                manager=self.manager,
+                container=panel
+            )
+            optional_dropdowns.append(dropdown)
+            last_pos = last_pos + 40 + i * 40
+
+        # Add Okay button
+        okay_button = pgui.elements.UIButton(
+            relative_rect=pg.Rect(10, last_pos + 40, 200, 50),
+            text='Okay',
+            manager=self.manager,
+            container=panel
+        )
+        okay_button.disable()
+
+        # Add Cancel button
+        cancel_button = pgui.elements.UIButton(
+            relative_rect=pg.Rect(220, last_pos + 40, 200, 50),
+            text='Cancel',
+            manager=self.manager,
+            container=panel
+        )
+
+        status_label = pgui.elements.UILabel(
+            relative_rect=pg.Rect(10, last_pos + 100, 430, 30),
+            text='Please don\'t leave any required columns empty.',
+            manager=self.manager,
+            container=panel
+        )
+
+        # Store the popup items
+        self.load_popup_items = {
+            'must_have': must_have_dropdowns,
+            'optional': optional_dropdowns,
+            'okay_button': okay_button,
+            'cancel_button': cancel_button,
+            'status_label': status_label
+        }
+        self.load_popup.set_blocking(True)
+
+    def handle_must_have_dropdown_changed(self):
+        for dropdown in self.load_popup_items['must_have']:
+            if dropdown.selected_option[0] == 'None':
+                self.load_popup_items['okay_button'].disable()
+                self.load_popup_items['status_label'].set_text('Please don\'t leave any required columns empty.')
+                return
+        all_dropdowns = self.load_popup_items['must_have'] + self.load_popup_items['optional']
+        for dropdown_1 in all_dropdowns:
+            for dropdown_2 in all_dropdowns:
+                if dropdown_1 != dropdown_2 and dropdown_1.selected_option == dropdown_2.selected_option:
+                    self.load_popup_items['okay_button'].disable()
+                    self.load_popup_items['status_label'].set_text('Please don\'t pair the same column twice.')
+                    return
+        self.load_popup_items['okay_button'].enable()
+        self.load_popup_items['status_label'].set_text('')
+
+    def handle_load_popup_okay_button_pressed(self):
+        must_have_columns = ['node_id', 'sub_id', 'connections']
+        optional_columns = ['node_name']
+
+        must_have_pairings = {
+            'node_id': 'None',
+            'sub_id': 'None',
+            'connections': 'None'
+        }
+
+        optional_pairings = {
+            'node_name': 'None'
+        }
+
+        for i, dropdown in enumerate(self.load_popup_items['must_have']):
+            must_have_pairings[must_have_columns[i]] = dropdown.selected_option[0]
+
+        for i, dropdown in enumerate(self.load_popup_items['optional']):
+            optional_pairings[optional_columns[i]] = dropdown.selected_option[0]
+
+        self.load_popup.kill()
+        return must_have_pairings, optional_pairings
+
+    def handle_load_popup_cancel_button_pressed(self):
+        self.load_popup.kill()
 
     def killall(self):
         self.load_button.kill()

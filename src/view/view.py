@@ -170,7 +170,7 @@ class View:
                 if event.ui_element == self.ui_panel.search_box['return_button']:
                     self.ui_graph.handle_return_button_pressed()
                     self.focus_changed(self.digraph)
-                if event.ui_element == self.ui_panel.infos[2]:
+                if event.ui_element == self.ui_panel.infos['show_popup_button']:
                     self.ui_panel.handle_popup_button_pressed()
                 if event.ui_element == self.ui_panel.search_box['focus_button']:
                     self.ui_panel.handle_focus_button_pressed()
@@ -184,11 +184,12 @@ class View:
                     horizontal_scatter = self.ui_panel.get_horizontal_scatter()
                     self.ui_graph.handle_node_focused(focused_digraph, focused_node, focused_depth, vertical_scatter, horizontal_scatter)
                 if event.ui_element == self.ui_header.load_button:
-                    new_digraph = self.view_model.handle_load_button_pressed()
-                    if new_digraph is None:
+                    column_names = self.view_model.handle_load_button_pressed()
+                    if column_names is None:
                         continue
-                    self.digraph = new_digraph
-                    self.digraph_loaded()
+                    self.ui_header.handle_load_button_pressed(column_names)
+                    #self.digraph = new_digraph
+                    #self.digraph_loaded()
                 if event.ui_element == self.ui_header.save_button:
                     export_digraph = self.ui_graph.get_focused_digraph()
                     if export_digraph is None:
@@ -198,6 +199,13 @@ class View:
                     self.ui_header.handle_help_button_pressed()
                 if self.ui_header.menu_buttons is not None and event.ui_element in self.ui_header.menu_buttons.values():
                     self.ui_header.handle_menu_button_pressed(event.ui_element)
+                if self.ui_header.load_popup_items is not None and event.ui_element == self.ui_header.load_popup_items['okay_button']:
+                    (must_have_pairings, optional_pairings) = self.ui_header.handle_load_popup_okay_button_pressed()
+                    self.digraph = self.view_model.create_digraph(must_have_pairings, optional_pairings)
+                    self.digraph_loaded()
+                if self.ui_header.load_popup_items is not None and event.ui_element == self.ui_header.load_popup_items['cancel_button']:
+                    self.ui_header.handle_load_popup_cancel_button_pressed()
+
             elif event.type == pgui.UI_TEXT_ENTRY_CHANGED:
                 if event.ui_element == self.ui_panel.search_box['search_text']:
                     filtered_ids = self.ui_panel.handle_search_bar_changed()
@@ -205,6 +213,11 @@ class View:
             elif event.type == pgui.UI_WINDOW_CLOSE:
                 if event.ui_element == self.ui_panel.popup:
                     self.ui_panel.popup = None
+            elif event.type == pgui.UI_DROP_DOWN_MENU_CHANGED:
+                if self.ui_header.load_popup_items is not None:
+                    if event.ui_element in self.ui_header.load_popup_items['must_have'] + self.ui_header.load_popup_items['optional']:
+                        self.ui_header.handle_must_have_dropdown_changed()
+
         return running
 
     def light_mode_pressed(self):

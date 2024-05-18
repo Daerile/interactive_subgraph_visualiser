@@ -5,25 +5,32 @@ from src.backend.node import Node
 
 
 class GraphSystem:
-    def __init__(self, dataframe: pd.DataFrame):
+    def __init__(self, dataframe: pd.DataFrame, column_names, must_have_pairings, optional_pairings):
         self.dataframe = dataframe
-        self.nodes = self.create_nodes()
-        self.digraph = self.create_graph()
+        self.nodes = None
+        self.digraph = None
+        self.column_names = column_names
+        self.must_have_columns = ['node_id', 'sub_id', 'connections']
+        self.optional_columns = ['node_name']
+        self.must_have_pairings = must_have_pairings
+        self.optional_pairings = optional_pairings
+        self.create_nodes()
+        self.create_graph()
 
     def create_nodes(self):
         nodes = []
         for index, next_node in self.dataframe.iterrows():
-            if next_node['csúcsid'] == '':
+            if next_node[self.must_have_pairings['node_id']] == '':
                 continue
             is_already_in = False
             for node in nodes:
-                if node.id == next_node['csúcsid']:
-                    node.append_diff_subid(next_node)
+                if node.id == next_node[self.must_have_pairings['node_id']]:
+                    node.append_diff_sub_id(next_node)
                     is_already_in = True
                     break
             if not is_already_in:
-                nodes.append(Node(next_node))
-        return nodes
+                nodes.append(Node(next_node, self.column_names, self.must_have_pairings, self.optional_pairings))
+        self.nodes = nodes
 
     def create_graph(self):
         digraph = nx.DiGraph()
@@ -38,7 +45,7 @@ class GraphSystem:
                         if node_in_graph.id == connected_node:
                             digraph.add_edge(node, node_in_graph)
                             break
-        return digraph
+        self.digraph = digraph
 
     def get_subgraph(self, node_id, depth):
         starter_node = None

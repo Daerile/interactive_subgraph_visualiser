@@ -3,7 +3,8 @@ import pygame_gui as pgui
 
 
 class UIPanel:
-    def __init__(self, window, manager, width, height, digraph, focused_depth, vertical_scatter, horizontal_scatter, header_height, colors=None):
+    def __init__(self, window, manager, width, height, digraph, focused_depth, vertical_scatter, horizontal_scatter,
+                 header_height, colors=None):
         if colors is not None:
             self.colors = colors
         else:
@@ -290,7 +291,6 @@ class UIPanel:
             self.close_button.set_text('O')
             self.base_panel.hide()
 
-
     def get_all_node_ids(self):
         return [node.id for node in self.digraph.nodes]
 
@@ -355,14 +355,28 @@ class UIPanel:
             container=information_box
         )
 
+        name_label = pgui.elements.UILabel(
+            relative_rect=pg.Rect(10, 50, self.width - 20, 30),
+            text=f'No node selected or no name specified',
+            manager=self.manager,
+            container=information_box
+        )
+
         show_popup_button = pgui.elements.UIButton(
-            relative_rect=pg.Rect(10, 50, self.width - 20, 40),
+            relative_rect=pg.Rect(10, 90, self.width - 20, 40),
             text='Show Other Info',
             manager=self.manager,
             container=information_box
         )
 
-        return information_box, id_label, show_popup_button
+        info_box = {
+            'panel': information_box,
+            'id_label': id_label,
+            'show_popup_button': show_popup_button,
+            'name_label': name_label
+        }
+
+        return info_box
 
     def create_action_information_box(self):
         # Determine the height position based on the previous element, e.g., search box
@@ -386,11 +400,10 @@ class UIPanel:
 
         return {'action_panel': action_panel, 'action_label': action_label}
 
-
     def handle_light_mode_pressed(self):
         self.set_action_label('Theme set to light mode')
         self.colors = {
-            'background': (240,240,240),
+            'background': (240, 240, 240),
             'text': pg.Color('white'),
             'node': (0, 156, 235),
             'edge': (136, 136, 136),
@@ -408,7 +421,7 @@ class UIPanel:
             'background': (1, 28, 39),
             'text': pg.Color('black'),
             'node': (131, 119, 209),
-            'edge': (136,136,136),
+            'edge': (136, 136, 136),
             'selected_node': (252, 163, 17),
             'searched_node': (228, 187, 151),
             'selected_edge': (255, 255, 255)
@@ -472,8 +485,8 @@ class UIPanel:
         )
 
         # Adjusting the scrolling container to fit the window's inner dimensions more accurately
-        scrolling_container = pgui.elements.UIScrollingContainer(
-            relative_rect=pg.Rect(10, 10, 380, 380),  # Slightly reduced size for padding
+        panel = pgui.elements.UIPanel(
+            relative_rect=pg.Rect(0, 0, 400, 400),  # Slightly reduced size for padding
             manager=self.manager,
             container=self.popup
         )
@@ -486,7 +499,7 @@ class UIPanel:
                 relative_rect=pg.Rect(0, y_offset, 360, 30),  # Adjust width to fit within scrolling container
                 html_text=text,
                 manager=self.manager,
-                container=scrolling_container
+                container=panel
             )
             y_offset += 35
         elif self.selected_node is not None:
@@ -497,7 +510,7 @@ class UIPanel:
                     relative_rect=pg.Rect(0, y_offset, 360, 30),
                     html_text=text,
                     manager=self.manager,
-                    container=scrolling_container
+                    container=panel
                 )
                 y_offset += 35
             else:
@@ -506,36 +519,35 @@ class UIPanel:
                         if not value:
                             text = '<p>No connections!</p>'
                             popup_text = pgui.elements.UITextBox(
-                                relative_rect=pg.Rect(0, y_offset, 360, 30),
+                                relative_rect=pg.Rect(20, y_offset, 360, 30),
                                 html_text=text,
                                 manager=self.manager,
-                                container=scrolling_container
+                                container=panel
                             )
                             y_offset += 35
                             break
                         for subkey, sublist in value.items():
                             label = pgui.elements.UILabel(
-                                relative_rect=pg.Rect(0, y_offset, 360, 30),
+                                relative_rect=pg.Rect(20, y_offset, 360, 30),
                                 text=f'{subkey}:',
                                 manager=self.manager,
-                                container=scrolling_container
+                                container=panel
                             )
                             y_offset += 35
                             dropdown = pgui.elements.UIDropDownMenu(
                                 options_list=sublist,
                                 starting_option=sublist[0] if sublist else 'None',
-                                relative_rect=pg.Rect(0, y_offset, 360, 30),
+                                relative_rect=pg.Rect(20, y_offset, 360, 30),
                                 manager=self.manager,
-                                container=scrolling_container
+                                container=panel
                             )
                             y_offset += 35
                     else:
-                        text = f'<p><b>{key}:</b> {value}</p>'
-                        popup_text = pgui.elements.UITextBox(
+                        item_label = pgui.elements.UILabel(
                             relative_rect=pg.Rect(0, y_offset, 360, 30),
-                            html_text=text,
+                            text=f'{key}: {value}',
                             manager=self.manager,
-                            container=scrolling_container
+                            container=panel
                         )
                         y_offset += 35
         else:
@@ -544,23 +556,26 @@ class UIPanel:
                 relative_rect=pg.Rect(0, y_offset, 360, 30),
                 html_text=text,
                 manager=self.manager,
-                container=scrolling_container
+                container=panel
             )
             y_offset += 35
-
-        # Set the dimensions of the scrollable area based on content height
-        scrolling_container.set_scrollable_area_dimensions((360, y_offset))
 
         self.popup.set_blocking(True)
 
     def update_information_box(self, selected_item, edge=False):
         if edge:
-            self.infos[1].set_text(f'Edge: {selected_item[0].id} - {selected_item[1].id}')
+            self.infos['id_label'].set_text(f'Edge: {selected_item[0].id} - {selected_item[1].id}')
+            if selected_item[0].name is None or selected_item[1].name is None:
+                self.infos['name_label'].set_text('No name specified')
+            self.infos['name_label'].set_text(f'{selected_item[0].name} - {selected_item[1].name}')
             self.selected_node = None
             self.selected_edge = selected_item
         else:
             self.selected_node = selected_item
-            self.infos[1].set_text(f'ID: {selected_item.get_id()}')
+            self.infos['id_label'].set_text(f'ID: {selected_item.get_id()}')
+            if selected_item.name is None:
+                self.infos['name_label'].set_text('No name specified')
+            self.infos['name_label'].set_text(f'Name: {selected_item.name}')
             self.selected_edge = None
 
     def create_base_panel(self):
@@ -579,7 +594,9 @@ class UIPanel:
         self.action_information['action_label'].set_text(text)
 
     def killall(self):
-        for element in self.infos:
+        for element in self.infos.values():
+            if element == 'No name specified':
+                continue
             element.disable()
             element.kill()
         for element in self.search_box.values():
@@ -589,7 +606,7 @@ class UIPanel:
         self.close_button.kill()
         self.close_button = None
         self.base_panel.kill()
-        self.infos = []
+        self.infos = {}
         self.search_box = {}
         self.base_panel = None
 

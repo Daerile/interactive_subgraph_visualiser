@@ -11,24 +11,25 @@ from src.backend.graph_system import GraphSystem
 from src.viewmodel.loader import Loader
 
 
-def read_data():
-    data = pd.read_csv('../data/allc_model_tulertkek_grafmegjeleníteshez.csv', sep=';')
-    return data
-
-
 class ViewModel:
     def __init__(self):
-        data = read_data()
-        self.graph_system = GraphSystem(data)
+        self.column_names = None
+        self.data = None
+        self.graph_system = None
+
+    def create_digraph(self, must_have_pairings, optional_pairings):
+        self.graph_system = GraphSystem(self.data, self.column_names, must_have_pairings, optional_pairings)
+        return self.graph_system.digraph
 
     def handle_load_button_pressed(self):
         data = Loader.load_file()
         if data is None:
             return None
         else:
-            self.graph_system = GraphSystem(data)
-            digraph = self.graph_system.digraph
-            return digraph
+            print(f'Data loaded')
+            self.data = data
+            self.column_names = data.columns
+            return self.column_names
 
     def handle_node_focused(self, focused_node, focused_depth):
         if focused_node is None:
