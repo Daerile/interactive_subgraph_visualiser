@@ -89,7 +89,16 @@ class Node:
         else:
             res = ""
             for key in self.focused_connections.keys():
-                res += f"{self.id};{key};{','.join(self.focused_connections[key])}\n"
+                res += f"{self.id};{key};{','.join(self.focused_connections[key])}"
+                if self.names:
+                    res += f";{str(self.names[str(key)]).replace(';',',')}"
+                if self.sub_id_value_names:
+                    res += f";{str(self.sub_id_value_names[str(key)]).replace(';',',')}"
+                for (key_2, value) in self.attributes.items():
+                    if key_2 == 'connections':
+                        continue
+                    res += f";{str(value).replace(';',',')}"
+                res += "\n"
             return res
 
     def get_connected_nodes(self):

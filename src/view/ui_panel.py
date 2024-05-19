@@ -641,10 +641,13 @@ class UIPanel:
                         )
                         y_offset += 35
         else:
-            text = f'<p>Edge: {self.selected_edge[0].id} - {self.selected_edge[1].id}</p>'
-            popup_text = pgui.elements.UITextBox(
+            if self.is_name_specified():
+                text = f'Edge: {self.selected_edge[0].id}: {self.selected_edge[0].name} - {self.selected_edge[1].id}: {self.selected_edge[1].name}'
+            else:
+                text = f'Edge: {self.selected_edge[0].id} - {self.selected_edge[1].id}'
+            popup_text = pgui.elements.UILabel(
                 relative_rect=pg.Rect(0, y_offset, 560, 30),
-                html_text=text,
+                text=text,
                 manager=self.manager,
                 container=panel
             )
