@@ -144,6 +144,8 @@ class Layout:
 
     def fruchterman_reingold(self, width, height, edge_list, pos, k=None, t=1000, shift=0, focused=False):
         if k is None:
+            if len(pos.keys()) == 0:
+                return
             k = (width * height / len(pos.keys())) ** 0.5
         k_sq = k ** 2
 
