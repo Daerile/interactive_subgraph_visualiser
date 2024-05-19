@@ -108,5 +108,11 @@ class UIGraph:
         else:
             return self.full_cem
 
+    def resize(self, width, height, window, manager):
+        self.window = window
+        self.manager = manager
+        self.width = width
+        self.height = height
+
     def update(self, time_delta):
         self.manager.update(time_delta)

@@ -103,25 +103,25 @@ class UIPanel:
         color_dict = {}
         for color in needed_colors:
             color_label = pgui.elements.UILabel(
-                relative_rect=pg.Rect(10, 50 + 40 * needed_colors.index(color), 100, 30),
+                relative_rect=pg.Rect(10, 50 + 40 * needed_colors.index(color), 120, 30),
                 text=f'{color.capitalize()}:',
                 manager=self.manager,
                 container=edit_panel
             )
             color_text_red = pgui.elements.UITextEntryLine(
-                relative_rect=pg.Rect(120, 50 + 40 * needed_colors.index(color), 50, 30),
+                relative_rect=pg.Rect(140, 50 + 40 * needed_colors.index(color), 50, 30),
                 manager=self.manager,
                 initial_text=str(self.colors[color][0]),
                 container=edit_panel
             )
             color_text_green = pgui.elements.UITextEntryLine(
-                relative_rect=pg.Rect(180, 50 + 40 * needed_colors.index(color), 50, 30),
+                relative_rect=pg.Rect(200, 50 + 40 * needed_colors.index(color), 50, 30),
                 manager=self.manager,
                 initial_text=str(self.colors[color][1]),
                 container=edit_panel
             )
             color_text_blue = pgui.elements.UITextEntryLine(
-                relative_rect=pg.Rect(240, 50 + 40 * needed_colors.index(color), 50, 30),
+                relative_rect=pg.Rect(260, 50 + 40 * needed_colors.index(color), 50, 30),
                 manager=self.manager,
                 initial_text=str(self.colors[color][2]),
                 container=edit_panel
@@ -724,6 +724,24 @@ class UIPanel:
         if self.optional_pairings is None or self.optional_pairings['sub_id_value_name'] == 'None':
             return False
         return True
+
+    def resize(self, width, height, window, manager):
+        self.window = window
+        self.manager = manager
+        self.width = width
+        self.height = height
+
+        self.killall()
+        self.base_panel = self.create_base_panel()
+        self.switch_panel = self.create_switch_panel()
+        self.infos = self.create_information_box()
+        self.search_box = self.create_search_box()
+        self.edit_box = self.create_edit_box()
+        self.action_information = self.create_action_information_box()
+        self.close_button = self.create_close_button()
+        if self.closed:
+            self.close_button.set_text('O')
+            self.base_panel.hide()
 
     def process_events(self, event):
         e = []

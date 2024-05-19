@@ -23,14 +23,23 @@ class View:
         self.HEIGHT = 720
         self.HEADER_WIDTH = self.WIDTH
         self.HEADER_HEIGHT = 35
-        self.PANEL_WIDTH = 300
+        self.PANEL_WIDTH = 380
         self.PANEL_HEIGHT = self.HEIGHT - self.HEADER_HEIGHT + 5
         self.GRAPH_WIDTH = self.WIDTH - self.PANEL_WIDTH + 5  # Width available for the graph
         self.GRAPH_HEIGHT = self.HEIGHT - self.HEADER_HEIGHT + 5
         self.NODE_RADIUS = 15
-        self.window = pg.display.set_mode((self.WIDTH, self.HEIGHT))
+        self.window = pg.display.set_mode((self.WIDTH, self.HEIGHT), pg.RESIZABLE)
         self.manager = pgui.UIManager((self.WIDTH, self.HEIGHT))
-        self.ui_panel = UIPanel(self.window, self.manager, self.PANEL_WIDTH, self.PANEL_HEIGHT, self.digraph, 2, 3, 3, self.HEADER_HEIGHT)
+        self.ui_panel = UIPanel(
+            self.window,
+            self.manager,
+            self.PANEL_WIDTH,
+            self.PANEL_HEIGHT,
+            self.digraph,
+            2,
+            3, 3,
+            self.HEADER_HEIGHT
+        )
         self.colors = self.ui_panel.handle_light_mode_pressed()
         self.ui_header = UIHeader(self.window, self.manager, self.HEADER_WIDTH, self.HEADER_HEIGHT, self.digraph)
         self.ui_graph = UIGraph(
@@ -60,7 +69,6 @@ class View:
         running = True
 
         while running:
-
             time_delta = clock.tick(60) / 1000.0
             running = self.handle_events()
 
@@ -83,7 +91,20 @@ class View:
                 running = False
             self.ui_panel.process_events(event)
             self.ui_header.process_events(event)
-
+            if event.type == pg.VIDEORESIZE:
+                self.WIDTH = event.w
+                self.HEIGHT = event.h
+                self.HEADER_WIDTH = self.WIDTH
+                self.HEADER_HEIGHT = 35
+                self.PANEL_WIDTH = 380
+                self.PANEL_HEIGHT = self.HEIGHT - self.HEADER_HEIGHT + 5
+                self.GRAPH_WIDTH = self.WIDTH - self.PANEL_WIDTH + 5
+                self.GRAPH_HEIGHT = self.HEIGHT - self.HEADER_HEIGHT + 5
+                self.window = pg.display.set_mode((self.WIDTH, self.HEIGHT), pg.RESIZABLE)
+                self.manager = pgui.UIManager((self.WIDTH, self.HEIGHT))
+                self.ui_graph.resize(self.GRAPH_WIDTH, self.GRAPH_HEIGHT, self.window, self.manager)
+                self.ui_panel.resize(self.PANEL_WIDTH, self.PANEL_HEIGHT, self.window, self.manager)
+                self.ui_header.resize(self.HEADER_WIDTH, self.HEADER_HEIGHT, self.window, self.manager)
             if event.type == pg.MOUSEBUTTONDOWN:
                 was_button = False
                 was_edge = False
@@ -116,14 +137,14 @@ class View:
                             if self.ui_panel.popup is None and self.ui_header.popup is None and mouse_x > self.PANEL_WIDTH and mouse_y > self.HEADER_HEIGHT:
                                 self.zoom_lvl += 1
                                 self.zoom_scale = 1.1 ** self.zoom_lvl
-                                self.ui_graph.zoom_all(self.zoom_lvl,1.1, event.pos)
+                                self.ui_graph.zoom_all(self.zoom_lvl, 1.1, event.pos)
                     if event.button == 5:
                         if self.zoom_scale > 1 / 3:
                             mouse_x, mouse_y = event.pos
                             if self.ui_panel.popup is None and self.ui_header.popup is None and mouse_x > self.PANEL_WIDTH and mouse_y > self.HEADER_HEIGHT:
                                 self.zoom_lvl -= 1
                                 self.zoom_scale = 1.1 ** self.zoom_lvl
-                                self.ui_graph.zoom_all(self.zoom_lvl, 100/110, event.pos)
+                                self.ui_graph.zoom_all(self.zoom_lvl, 100 / 110, event.pos)
             elif event.type == pg.MOUSEBUTTONUP:
                 if event.button == 1:
                     self.dragging = False
@@ -181,12 +202,14 @@ class View:
                     focused_node = self.ui_panel.get_focused_node()
                     if focused_node is None:
                         continue
-                    focused_digraph = self.view_model.handle_node_focused(focused_node, self.ui_panel.get_focused_depth())
+                    focused_digraph = self.view_model.handle_node_focused(focused_node,
+                                                                          self.ui_panel.get_focused_depth())
                     self.focus_changed(focused_digraph)
                     focused_depth = self.ui_panel.get_focused_depth()
                     vertical_scatter = self.ui_panel.get_vertical_scatter()
                     horizontal_scatter = self.ui_panel.get_horizontal_scatter()
-                    self.ui_graph.handle_node_focused(focused_digraph, focused_node, focused_depth, vertical_scatter, horizontal_scatter)
+                    self.ui_graph.handle_node_focused(focused_digraph, focused_node, focused_depth, vertical_scatter,
+                                                      horizontal_scatter)
                 if event.ui_element == self.ui_header.load_button:
                     column_names = self.view_model.handle_load_button_pressed()
                     if column_names is None:
@@ -201,11 +224,13 @@ class View:
                     self.ui_header.handle_help_button_pressed()
                 if self.ui_header.menu_buttons is not None and event.ui_element in self.ui_header.menu_buttons.values():
                     self.ui_header.handle_menu_button_pressed(event.ui_element)
-                if self.ui_header.load_popup_items is not None and event.ui_element == self.ui_header.load_popup_items['okay_button']:
+                if self.ui_header.load_popup_items is not None and event.ui_element == self.ui_header.load_popup_items[
+                    'okay_button']:
                     (must_have_pairings, optional_pairings) = self.ui_header.handle_load_popup_okay_button_pressed()
                     self.digraph = self.view_model.create_digraph(must_have_pairings, optional_pairings)
                     self.digraph_loaded(optional_pairings)
-                if self.ui_header.load_popup_items is not None and event.ui_element == self.ui_header.load_popup_items['cancel_button']:
+                if self.ui_header.load_popup_items is not None and event.ui_element == self.ui_header.load_popup_items[
+                    'cancel_button']:
                     self.ui_header.handle_load_popup_cancel_button_pressed()
 
             elif event.type == pgui.UI_TEXT_ENTRY_CHANGED:
@@ -217,7 +242,8 @@ class View:
                     self.ui_panel.popup = None
             elif event.type == pgui.UI_DROP_DOWN_MENU_CHANGED:
                 if self.ui_header.load_popup_items is not None:
-                    if event.ui_element in self.ui_header.load_popup_items['must_have'] + self.ui_header.load_popup_items['optional']:
+                    if event.ui_element in self.ui_header.load_popup_items['must_have'] + \
+                            self.ui_header.load_popup_items['optional']:
                         self.ui_header.handle_must_have_dropdown_changed()
 
         return running
@@ -253,7 +279,19 @@ class View:
         ui_panel_closed = self.ui_panel.closed
         optional_pairings = self.ui_panel.optional_pairings
         self.ui_panel.killall()
-        self.ui_panel = UIPanel(self.window, self.manager, self.PANEL_WIDTH, self.PANEL_HEIGHT, focused_digraph, focused_depth, vertical_scatter, horizontal_scatter,self.HEADER_HEIGHT, colors=self.colors, optional_pairings=optional_pairings)
+        self.ui_panel = UIPanel(
+            self.window,
+            self.manager,
+            self.PANEL_WIDTH,
+            self.PANEL_HEIGHT,
+            focused_digraph,
+            focused_depth,
+            vertical_scatter,
+            horizontal_scatter,
+            self.HEADER_HEIGHT,
+            colors=self.colors,
+            optional_pairings=optional_pairings
+        )
         if ui_panel_closed:
             self.ui_panel.handle_close_button_pressed()
         self.ui_panel.update(0)
@@ -264,7 +302,19 @@ class View:
         self.ui_panel.killall()
         self.ui_header.killall()
 
-        self.ui_panel = UIPanel(self.window, self.manager, self.PANEL_WIDTH, self.PANEL_HEIGHT, self.digraph, 2, 3, 3, self.HEADER_HEIGHT, colors=self.colors, optional_pairings=optional_pairings)
+        self.ui_panel = UIPanel(
+            self.window,
+            self.manager,
+            self.PANEL_WIDTH,
+            self.PANEL_HEIGHT,
+            self.digraph,
+            2,
+            3,
+            3,
+            self.HEADER_HEIGHT,
+            colors=self.colors,
+            optional_pairings=optional_pairings
+        )
         self.ui_graph.digraph_loaded(self.digraph)
         self.ui_header = UIHeader(self.window, self.manager, self.HEADER_WIDTH, self.HEADER_HEIGHT, self.digraph)
 

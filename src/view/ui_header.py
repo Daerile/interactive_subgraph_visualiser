@@ -49,9 +49,10 @@ class UIHeader:
 
     def create_base_panel(self):
         base_panel = pgui.elements.UIPanel(
-            relative_rect=pg.Rect(0, 0, self.width, self.height),
+            relative_rect=pg.Rect((0, 0), (self.width, self.height)),
             starting_height=0,
             manager=self.manager,
+            margins={'left': 0, 'right': 0, 'top': 0, 'bottom': 0},
             anchors={'left': 'left',
                      'right': 'right',
                      'top': 'top',
@@ -296,6 +297,18 @@ class UIHeader:
 
         self.load_popup.kill()
         return must_have_pairings, optional_pairings
+
+    def resize(self, width, height, window, manager):
+        self.window = window
+        self.manager = manager
+        self.width = width
+        self.height = height
+
+        # Hide and kill old elements
+        self.killall()
+        self.base_panel = self.create_base_panel()
+
+        self.create_buttons()
 
     def handle_load_popup_cancel_button_pressed(self):
         self.load_popup.kill()
