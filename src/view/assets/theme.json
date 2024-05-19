@@ -1,34 +1,99 @@
 {
-    "defaults":
-    {
-        "colours":
-        {
-            "normal_bg": "#f2f",
-            "hovered_bg": "#ff7a",
-            "disabled_bg": "rgb(200, 150, 60)",
-            "selected_bg": "rgba(20, 50, 89, 225)",
-            "dark_bg": "rgb(216, 140, 48)", // Assuming conversion from HSL
-            "normal_text": "rgba(217, 52, 35, 0.9)", // Assuming conversion from HSLA
+    "defaults": {
+        "colours": {
+            "normal_bg": "#45494e",
+            "hovered_bg": "#35393e",
+            "disabled_bg": "#25292e",
+            "selected_bg": "#193754",
+            "dark_bg": "#15191e",
+            "normal_text": "#c5cbd8",
             "hovered_text": "#FFFFFF",
-            "selected_text": "purple",
-            "disabled_text": "rgb(40, 70, 90)",
-            "link_text": "rgb(128, 102, 64)", // Assuming conversion from HSV
-            "link_hover": "rgb(128, 178, 179)", // Assuming conversion
-            "link_selected": "teal",
-            "text_shadow": "skyblue",
-            "normal_border": "gold"
+            "selected_text": "#FFFFFF",
+            "disabled_text": "#6d736f",
+            "link_text": "#0000EE",
+            "link_hover": "#2020FF",
+            "link_selected": "#551A8B",
+            "text_shadow": "#777777",
+            "normal_border": "#DDDDDD",
+            "hovered_border": "#B0B0B0",
+            "disabled_border": "#808080",
+            "selected_border": "#8080B0",
+            "active_border": "#8080B0",
+            "filled_bar": "#f4251b",
+            "unfilled_bar": "#CCCCCC"
         }
     },
-
-    "#hello_button":
-    {
+    "panel": {
+        "colours": {
+            "dark_bg": "#040F16",
+            "normal_border": "rgb(0,0,0)"
+        }
+    },
+    "button": {
+        "colours": {
+            "normal_bg": "#615756",
+            "hovered_bg": "#453633",
+            "disabled_bg": "#201212",
+            "active_bg": "#4E675D",
+            "normal_border": "#040F16",
+            "hovered_border": "#040F16",
+            "disabled_border": "#040F16",
+            "normal_text": "#EAF2EF",
+            "hovered_text": "#EAF2EF"
+        },
+        "misc": {
+            "shape": "rounded_rectangle",
+            "shape_corner_radius": 20,
+            "state_transitions": {
+                "normal_hovered": "0.5",
+                "normal_disabled": "0.5",
+                "disabled_normal": "0.5",
+                "hovered_normal": "0.5"
+            }
+        }
+    },
+    "drop_down_menu": {
+        "colours":{
+            "dark_bg": "#615756",
+            "normal_border": "#040F16"
+        },
+        "misc": {
+            "shape": "rounded_rectangle",
+            "shape_corner_radius": 20
+        }
+    },
+    "drop_down_menu.#drop_down_options_list": {
+       "colours": {
+           "normal_bg": "#615756",
+           "hovered_bg": "#453633",
+           "selected_bg": "#4E675D",
+           "active_bg": "#4E675D",
+           "normal_text": "#EAF2EF",
+           "hovered_text": "#EAF2EF",
+           "selected_text": "#EAF2EF"
+       }
+    },
+    "text_entry_line": {
+        "colours": {
+            "dark_bg": "#100E12"
+        },
+        "misc": {
+            "shape": "rounded_rectangle",
+            "shape_corner_radius": 20
+        }
+    },
+    "#panel_close_button": {
         "images": {
             "normal_image": {
-                "path": "src/view/assets/close.jpeg"
-            },
-            "selected_image": {
-                "path": "src/view/assets/open.jpeg"
+                "path": "C:\\Stuff\\Git\\interactive_subgraph_visualiser\\src\\view\\assets\\close.jpeg"
+            }
+        }
+    },
+    "#panel_open_button": {
+        "images": {
+            "normal_image": {
+                "path": "C:\\Stuff\\Git\\interactive_subgraph_visualiser\\src\\view\\assets\\open.jpeg"
             }
         }
     }
-}
+ }

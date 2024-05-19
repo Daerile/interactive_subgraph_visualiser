@@ -9,7 +9,7 @@ from src.view.ui_header import UIHeader
 from src.view.ui_graph import UIGraph
 from src.viewmodel.view_model import ViewModel
 import time
-
+import os
 
 class View:
     def __init__(self, digraph: nx.DiGraph, focused_graph: nx.DiGraph = None, focused=False):
@@ -29,7 +29,13 @@ class View:
         self.GRAPH_HEIGHT = self.HEIGHT - self.HEADER_HEIGHT + 5
         self.NODE_RADIUS = 15
         self.window = pg.display.set_mode((self.WIDTH, self.HEIGHT), pg.RESIZABLE)
-        self.manager = pgui.UIManager((self.WIDTH, self.HEIGHT))
+
+        relative_path = "view/assets/theme.json"
+        absolute_path = os.path.abspath(relative_path)
+        print(absolute_path)
+        self.theme_path = absolute_path
+
+        self.manager = pgui.UIManager((self.WIDTH, self.HEIGHT), theme_path=self.theme_path)
         self.ui_panel = UIPanel(
             self.window,
             self.manager,
@@ -101,7 +107,7 @@ class View:
                 self.GRAPH_WIDTH = self.WIDTH - self.PANEL_WIDTH + 5
                 self.GRAPH_HEIGHT = self.HEIGHT - self.HEADER_HEIGHT + 5
                 self.window = pg.display.set_mode((self.WIDTH, self.HEIGHT), pg.RESIZABLE)
-                self.manager = pgui.UIManager((self.WIDTH, self.HEIGHT))
+                self.manager = pgui.UIManager((self.WIDTH, self.HEIGHT), theme_path=self.theme_path)
                 self.ui_graph.resize(self.GRAPH_WIDTH, self.GRAPH_HEIGHT, self.window, self.manager)
                 self.ui_panel.resize(self.PANEL_WIDTH, self.PANEL_HEIGHT, self.window, self.manager)
                 self.ui_header.resize(self.HEADER_WIDTH, self.HEADER_HEIGHT, self.window, self.manager)

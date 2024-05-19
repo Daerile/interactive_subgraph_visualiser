@@ -1,5 +1,6 @@
 import pygame as pg
 import pygame_gui as pgui
+import pygame_gui.core
 
 
 class UIPanel:
@@ -39,8 +40,9 @@ class UIPanel:
         self.search_box = self.create_search_box()
         self.edit_box = self.create_edit_box()
         self.action_information = self.create_action_information_box()
-        self.close_button = self.create_close_button()
+        self.close_button = None
         self.popup = None
+        self.create_close_button()
 
     def create_switch_panel(self):
         switch_panel = pgui.elements.UIPanel(
@@ -134,7 +136,7 @@ class UIPanel:
             }
 
         personal_colors_button = pgui.elements.UIButton(
-            relative_rect=pg.Rect(10, 50 + 40 * len(needed_colors), self.width - 20, 30),
+            relative_rect=pg.Rect(50, 50 + 40 * len(needed_colors), self.width - 100, 30),
             text='Set Colors',
             manager=self.manager,
             container=edit_panel
@@ -254,14 +256,14 @@ class UIPanel:
         )
 
         focus_button = pgui.elements.UIButton(
-            relative_rect=pg.Rect(10, 250, self.width - 20, 30),
+            relative_rect=pg.Rect(50, 250, self.width - 100, 30),
             text='Focus on Node',
             manager=self.manager,
             container=search_panel
         )
 
         return_button = pgui.elements.UIButton(
-            relative_rect=pg.Rect(10, 290, self.width - 20, 30),
+            relative_rect=pg.Rect(50, 290, self.width - 100, 30),
             text='Return to Full Graph',
             manager=self.manager,
             container=search_panel
@@ -286,25 +288,30 @@ class UIPanel:
         return return_map
 
     def create_close_button(self):
+        if self.close_button:
+            self.close_button.hide()
+            self.close_button.kill()
+        id = '#panel_close_button' if not self.closed else '#panel_open_button'
         # Make sure this panel is very close to the top of the z-order by recreating it last
         close_button_panel = pgui.elements.UIPanel(
-            relative_rect=pg.Rect(0, self.height - 40, 30, 40),
+            relative_rect=pg.Rect(0, self.height - 40, 50, 50),
             starting_height=self.height - 40,  # Ensure it's towards the bottom of the window
             manager=self.manager
         )
         close_button = pgui.elements.UIButton(
-            relative_rect=pg.Rect(0, 5, 30, 30),  # Small adjustment for vertical centering in the panel
-            text='X',
+            relative_rect=pg.Rect(5, 5, 40, 40),  # Small adjustment for vertical centering in the panel
+            text='',
             manager=self.manager,
-            container=close_button_panel
+            container=close_button_panel,
+            object_id=pygame_gui.core.ObjectID(class_id='@image_buttons', object_id=id)
         )
 
-        return close_button
+        self.close_button = close_button
 
     def handle_close_button_pressed(self):
         if self.closed:
             self.closed = False
-            self.close_button.set_text('X')
+            self.create_close_button()
             self.base_panel.show()
             if self.selected_mode == 'search':
                 self.edit_box['edit_panel'].hide()
@@ -312,7 +319,7 @@ class UIPanel:
                 self.search_box['search_panel'].hide()
         else:
             self.closed = True
-            self.close_button.set_text('O')
+            self.create_close_button()
             self.base_panel.hide()
 
     def get_all_node_info(self):
@@ -397,7 +404,7 @@ class UIPanel:
         )
 
         show_popup_button = pgui.elements.UIButton(
-            relative_rect=pg.Rect(10, 90, self.width - 20, 40),
+            relative_rect=pg.Rect(50, 90, self.width - 100, 40),
             text='Show Other Info',
             manager=self.manager,
             container=information_box
@@ -695,7 +702,7 @@ class UIPanel:
         for element in self.search_box.values():
             element.disable()
             element.kill()
-        self.close_button.disable()
+        self.close_button.hide()
         self.close_button.kill()
         self.close_button = None
         self.base_panel.kill()
@@ -738,9 +745,8 @@ class UIPanel:
         self.search_box = self.create_search_box()
         self.edit_box = self.create_edit_box()
         self.action_information = self.create_action_information_box()
-        self.close_button = self.create_close_button()
+        self.create_close_button()
         if self.closed:
-            self.close_button.set_text('O')
             self.base_panel.hide()
 
     def process_events(self, event):
