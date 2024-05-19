@@ -266,7 +266,7 @@ class UIHeader:
         all_dropdowns = self.load_popup_items['must_have'] + self.load_popup_items['optional']
         for dropdown_1 in all_dropdowns:
             for dropdown_2 in all_dropdowns:
-                if dropdown_1 != dropdown_2 and dropdown_1.selected_option == dropdown_2.selected_option:
+                if dropdown_1 != dropdown_2 and dropdown_1.selected_option == dropdown_2.selected_option and dropdown_1.selected_option[0] != 'None':
                     self.load_popup_items['okay_button'].disable()
                     self.load_popup_items['status_label'].set_text('Please don\'t pair the same column twice.')
                     return
