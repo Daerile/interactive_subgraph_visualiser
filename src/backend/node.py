@@ -3,6 +3,7 @@ import math
 import networkx as nx
 import pandas as pd
 
+
 class Node:
     def __init__(self, node: pd.Series, column_names, must_have_pairings, optional_pairings):
         self.column_names = column_names
@@ -11,10 +12,16 @@ class Node:
         self.sub_id = str(node[must_have_pairings['sub_id']])
         if optional_pairings['node_name'] != 'None':
             self.name = node[optional_pairings['node_name']]
-            self.names = [node[optional_pairings['node_name']]]
+            self.names = {self.sub_id: self.name}
         else:
             self.name = None
-            self.names = []
+            self.names = {}
+        if optional_pairings['sub_id_value_name'] != 'None':
+            self.sub_id_value_name = node[optional_pairings['sub_id_value_name']]
+            self.sub_id_value_names = {self.sub_id: self.sub_id_value_name}
+        else:
+            self.sub_id_value_name = None
+            self.sub_id_value_names = {}
         self.must_have_pairings = must_have_pairings
         self.optional_pairings = optional_pairings
         self.connections = self.init_connections(node)
@@ -70,8 +77,10 @@ class Node:
 
     def append_diff_sub_id(self, node: pd.Series):
         self.sub_ids.append(node[self.must_have_pairings['sub_id']])
+        if self.sub_id_value_names:
+            self.sub_id_value_names[str(node[self.must_have_pairings['sub_id']])] = node[self.optional_pairings['sub_id_value_name']]
         if self.names:
-            self.names.append(node[self.optional_pairings['node_name']])
+            self.names[str(node[self.must_have_pairings['sub_id']])] = node[self.optional_pairings['node_name']]
         self.connections = self.add_connections(node)
 
     def focused_connections_to_csv(self):
@@ -94,17 +103,3 @@ class Node:
                         continue
                     return_set.add(value)
             return return_set
-
-    def get_id(self):
-        return self.id
-
-    def get_sub_id(self):
-        return self.sub_id
-
-    def get_attributes(self):
-        if self.focused_connections is not None:
-            return {'connections': self.focused_connections}
-        return self.attributes
-
-    def get_other_attributes(self):
-        return self.attributes

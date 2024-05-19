@@ -17,7 +17,7 @@ class NodeButton:
         self.radius = radius
         self.color = color
         self.node = node
-        self.text = node.get_id()
+        self.text = node.id
         self.text_color = text_color
         self.font_size = self.calculate_font_size()
         self.font = pg.font.Font(None, self.font_size)  # Initialize font; None for default font
@@ -98,5 +98,5 @@ class NodeButton:
         self.draw()
 
     def information_dict(self):
-        return self.node.get_attributes()
+        return self.node.attributes
 

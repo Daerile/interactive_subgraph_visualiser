@@ -46,7 +46,7 @@ class Loader:
     @classmethod
     def read_file(cls, file_path, file_type):
         if file_type == 'csv':
-            return pd.read_csv(file_path, sep=';')
+            return pd.read_csv(file_path, sep=';', encoding='cp1250')
         elif file_type == 'xlsx':
             return pd.read_excel(file_path)
         else:

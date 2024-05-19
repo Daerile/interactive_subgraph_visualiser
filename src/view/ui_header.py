@@ -142,7 +142,7 @@ class UIHeader:
 
     def handle_load_button_pressed(self, column_names):
         must_have_columns = ['node_id', 'sub_id', 'connections']
-        optional_columns = ['node_name']
+        optional_columns = ['node_name', 'sub_id_value_name']
 
         # Initialize the load popup window
         self.load_popup = pgui.elements.UIWindow(
@@ -202,17 +202,19 @@ class UIHeader:
 
         optional_dropdowns = []
 
+        size = len(must_have_columns)
+
         # Create dropdowns for optional columns
         for i, column_name in enumerate(optional_columns):
             label = pgui.elements.UILabel(
-                relative_rect=pg.Rect(10, last_pos + 40 + i * 40, 200, 30),
+                relative_rect=pg.Rect(10, y_position + (i + size) * 40, 200, 30),
                 text=column_name + ' (optional)',
                 manager=self.manager,
                 container=panel
             )
 
             dropdown = pgui.elements.UIDropDownMenu(
-                relative_rect=pg.Rect(220, last_pos + 40 + i * 40, 200, 30),
+                relative_rect=pg.Rect(220, y_position + (i + size) * 40, 200, 30),
                 options_list=items,
                 starting_option=items[0],
                 manager=self.manager,
@@ -273,7 +275,7 @@ class UIHeader:
 
     def handle_load_popup_okay_button_pressed(self):
         must_have_columns = ['node_id', 'sub_id', 'connections']
-        optional_columns = ['node_name']
+        optional_columns = ['node_name', 'sub_id_value_name']
 
         must_have_pairings = {
             'node_id': 'None',
@@ -282,7 +284,8 @@ class UIHeader:
         }
 
         optional_pairings = {
-            'node_name': 'None'
+            'node_name': 'None',
+            'sub_id_value_name': 'None'
         }
 
         for i, dropdown in enumerate(self.load_popup_items['must_have']):

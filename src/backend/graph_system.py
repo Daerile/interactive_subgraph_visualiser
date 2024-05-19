@@ -11,7 +11,7 @@ class GraphSystem:
         self.digraph = None
         self.column_names = column_names
         self.must_have_columns = ['node_id', 'sub_id', 'connections']
-        self.optional_columns = ['node_name']
+        self.optional_columns = ['node_name', 'sub_id_value_name']
         self.must_have_pairings = must_have_pairings
         self.optional_pairings = optional_pairings
         self.create_nodes()

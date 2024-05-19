@@ -552,7 +552,7 @@ class UIPanel:
     def handle_popup_button_pressed(self):
         # Create a popup window with appropriate dimensions
         self.popup = pgui.elements.UIWindow(
-            rect=pg.Rect(100, 100, 400, 400),  # Size of the window
+            rect=pg.Rect(100, 100, 600, 600),  # Size of the window
             manager=self.manager,
             window_display_title='Additional Information',
             element_id='popup_window'
@@ -560,7 +560,7 @@ class UIPanel:
 
         # Adjusting the scrolling container to fit the window's inner dimensions more accurately
         panel = pgui.elements.UIPanel(
-            relative_rect=pg.Rect(0, 0, 400, 400),  # Slightly reduced size for padding
+            relative_rect=pg.Rect(0, 0, 600, 600),  # Slightly reduced size for padding
             manager=self.manager,
             container=self.popup
         )
@@ -568,21 +568,21 @@ class UIPanel:
         y_offset = 0
 
         if self.selected_node is None and self.selected_edge is None:
-            text = '<p>No node selected!</p>'
-            popup_text = pgui.elements.UITextBox(
-                relative_rect=pg.Rect(0, y_offset, 360, 30),  # Adjust width to fit within scrolling container
-                html_text=text,
+            text = 'No node selected!'
+            popup_text = pgui.elements.UILabel(
+                relative_rect=pg.Rect(0, y_offset, 560, 30),  # Adjust width to fit within scrolling container
+                text=text,
                 manager=self.manager,
                 container=panel
             )
             y_offset += 35
         elif self.selected_node is not None:
-            attributes = self.selected_node.get_attributes()
+            attributes = self.selected_node.attributes
             if not attributes:
-                text = '<p>No attributes!</p>'
-                popup_text = pgui.elements.UITextBox(
-                    relative_rect=pg.Rect(0, y_offset, 360, 30),
-                    html_text=text,
+                text = 'No attributes!'
+                popup_text = pgui.elements.UILabel(
+                    relative_rect=pg.Rect(0, y_offset, 560, 30),
+                    text=text,
                     manager=self.manager,
                     container=panel
                 )
@@ -590,35 +590,51 @@ class UIPanel:
             else:
                 for key, value in attributes.items():
                     if key == 'connections':
-                        if not value:
-                            text = '<p>No connections!</p>'
-                            popup_text = pgui.elements.UITextBox(
-                                relative_rect=pg.Rect(20, y_offset, 360, 30),
-                                html_text=text,
+                        if not value or value == 'None':
+                            text = 'No connections!'
+                            popup_text = pgui.elements.UILabel(
+                                relative_rect=pg.Rect(20, y_offset, 560, 30),
+                                text=text,
                                 manager=self.manager,
                                 container=panel
                             )
                             y_offset += 35
                             break
                         for subkey, sublist in value.items():
+                            subkey_text = str(subkey)
+                            if self.is_name_specified():
+                                subkey_text = str(str(subkey) + ': ' + self.selected_node.names[str(subkey)])
+                                for item in sublist:
+                                    for node in self.digraph.nodes:
+                                        if node.id == item:
+                                            sublist[sublist.index(item)] = str(str(item) + ': ' + node.name)
                             label = pgui.elements.UILabel(
-                                relative_rect=pg.Rect(20, y_offset, 360, 30),
-                                text=f'{subkey}:',
+                                relative_rect=pg.Rect(20, y_offset, 560, 30),
+                                text=f'{subkey_text}:',
                                 manager=self.manager,
                                 container=panel
                             )
                             y_offset += 35
                             dropdown = pgui.elements.UIDropDownMenu(
-                                options_list=sublist,
+                                options_list=sublist if sublist else ['None'],
                                 starting_option=sublist[0] if sublist else 'None',
-                                relative_rect=pg.Rect(20, y_offset, 360, 30),
+                                relative_rect=pg.Rect(20, y_offset, 560, 30),
                                 manager=self.manager,
                                 container=panel
                             )
+
+                            if self.sub_id_value_names_specified():
+                                y_offset += 35
+                                sub_id_name_label = pgui.elements.UILabel(
+                                    relative_rect=pg.Rect(20, y_offset, 560, 30),
+                                    text=f'Sub_id value: {self.selected_node.sub_id_value_names[str(subkey)]}',
+                                    manager=self.manager,
+                                    container=panel
+                                )
                             y_offset += 35
                     else:
                         item_label = pgui.elements.UILabel(
-                            relative_rect=pg.Rect(0, y_offset, 360, 30),
+                            relative_rect=pg.Rect(0, y_offset, 560, 30),
                             text=f'{key}: {value}',
                             manager=self.manager,
                             container=panel
@@ -627,7 +643,7 @@ class UIPanel:
         else:
             text = f'<p>Edge: {self.selected_edge[0].id} - {self.selected_edge[1].id}</p>'
             popup_text = pgui.elements.UITextBox(
-                relative_rect=pg.Rect(0, y_offset, 360, 30),
+                relative_rect=pg.Rect(0, y_offset, 560, 30),
                 html_text=text,
                 manager=self.manager,
                 container=panel
@@ -646,7 +662,7 @@ class UIPanel:
             self.selected_edge = selected_item
         else:
             self.selected_node = selected_item
-            self.infos['id_label'].set_text(f'ID: {selected_item.get_id()}')
+            self.infos['id_label'].set_text(f'ID: {selected_item.id}')
             if selected_item.name is None:
                 self.infos['name_label'].set_text('No name specified')
             self.infos['name_label'].set_text(f'Name: {selected_item.name}')
@@ -696,9 +712,17 @@ class UIPanel:
     def get_vertical_scatter(self):
         return int(self.search_box['vertical_scatter_choose'].selected_option[0])
 
+    def is_name_specified(self):
+        if self.optional_pairings is None or self.optional_pairings['node_name'] == 'None':
+            return False
+        return True
+
+    def sub_id_value_names_specified(self):
+        if self.optional_pairings is None or self.optional_pairings['sub_id_value_name'] == 'None':
+            return False
+        return True
+
     def process_events(self, event):
-        # this works but I dont know why
-        # self.manager.process_events(event)
         e = []
 
     def draw_ui(self):
