@@ -246,6 +246,8 @@ class View:
             elif event.type == pgui.UI_WINDOW_CLOSE:
                 if event.ui_element == self.ui_panel.popup:
                     self.ui_panel.popup = None
+                if event.ui_element == self.ui_header.popup:
+                    self.ui_header.popup = None
             elif event.type == pgui.UI_DROP_DOWN_MENU_CHANGED:
                 if self.ui_header.load_popup_items is not None:
                     if event.ui_element in self.ui_header.load_popup_items['must_have'] + \

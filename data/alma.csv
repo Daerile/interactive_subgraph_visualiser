@@ -1,0 +1,268 @@
+node_id;sub_id;connections;node_name;sub_id_value_name;MERTEKEGYSEG
+m1;0;;páciens neme;nõ;
+m1;1;;páciens neme;férfi;
+m1;2;m1048,m714,m264,m761,m63,m1038,m1023,m1033,m82,m97,m1066,m1065,m1016,m1022,m1062,m1049,m1012,m83,m1052,m1041,m24,m1046,m760,m342,m79,m2001,m1054,m1020,m283,m1021,m1068,m219,m1037,m1050,m1031,m201,m2002,m70,m1014,m1030,m265,m86,m81,m1008,m1064,m501,m1032,m80,m320,m321,m1051,m98,m1069,m1011,m1047,m1039,m1019,m25,m1015;páciens neme;ismeretlen;
+m1048;-1;;Hipertónia betegség/m.érték besorolás;mért érték nem magas, hyp. van, gyógysz. nem szed;
+m1048;0;;Hipertónia betegség/m.érték besorolás;mért érték nem magas, hyp. van, gyógysz. szed;
+m714;0;;Beck értékelés összpontszám alapján;enyhe;
+m714;1;;Beck értékelés összpontszám alapján;középsúlyos;
+m264;0;;Debreceni Egyetemi Karok;Általános Orvostudományi Kar;
+m264;1;;Debreceni Egyetemi Karok;Bölcsészettudományi Kar;
+m264;2;;Debreceni Egyetemi Karok;Egészségügyi Kar;
+m264;3;;Debreceni Egyetemi Karok;Fogorvostudományi Kar;
+m264;4;;Debreceni Egyetemi Karok;Gazdálkodástudományi és Vidékfejlesztési Kar;
+m761;0;;Milyen gyakran fodul el?, hogy vizelés közben a vizeletsugár elakad és újra kell indítania?;Az esetek felében;
+m761;1;;Milyen gyakran fodul el?, hogy vizelés közben a vizeletsugár elakad és újra kell indítania?;Gyakran, sokszor;
+m761;2;;Milyen gyakran fodul el?, hogy vizelés közben a vizeletsugár elakad és újra kell indítania?;Mindig;
+m761;3;;Milyen gyakran érzi úgy, hogy nehéz a vizelést visszatartania?;Nincs megadva;
+m63;0;;Boka-kar index érték besorolás;csökkent érték;
+m63;1;;Volt-e balkamra hipertrófia?;Nem;
+m63;2;;Volt-e balkamra hipertrófia?;Igen;
+m63;3;;Volt-e balkamra hipertrófia?;Nem ismert;
+m1038;0;;A bevitt értékek alapján számítható összetett anyagcserezavar bet.?;1 db anyagcserezavar kockázati tény., normális haskörfogat;
+m1038;1;;A bevitt értékek alapján számítható összetett anyagcserezavar bet.?;1 db anyagcserezavar kockázati tény., enyhén em. haskörfogat;
+m1038;2;;A bevitt értékek alapján számítható összetett anyagcserezavar bet.?;1 db anyagcserezavar kockázati tény., erõsen em. haskörfogat;
+m1023;0;;Rossz lipid paraméterek száma;Nem kiértékelhetõ;db
+m1023;1;;Vércukor besorolás;Nem besorolható;db
+m1023;2;;Vércukor besorolás;Normális;db
+m1023;3;;Vércukor besorolás;Emelkedett;db
+m1023;4;;Vérnyomás értékek besorolása;Nem besorolható;db
+m1023;5;;Vérnyomás értékek besorolása;ideális;db
+m1023;6;;Vérnyomás értékek besorolása;normális;db
+m1023;7;;Vérnyomás értékek besorolása;emelkedett normális;db
+m1023;8;;Vérnyomás értékek besorolása;magas;db
+m1023;9;;Vérnyomás értékek besorolása;nagyon magas;db
+m1033;0;;Haskörfogat besorolásai;Nem besorolható;
+m1033;1;;Haskörfogat besorolásai;normális;
+m1033;2;;Haskörfogat besorolásai;enyhén emelkedett;
+m1033;3;;Haskörfogat besorolásai;jelentõsen emelkedett;
+m1033;4;;Haskörfogat besorolásai;nagyon jelentõsen emelkedett;
+m82;-1;;Teljes vagy globális kard.met. kockázati tényezok szerint nagy kock;nem;
+m82;0;;Teljes vagy globális kard.met. kockázati tényezok szerint nagy kock;igen;
+m97;-1;;Közeli rokonságban diagnosztizáltak-e 1-es vagy 2-es típusú diabétesz betegséget?;Nem;
+m97;1;;Közeli rokonságban diagnosztizáltak-e 1-es vagy 2-es típusú diabétesz betegséget?;Nagyszülõk, nagybácsi/nagynéni;
+m1066;0;;MS kockázati tényezok darabszámai;nem beteg, 2 MS kockázati tényezõvel;
+m1066;1;;MS kockázati tényezok darabszámai;nem beteg, 3 MS kockázati tényezõvel;
+m1066;2;;MS kockázati tényezok darabszámai;nem beteg, 4 vagy több MS kockázati tényezõvel;
+m1065;-1;;Hypertóniás betegcsoportok;Nincs hypertónia, vérnyomás emelkedett;
+m1065;0;;Hypertóniás betegcsoportok;Van hypertónia, vérnyomás normális;
+m1065;1;;Hypertóniás betegcsoportok;Van hypertónia, vérnyomás emelkedett;
+m1065;2;;Hypertóniás betegcsoportok;nem kiértékelhetõ;
+m1065;3;;MS kockázati tényezok darabszámai;nem beteg, nincs MS kockázati tényezõ;
+m1065;4;;MS kockázati tényezok darabszámai;nem beteg, 1 MS kockázati tényezõvel;
+m1016;0;;Szív- és érrendszeri betegségek száma?;nem értékelhetõ;db
+m1016;1;;Anyagcserezavar miatti krónikus betegségek száma?;darabszám;db
+m1016;2;;Anyagcserezavar miatti krónikus betegségek száma?;nem értékelhetõ;db
+m1016;3;;Korcsoport besorolások (-18-35-45-55-60-65-70-);nem besorolható;db
+m1016;4;;Korcsoport besorolások (-18-35-45-55-60-65-70-);fiatal korú;db
+m1016;5;;Korcsoport besorolások (-18-35-45-55-60-65-70-);18-34;db
+m1016;6;;Korcsoport besorolások (-18-35-45-55-60-65-70-);35-44;db
+m1016;7;;Korcsoport besorolások (-18-35-45-55-60-65-70-);45-54;db
+m1016;8;;Korcsoport besorolások (-18-35-45-55-60-65-70-);55-60;db
+m1016;9;;Korcsoport besorolások (-18-35-45-55-60-65-70-);61-64;db
+m1016;10;;Korcsoport besorolások (-18-35-45-55-60-65-70-);65-74;db
+m1022;-1;;Korcsoport bes. (repr.orsz, 5 éves bontás);76-;
+m1022;0;;Rossz lipid paraméterek száma;darabszám;
+m1062;-1;;Koleszterin kockázati tényezo együttállásai;nem beteg, lipid, testsúly és vérnyomás kockázat;
+m1062;0;;Koleszterin kockázati tényezo együttállásai;nem beteg, lipid, testsúly és vércukor kockázat;
+m1049;0;;Hipertónia betegség/m.érték besorolás;mért érték magas, hyp. nem megállapított, gyógysz. nem szed;
+m1049;1;;Hipertónia betegség/m.érték besorolás;mért érték magas, hyp. van, gyógysz. nem szed;
+m1049;2;;Hipertónia betegség/m.érték besorolás;mért érték magas, hyp. van, gyógysz. szed;
+m1049;3;;lipid paraméterek besorolása;nincs rossz lipid paraméter;
+m1049;4;;lipid paraméterek besorolása;van rossz lipid paraméter;
+m1049;5;;lipid paraméterek besorolása;Nem kiértékelhetõ;
+m1049;6;;Metabolikus szindróma kimondható lenne?;nem;
+m1049;7;;Metabolikus szindróma kimondható lenne?;igen;
+m1049;8;;Metabolikus szindróma kimondható lenne?;nem kiértékelhetõ;
+m1049;9;;Szív-érbetegség / cukorbetegség /  testsúly elemzés;nem értelmezhetõ;
+m1049;10;;Szív-érbetegség / cukorbetegség /  testsúly elemzés;nincs szívbet., nincs cukorbet, nem túltáplált;
+m1049;11;;Szív-érbetegség / cukorbetegség /  testsúly elemzés;nincs szívbet., nincs cukorbet, túltáplált;
+m1049;12;;Szív-érbetegség / cukorbetegség /  testsúly elemzés;nincs szívbet., van cukorbet, nem túltáplált;
+m1049;13;;Szív-érbetegség / cukorbetegség /  testsúly elemzés;nincs szívbet., van cukorbet, túltáplált;
+m1049;14;;Szív-érbetegség / cukorbetegség /  testsúly elemzés;van szívbet., nincs cukorbet, nem túltáplált;
+m1049;15;;Szív-érbetegség / cukorbetegség /  testsúly elemzés;van szívbet., nincs cukorbet, túltáplált;
+m1049;16;;Szív-érbetegség / cukorbetegség /  testsúly elemzés;van szívbet., van cukorbet, nem túltáplált;
+m1012;0;;Van-e Önnek stómája, vagy terveznek-e Önnél a közeljövõbenilyen jellegû mûtétet?;igen;
+m1012;1;;Van-e Önnek stómája, vagy terveznek-e Önnél a közeljövõbenilyen jellegû mûtétet?;nem ismert;
+m1012;2;;Még akkor sem éreztem fájdalmat, ha gyors tempóban, vagy emelkedõn sétálok.;nem;
+m1012;3;;Még akkor sem éreztem fájdalmat, ha gyors tempóban, vagy emelkedõn sétálok.;igen;
+m1012;4;;Mért vércukor érték - betegség kapcsolat;nem kiértékelhetõ;
+m83;0;;Teljes vagy globális kard.met. kockázati tényezok szerint nagy kock;nem meghatározható;
+m83;99;;Nagykockázatú E csoport;Nem kiértékelhetõ;
+m1052;0;;Koleszterinszint besorolása (-4.8-5-6-8-);emelkedett;
+m1052;1;;Koleszterinszint besorolása (-4.8-5-6-8-);jelentõsen emelkedett;
+m1052;2;;Koleszterinszint besorolása (-4.8-5-6-8-);magas;
+m1052;3;;Húgysav besorolás;nem besorolható;
+m1052;4;;Húgysav besorolás;1. fokozat;
+m1052;5;;Húgysav besorolás;2. fokozat;
+m1052;6;;Húgysav besorolás;3. fokozat;
+m1052;7;;Húgysav besorolás;kóros 1.;
+m1052;8;;Húgysav besorolás;kóros 2.;
+m1041;1;;Testtömegindex (BMI) besorolás;emelkedett;
+m1041;2;;Testtömegindex (BMI) besorolás;erõsen emelkedett;
+m1041;3;;Testtömegindex (BMI) besorolás;nagyon erõsen emelkedett;
+m1041;4;;Triglicerid besorolás;nem besorolható;
+m1041;5;;Triglicerid besorolás;normális;
+m1041;6;;Triglicerid besorolás;emelkedett;
+m1041;99;;LDL besorolás;nem besorolható;
+m24;-1;;EURO-Score kockázati százalék;nem számítható;%
+m24;1;;EURO-Score kockázati százalék;kockázati %;%
+m1046;0;;Módosított EuroScore kockázat;módosított szorzó;
+m1046;1;;Módosított Framingham kockázat;nem kiértékelhetõ;
+m1046;2;;Módosított Framingham kockázat;módosított szorzó;
+m1046;3;;Konszenzus fõcsoportosítás;nem kiértékelhetõ;
+m1046;4;;Konszenzus fõcsoportosítás;kockázat mentes;
+m1046;5;;Konszenzus fõcsoportosítás;kis kockázat;
+m1046;6;;Konszenzus fõcsoportosítás;közepes kockázat;
+m760;0;;Milyen gyakran fordul el?, hogy két órán belül újra vizelnie kell?;Mindig;sec
+m760;1;;Milyen gyakran fodul el?, hogy vizelés közben a vizeletsugár elakad és újra kell indítania?;Nincs megadva;sec
+m760;2;;Milyen gyakran fodul el?, hogy vizelés közben a vizeletsugár elakad és újra kell indítania?;Soha;sec
+m760;3;;Milyen gyakran fodul el?, hogy vizelés közben a vizeletsugár elakad és újra kell indítania?;Ritkán;sec
+m760;4;;Milyen gyakran fodul el?, hogy vizelés közben a vizeletsugár elakad és újra kell indítania?;Alkalmanként;sec
+m342;-1;;Bõr hidratáltság vizsgálat (kiértékelés MÁESZ);eltérõ érték;
+m342;1;;Bõr hidratáltság vizsgálat (kiértékelés MÁESZ);megfelelõ érték;
+m342;2;;Bõr hidratáltság vizsgálat (kiértékelés MÁESZ);ismeretlen;
+m342;3;;Bõr faggyútartalmának vizsgálata (pont);;
+m79;0;;Nagy kockázat 2-es csoport?;Nem értelmezhetõ;
+m79;1;;Nagy kockázat 2-es csoport?;Nem;
+m79;2;;Nagy kockázat 2-es csoport?;Igen;
+m2001;1;;Ultrahang diagnózis (SCI-Net szívhang);ASD;
+m2001;2;;Ultrahang diagnózis (SCI-Net szívhang);VSD;
+m1054;0;;Haskörfogat - Metabolikus szindr paraméterek besorolás;enyhén emelkedett haskörfogat, sok met.kockázat;
+m1054;1;;Haskörfogat - Metabolikus szindr paraméterek besorolás;erõsen emelkedett haskörfogat, kevés met.kockázat;
+m1054;2;;Haskörfogat - Metabolikus szindr paraméterek besorolás;erõsen emelkedett haskörfogat, sok met.kockázat;
+m1054;3;;Mért értékekb?l adódó kockázati tényezok száma;nem számítható;
+m1054;4;;Mért értékekb?l adódó kockázati tényezok száma;darabszám;
+m1054;5;;Betegség/MS besorolás/kock.tényezok besorolása;nem kiszámolható;
+m1054;6;;Betegség/MS besorolás/kock.tényezok besorolása;nincs betegség / nincs MS / nincs kock.tény.;
+m1054;7;;Betegség/MS besorolás/kock.tényezok besorolása;nincs betegség / nincs MS / 1 db kock.tény.;
+m1054;8;;Betegség/MS besorolás/kock.tényezok besorolása;nincs betegség / nincs MS / 2 db kock.tény.;
+m1054;9;;Betegség/MS besorolás/kock.tényezok besorolása;nincs betegség / nincs MS / 2-nél több kock.tény.;
+m1054;10;;Betegség/MS besorolás/kock.tényezok besorolása;nincs betegség / van MS / nincs kock.tény.;
+m1020;0;;Korcsoport bes. (repr.orsz, 5 éves bontás);36-40;
+m1020;1;;Korcsoport bes. (repr.orsz, 5 éves bontás);41-45;
+m1020;2;;Korcsoport bes. (repr.orsz, 5 éves bontás);46-50;
+m283;0;;Hasi zsírterület besorolása (-100-);emelkedett;
+m283;1;;Vércukorszintek besorolása (-6.1-);Nem besorolható;
+m283;2;;Vércukorszintek besorolása (-6.1-);normális;
+m283;3;;Vércukorszintek besorolása (-6.1-);emelkedett;
+m1021;0;;Korcsoport bes. (repr.orsz, 5 éves bontás);51-55;
+m1021;1;;Korcsoport bes. (repr.orsz, 5 éves bontás);56-60;
+m1021;2;;Korcsoport bes. (repr.orsz, 5 éves bontás);61-65;
+m1021;3;;Korcsoport bes. (repr.orsz, 5 éves bontás);66-70;
+m1021;4;;Korcsoport bes. (repr.orsz, 5 éves bontás);71-75;
+m1068;-1;;Korcsoport besorolások 10 éves bontásokban (-18-25-35-45-55-65-75-);nem besorolható;
+m1068;0;;Korcsoport besorolások 10 éves bontásokban (-18-25-35-45-55-65-75-);fiatal korú;
+m1068;1;;Korcsoport besorolások 10 éves bontásokban (-18-25-35-45-55-65-75-);18-25;
+m1068;2;;Korcsoport besorolások 10 éves bontásokban (-18-25-35-45-55-65-75-);26-35;
+m1068;3;;Korcsoport besorolások 10 éves bontásokban (-18-25-35-45-55-65-75-);36-45;
+m219;0;;Kimondható-e, hogy nem beállított diabetesze van?;nem kiértékelhetõ;
+m219;1;;Kimondható-e, hogy nem beállított diabetesze van?;Nem;
+m219;2;;Kimondható-e, hogy nem beállított diabetesze van?;Igen;
+m1037;0;;A bevitt értékek alapján számítható összetett anyagcserezavar bet.?;nincs anyagcserezavar kockázat, normális haskörfogat;
+m1037;1;;A bevitt értékek alapján számítható összetett anyagcserezavar bet.?;nincs anyagcserezavar kockázat, enyhén emelk. haskörfogat;
+m1037;99;;A bevitt értékek alapján számítható összetett anyagcserezavar bet.?;nincs anyagcserezavar kockázat, erõsen emelk. haskörfogat;
+m1050;0;;Szív-érbetegség / cukorbetegség /  testsúly elemzés;van szívbet., van cukorbet, túltáplált;
+m1050;1;;Rossz lipid érték / koleszterin betegség / gyógyszerszedés kapcsolata;mért érték nem magas, kol.bet nincs, gyógysz. nem szed;
+m1050;2;;Rossz lipid érték / koleszterin betegség / gyógyszerszedés kapcsolata;mért érték nem magas, kol.bet van, gyógysz. nem szed;
+m1050;3;;Rossz lipid érték / koleszterin betegség / gyógyszerszedés kapcsolata;mért érték nem magas, kol.bet van, gyógysz. szed;
+m1050;4;;Rossz lipid érték / koleszterin betegség / gyógyszerszedés kapcsolata;mért érték magas, kol.bet nincs, gyógysz. nem szed;
+m1031;-1;;Vérnyomás és összkoleszterin besorolás;em. vérnyomás, em koleszterinszint;
+m1031;1;;Vérnyomás és összkoleszterin besorolás;norm vérnyomás, norm koleszterinszint;
+m201;0;;Bõrgyógyászati kérdõív besorolás;mérsékelt kockázat;
+m201;1;;Bõrgyógyászati kérdõív besorolás;magas kockázat;
+m2002;1;;Ultrahang diagnózis (SCI-Net szívhang);FOA;
+m2002;2;;Ultrahang diagnózis (SCI-Net szívhang);Nyitott ductus Botalli;
+m2002;3;;Ultrahang diagnózis (SCI-Net szívhang);AI;
+m70;0;;hsCRP szint besorolás;emelkedett érték;
+m70;1;;Megállapítható-e protombotikus állapot (fibrinogén, PAI, Homocisztein)?;Nem;
+m70;2;;Megállapítható-e protombotikus állapot (fibrinogén, PAI, Homocisztein)?;Igen;
+m1014;0;;Mért vércukor érték - betegség kapcsolat;normál vércukor értékek, nincs betegség;
+m1014;1;;Mért vércukor érték - betegség kapcsolat;emelkedett vércukor érték, nincs betegség;
+m1030;0;;Kardiovaszkuláris kockázati besorolás (III. Konszenzus konf.);kis kockázat(2);
+m1030;1;;Kardiovaszkuláris kockázati besorolás (III. Konszenzus konf.);kis kockázat(1);
+m1030;2;;Kardiovaszkuláris kockázati besorolás (III. Konszenzus konf.);minden más eset;
+m1030;3;;Kardiovaszkuláris kockázati szorzó;1 (nincs módosító szorzó);
+m1030;4;;Vérnyomás és összkoleszterin besorolás;nem értelmezhetõ;
+m265;0;;Debreceni Egyetemi Karok;Gyermeknevelési és Felnõttképzési Kar;
+m265;1;;Debreceni Egyetemi Karok;Gyógyszerésztudományi Kar;
+m265;2;;Debreceni Egyetemi Karok;Informatikai Kar;
+m86;-1;;Diabétesz kockázathoz korcsoport besorolás (-45-55-65-);45-54;
+m86;0;;Diabétesz kockázathoz korcsoport besorolás (-45-55-65-);55-64;
+m86;3;;Diabétesz kockázathoz korcsoport besorolás (-45-55-65-);65 felett;
+m86;4;;Diabétesz kockázathoz BMI besorolás;nem számolható;
+m81;0;;Súlyos kockázati tényezok száma;darabszám;
+m1008;0;;Felmerül a post Covid szindróma?;Igen;
+m1008;99;;páciens TAJ-szám;;
+m1064;-1;;Koleszterin kockázati tényezo együttállásai;beteg;
+m1064;0;;Hypertóniás betegcsoportok;Nincs hypertónia, vérnyomás normális;
+m501;-1;;Tornaórán/terhelésre volt-e nehézlégzése?;nincs megadva;
+m501;0;;Tornaórán/terhelésre volt-e nehézlégzése?;nem volt;
+m1032;-1;;Vérnyomás és összkoleszterin besorolás;norm vérnyomás, em. koleszterinszint;
+m1032;1;;Vérnyomás és összkoleszterin besorolás;em. vérnyomás, norm. koleszterinszint;
+m80;-1;;Nagy kockázat 3-as csoport?;Nem értelmezhetõ;
+m80;0;;Nagy kockázat 3-as csoport?;Nem;
+m80;1;;Nagy kockázat 3-as csoport?;Igen;
+m320;0;;Szüleinél elõfordul visszeresség?;Egyik szülõnél;
+m320;1;;Szüleinél elõfordul visszeresség?;Mindkét szülõnél;
+m320;2;;Szüleinél elõfordul visszeresség?;mindkettõnél, egyiküknél szövõdmény is (lábszárfekély);
+m321;-1;;Szokott Ön gyalogolni, úszni, kerékpározni, tornászni?;nincs válasz;
+m321;1;;Szokott Ön gyalogolni, úszni, kerékpározni, tornászni?;Igen, legalább heti 3 órát.;
+m1051;0;;Rossz lipid érték / koleszterin betegség / gyógyszerszedés kapcsolata;mért érték magas, kol.bet van, gyógysz. nem szed;
+m1051;1;;Rossz lipid érték / koleszterin betegség / gyógyszerszedés kapcsolata;mért érték magas, kol.bet van, gyógysz. szed;
+m1051;2;;Rossz lipid érték / koleszterin betegség / gyógyszerszedés kapcsolata;nem kiértékelhetõ;
+m1051;3;;Betegség dohányzás kapcsolata;Nem besorolható;
+m1051;4;;Betegség dohányzás kapcsolata;van krónikus betegség és doh.;
+m1051;5;;Betegség dohányzás kapcsolata;van krónikus betegség és nem doh.;
+m1051;6;;Betegség dohányzás kapcsolata;nincs krónikus betegség és doh.;
+m1051;7;;Betegség dohányzás kapcsolata;nincs krónikus betegség és nem doh.;
+m1051;8;;Éhomi vércukorszint besorolás;Nem besorolható;
+m1051;9;;Éhomi vércukorszint besorolás;normális;
+m1051;10;;Éhomi vércukorszint besorolás;emelkedett;
+m1051;11;;Étkezés utáni vércukorszint besorolás;Nem besorolható;
+m1051;12;;Étkezés utáni vércukorszint besorolás;normális;
+m1051;13;;Étkezés utáni vércukorszint besorolás;emelkedett;
+m1051;14;;Koleszterinszint besorolása (-4.8-5-6-8-);nem besorolható;
+m1051;15;;Koleszterinszint besorolása (-4.8-5-6-8-);normális;
+m1051;16;;Koleszterinszint besorolása (-4.8-5-6-8-);magas-normális;
+m98;0;;Közeli rokonságban diagnosztizáltak-e 1-es vagy 2-es típusú diabétesz betegséget?;Szülõk, testvér;
+m98;1;;Cukorbetegség családi érintettség kockázati pontszáma;nem számolható;
+m98;2;;Cukorbetegség családi érintettség kockázati pontszáma;0 pont;
+m98;3;;Cukorbetegség családi érintettség kockázati pontszáma;3 pont;
+m98;4;;Cukorbetegség családi érintettség kockázati pontszáma;5 pont;
+m98;5;;Cukorbetegség kockázat összpontszáma (FindRisc);nem számolható;
+m1069;0;;Korcsoport besorolások 10 éves bontásokban (-18-25-35-45-55-65-75-);46-55;
+m1069;1;;Korcsoport besorolások 10 éves bontásokban (-18-25-35-45-55-65-75-);56-65;
+m1069;2;;Korcsoport besorolások 10 éves bontásokban (-18-25-35-45-55-65-75-);66-75;
+m1069;3;;Korcsoport besorolások 10 éves bontásokban (-18-25-35-45-55-65-75-);76-;
+m1011;0;;MÁESz Vastagbéldaganat: dohányzik?;igen;
+m1011;1;;MÁESz Vastagbéldaganat: dohányzik?;nem ismert;
+m1011;99;;Van-e Önnek stómája, vagy terveznek-e Önnél a közeljövõbenilyen jellegû mûtétet?;nem;
+m1047;0;;Konszenzus fõcsoportosítás;nagy kockázat;
+m1047;1;;Éhomi vércukorszint;Nem definiált;
+m1047;2;;Éhomi vércukorszint;Éhgyomri vércukorszint;
+m1047;3;;Étkezés utáni vércukorszint;Nem definiált;
+m1047;4;;Étkezés utáni vércukorszint;étkezés utáni;
+m1047;5;;Hipertónia betegség/m.érték besorolás;nem kiértékelhetõ;
+m1047;6;;Hipertónia betegség/m.érték besorolás;mért érték nem magas, hyp. nem megállapított, gyógysz. nem szed;
+m1039;0;;A bevitt értékek alapján számítható összetett anyagcserezavar bet.?;2 vagy több anyagcserezavar kockázati tény., normális haskörfogat;
+m1039;1;;A bevitt értékek alapján számítható összetett anyagcserezavar bet.?;2 vagy több anyagcserezavar kockázati tény., enyhén em. haskörfogat;
+m1039;2;;A bevitt értékek alapján számítható összetett anyagcserezavar bet.?;2 vagy több anyagcserezavar kockázati tény., erõsen em. haskörfogat;
+m1039;3;;Koleszterinszint besorolás;nem besorolható;
+m1039;4;;Koleszterinszint besorolás;normális;
+m1039;5;;Koleszterinszint besorolás;emelkedett;
+m1039;6;;Koleszterinszint besorolás;nagyon erõsen emelkedett;
+m1039;7;;Testtömegindex (BMI) besorolás;Nem besorolható;
+m1039;8;;Testtömegindex (BMI) besorolás;normális;
+m1019;0;;Korcsoport bes. (repr.orsz, 5 éves bontás);nem besorolható;
+m1019;1;;Korcsoport bes. (repr.orsz, 5 éves bontás);fiatal korú;
+m1019;2;;Korcsoport bes. (repr.orsz, 5 éves bontás);18-25;
+m1019;3;;Korcsoport bes. (repr.orsz, 5 éves bontás);26-30;
+m1019;4;;Korcsoport bes. (repr.orsz, 5 éves bontás);31-35;
+m25;-1;;Framingham-score kock. Százalék;nem számítható;%
+m25;1;;Framingham-score kock. Százalék;kockázati %;%
+m1015;1;;Mért vércukor érték - betegség kapcsolat;normális vércukor érték, van betegség;
+m1015;2;;Mért vércukor érték - betegség kapcsolat;emelkedett vércukor érték, van betegség;
+m1015;3;;Krónikus bet. száma, ami nem anyagcserezavarral függ össze;darabszám;
+m1015;4;;Krónikus bet. száma, ami nem anyagcserezavarral függ össze;Nem kiszámítható;
+m1015;5;;Szív- és érrendszeri betegségek száma?;darabszám;
