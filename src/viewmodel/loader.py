@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import filedialog
 from io import StringIO
 
+
 class Loader:
 
     @classmethod
@@ -25,7 +26,6 @@ class Loader:
             print(f"File has been saved to: {file_path}")
         else:
             print("No file selected. File not saved.")
-
 
     @classmethod
     def load_file(cls):
@@ -52,5 +52,3 @@ class Loader:
         else:
             print("Unsupported file type.")
             return None
-
-

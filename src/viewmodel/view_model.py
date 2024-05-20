@@ -11,6 +11,7 @@ from src.backend.graph_system import GraphSystem
 from src.viewmodel.loader import Loader
 import pprint
 
+
 class ViewModel:
     def __init__(self):
         self.column_names = None
