@@ -53,7 +53,7 @@
         }
     },
     "drop_down_menu": {
-        "colours":{
+        "colours": {
             "dark_bg": "#615756",
             "normal_border": "#040F16"
         },
@@ -63,15 +63,15 @@
         }
     },
     "drop_down_menu.#drop_down_options_list": {
-       "colours": {
-           "normal_bg": "#615756",
-           "hovered_bg": "#453633",
-           "selected_bg": "#4E675D",
-           "active_bg": "#4E675D",
-           "normal_text": "#EAF2EF",
-           "hovered_text": "#EAF2EF",
-           "selected_text": "#EAF2EF"
-       }
+        "colours": {
+            "normal_bg": "#615756",
+            "hovered_bg": "#453633",
+            "selected_bg": "#4E675D",
+            "active_bg": "#4E675D",
+            "normal_text": "#EAF2EF",
+            "hovered_text": "#EAF2EF",
+            "selected_text": "#EAF2EF"
+        }
     },
     "text_entry_line": {
         "colours": {
@@ -96,4 +96,4 @@
             }
         }
     }
- }
+}

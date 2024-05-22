@@ -10,6 +10,7 @@ from src.view.ui_graph import UIGraph
 from src.viewmodel.view_model import ViewModel
 import time
 import os
+import json
 
 class View:
     def __init__(self, digraph: nx.DiGraph, focused_graph: nx.DiGraph = None, focused=False):
@@ -31,9 +32,20 @@ class View:
         self.window = pg.display.set_mode((self.WIDTH, self.HEIGHT), pg.RESIZABLE)
 
         relative_path = "view/assets/theme.json"
+        relative_path_for_close_image = "view/assets/close.jpeg"
+        relative_path_for_open_image = "view/assets/open.jpeg"
         absolute_path = os.path.abspath(relative_path)
+        absolute_path_for_close_image = os.path.abspath(relative_path_for_close_image)
+        absolute_path_for_open_image = os.path.abspath(relative_path_for_open_image)
         print(absolute_path)
         self.theme_path = absolute_path
+
+        with open(self.theme_path, 'r') as file:
+            data = json.load(file)
+        data["#panel_close_button"]["images"]["normal_image"]["path"] = absolute_path_for_close_image
+        data["#panel_open_button"]["images"]["normal_image"]["path"] = absolute_path_for_open_image
+        with open(self.theme_path, "w") as file:
+            json.dump(data, file, indent=4)
 
         self.manager = pgui.UIManager((self.WIDTH, self.HEIGHT), theme_path=self.theme_path)
         self.ui_panel = UIPanel(
