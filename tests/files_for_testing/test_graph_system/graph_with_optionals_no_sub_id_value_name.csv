@@ -1,0 +1,6 @@
+node_id;sub_id;connections;node_name;
+m1;0;m1,m2,m3,m4,;alma
+m2;0;m3,m4,;korte
+m3;0;;szilva;kek
+m4;0;m5,;barack
+m5;0;;cseresznye

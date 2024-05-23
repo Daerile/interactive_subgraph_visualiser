@@ -1,4 +1,4 @@
-csúcsid;alcsúcsid;kapcsolat
+node_id;sub_id;connections
 m1;0;m1,m2,m3,m4,
 m2;0;m3,m4,
 m3;0;

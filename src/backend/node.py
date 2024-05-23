@@ -46,8 +46,13 @@ class Node:
             if math.isnan(node[self.must_have_pairings['connections']]):
                 return None
         except TypeError:
+            key = node[self.must_have_pairings['sub_id']]
+            value = node[self.must_have_pairings['connections']].split(',')
+            for i in range(len(value)):
+                if value[i] == '':
+                    value.pop(i)
             ret_dict = {
-                node[self.must_have_pairings['sub_id']]: node[self.must_have_pairings['connections']].split(',')
+                key: value
             }
             return ret_dict
 
@@ -67,13 +72,18 @@ class Node:
             if math.isnan(node[self.must_have_pairings['connections']]):
                 return self.connections
         except TypeError:
+            key = node[self.must_have_pairings['sub_id']]
+            value = node[self.must_have_pairings['connections']].split(',')
+            for i in range(len(value)):
+                if value[i] == '':
+                    value.pop(i)
             new_dict = {
-                node[self.must_have_pairings['sub_id']]: node[self.must_have_pairings['connections']].split(',')
+                key: value
             }
             if self.connections is not None:
-                return self.connections.update(new_dict)
+                self.connections.update(new_dict)
             else:
-                return new_dict
+                self.connections = new_dict
 
     def append_diff_sub_id(self, node: pd.Series):
         self.sub_ids.append(node[self.must_have_pairings['sub_id']])
@@ -81,7 +91,8 @@ class Node:
             self.sub_id_value_names[str(node[self.must_have_pairings['sub_id']])] = node[self.optional_pairings['sub_id_value_name']]
         if self.names:
             self.names[str(node[self.must_have_pairings['sub_id']])] = node[self.optional_pairings['node_name']]
-        self.connections = self.add_connections(node)
+        self.add_connections(node)
+        self.attributes['connections'] = self.connections
 
     def focused_connections_to_csv(self):
         if self.focused_connections is None:

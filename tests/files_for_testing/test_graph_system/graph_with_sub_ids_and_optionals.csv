@@ -1,0 +1,9 @@
+node_id;sub_id;connections;node_name;sub_id_value_name
+m1;0;m1,m2,m3,m4,;alma;piros
+m1;1;m2,m3,;alma;zöld
+m2;-1;m3,;körte;piros
+m2;0;m3,m4,;körte;zöld
+m3;0;;szilva;piros
+m4;0;m5,;barack;piros
+m4;1;;barack;zöld
+m5;0;;szőlő;piros
