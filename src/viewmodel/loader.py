@@ -1,5 +1,6 @@
 import pandas as pd
 import tkinter as tk
+import chardet
 from tkinter import filedialog
 from io import StringIO
 
@@ -46,7 +47,11 @@ class Loader:
     @classmethod
     def read_file(cls, file_path, file_type):
         if file_type == 'csv':
-            return pd.read_csv(file_path, sep=';', encoding='cp1250')
+            with open(file_path, 'rb') as f:
+                data = f.read()
+            encoding_result = chardet.detect(data)
+            encoding = encoding_result['encoding']
+            return pd.read_csv(file_path, sep=';', encoding=encoding)
         elif file_type == 'xlsx':
             return pd.read_excel(file_path)
         else:

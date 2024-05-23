@@ -95,5 +95,14 @@
                 "path": "C:\\Stuff\\Git\\interactive_subgraph_visualiser\\src\\view\\assets\\open.jpeg"
             }
         }
+    },
+    "@info_labels": {
+        "colours": {
+            "dark_bg": "#040F16",
+            "normal_border": "#040F16"
+        },
+        "misc": {
+            "text_horiz_alignment": "center"
+        }
     }
 }

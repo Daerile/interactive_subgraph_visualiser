@@ -396,11 +396,12 @@ class UIPanel:
             container=information_box
         )
 
-        name_label = pgui.elements.UILabel(
-            relative_rect=pg.Rect(10, 50, self.width - 20, 30),
-            text=f'No node selected or no name specified',
+        name_label = pgui.elements.UITextBox(
+            relative_rect=pg.Rect(10, 50, self.width - 20, -1),
+            html_text=f'No node selected or no name specified',
             manager=self.manager,
-            container=information_box
+            container=information_box,
+            object_id=pygame_gui.core.ObjectID(class_id='@info_labels', object_id='#info_label_name')
         )
 
         show_popup_button = pgui.elements.UIButton(
@@ -418,6 +419,18 @@ class UIPanel:
         }
 
         return info_box
+
+    def recreate_show_popup_button(self):
+        self.infos['show_popup_button'].hide()
+        self.infos['show_popup_button'].kill()
+        show_popup_button = pgui.elements.UIButton(
+            relative_rect=pg.Rect(50, self.infos['name_label'].rect.height + 45, self.width - 100, 40),
+            text='Show Other Info',
+            manager=self.manager,
+            container=self.infos['panel']
+        )
+        self.infos['show_popup_button'] = show_popup_button
+
 
     def create_action_information_box(self):
         # Determine the height position based on the previous element, e.g., search box
@@ -607,7 +620,7 @@ class UIPanel:
                             )
                             y_offset += 35
                             break
-                        for subkey, sublist in value.items():
+                        for i, (subkey, sublist) in enumerate(value.items()):
                             subkey_text = str(subkey)
                             if self.is_name_specified():
                                 subkey_text = str(str(subkey) + ': ' + self.selected_node.names[str(subkey)])
@@ -615,13 +628,14 @@ class UIPanel:
                                     for node in self.digraph.nodes:
                                         if node.id == item:
                                             sublist[sublist.index(item)] = str(str(item) + ': ' + node.name)
-                            label = pgui.elements.UILabel(
-                                relative_rect=pg.Rect(20, y_offset, 560, 30),
-                                text=f'{subkey_text}:',
+                            label = pgui.elements.UITextBox(
+                                relative_rect=pg.Rect(20, y_offset, 560, -1),
+                                html_text=f'{subkey_text}:',
                                 manager=self.manager,
-                                container=panel
+                                container=panel,
+                                object_id=pygame_gui.core.ObjectID(class_id='@info_labels', object_id='#info_label_' + str(i))
                             )
-                            y_offset += 35
+                            y_offset += label.rect.height + 5
                             dropdown = pgui.elements.UIDropDownMenu(
                                 options_list=sublist if sublist else ['None'],
                                 starting_option=sublist[0] if sublist else 'None',
@@ -677,6 +691,7 @@ class UIPanel:
                 self.infos['name_label'].set_text('No name specified')
             self.infos['name_label'].set_text(f'Name: {selected_item.name}')
             self.selected_edge = None
+        self.recreate_show_popup_button()
 
     def create_base_panel(self):
         base_panel = pgui.elements.UIPanel(
@@ -740,6 +755,7 @@ class UIPanel:
 
         self.killall()
         self.base_panel = self.create_base_panel()
+        self.switch_panel = self.create_switch_panel()
         self.switch_panel = self.create_switch_panel()
         self.infos = self.create_information_box()
         self.search_box = self.create_search_box()
