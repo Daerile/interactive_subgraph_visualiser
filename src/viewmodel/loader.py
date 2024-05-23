@@ -23,7 +23,7 @@ class Loader:
         if file_path:
             # Assuming data_string is a CSV formatted string
             df = pd.read_csv(StringIO(data_string), sep=';')
-            df.to_csv(file_path, index=False, sep=';', encoding='cp1250')
+            df.to_csv(file_path, index=False, sep=';', encoding='utf-8')
             print(f"File has been saved to: {file_path}")
         else:
             print("No file selected. File not saved.")
