@@ -91,7 +91,6 @@ class View:
             running = self.handle_events()
 
             self.window.fill(self.colors['background'])
-            self.ui_graph.draw_ui()
             self.ui_header.update(time_delta)
             self.ui_header.draw_ui()
             self.ui_panel.update(time_delta)
@@ -109,6 +108,7 @@ class View:
                 running = False
             self.ui_panel.process_events(event)
             self.ui_header.process_events(event)
+            e = pg.VIDEORESIZE
             if event.type == pg.VIDEORESIZE:
                 self.WIDTH = event.w
                 self.HEIGHT = event.h
@@ -138,7 +138,7 @@ class View:
                 if not was_button:
                     for arrow in self.ui_graph.get_arrows():
                         res = arrow[2].handle_click(event)
-                        if res == 1:
+                        if res == 1 and self.ui_panel.popup is None and self.ui_header.popup is None and event.button == 1:
                             self.edge_clicked(arrow)
                             was_edge = True
                             break
@@ -172,12 +172,12 @@ class View:
                         self.node_button_clicked(button)
                     if self.res == 2:
                         print(f'Double clicked button {button.text}')
-                        focused_digraph = self.view_model.handle_node_focused(button.node,
-                                                                              self.ui_panel.get_focused_depth())
-                        self.focus_changed(focused_digraph)
                         focused_depth = self.ui_panel.get_focused_depth()
                         vertical_scatter = self.ui_panel.get_vertical_scatter()
                         horizontal_scatter = self.ui_panel.get_horizontal_scatter()
+                        focused_digraph = self.view_model.handle_node_focused(button.node,
+                                                                              focused_depth)
+                        self.focus_changed(focused_digraph)
                         self.ui_graph.handle_node_focused(focused_digraph, button.node, focused_depth, vertical_scatter,
                                                           horizontal_scatter)
                     self.res = None
@@ -196,58 +196,57 @@ class View:
             elif event.type == pgui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.ui_panel.search_box['search_by_id_button']:
                     self.ui_panel.handle_search_by_id_button_pressed()
-                if event.ui_element == self.ui_panel.search_box['search_by_name_button']:
+                elif event.ui_element == self.ui_panel.search_box['search_by_name_button']:
                     self.ui_panel.handle_search_by_name_button_pressed()
-                if event.ui_element == self.ui_panel.close_button:
+                elif event.ui_element == self.ui_panel.close_button:
                     self.ui_panel.handle_close_button_pressed()
-                if event.ui_element == self.ui_panel.edit_box['dark_mode']:
+                elif event.ui_element == self.ui_panel.edit_box['dark_mode']:
                     self.dark_mode_pressed()
-                if event.ui_element == self.ui_panel.edit_box['light_mode']:
+                elif event.ui_element == self.ui_panel.edit_box['light_mode']:
                     self.light_mode_pressed()
-                if event.ui_element == self.ui_panel.edit_box['personal_mode']:
+                elif event.ui_element == self.ui_panel.edit_box['personal_mode']:
                     self.personal_mode_pressed()
-                if event.ui_element == self.ui_panel.switch_panel['search']:
+                elif event.ui_element == self.ui_panel.switch_panel['search']:
                     self.ui_panel.handle_switch_search_pressed()
-                if event.ui_element == self.ui_panel.switch_panel['edit']:
+                elif event.ui_element == self.ui_panel.switch_panel['edit']:
                     self.ui_panel.handle_switch_edit_pressed()
-                if event.ui_element == self.ui_panel.search_box['return_button']:
+                elif event.ui_element == self.ui_panel.search_box['return_button']:
                     self.ui_graph.handle_return_button_pressed()
                     self.focus_changed(self.digraph)
-                if event.ui_element == self.ui_panel.infos['show_popup_button']:
+                elif event.ui_element == self.ui_panel.infos['show_popup_button']:
                     self.ui_panel.handle_popup_button_pressed()
-                if event.ui_element == self.ui_panel.search_box['focus_button']:
+                elif event.ui_element == self.ui_panel.search_box['focus_button']:
                     self.ui_panel.handle_focus_button_pressed()
                     focused_node = self.ui_panel.get_focused_node()
                     if focused_node is None:
                         continue
-                    focused_digraph = self.view_model.handle_node_focused(focused_node,
-                                                                          self.ui_panel.get_focused_depth())
-                    self.focus_changed(focused_digraph)
                     focused_depth = self.ui_panel.get_focused_depth()
                     vertical_scatter = self.ui_panel.get_vertical_scatter()
                     horizontal_scatter = self.ui_panel.get_horizontal_scatter()
+                    focused_digraph = self.view_model.handle_node_focused(focused_node,
+                                                                          focused_depth)
+                    self.focus_changed(focused_digraph)
                     self.ui_graph.handle_node_focused(focused_digraph, focused_node, focused_depth, vertical_scatter,
                                                       horizontal_scatter)
-                if event.ui_element == self.ui_header.load_button:
+                elif event.ui_element == self.ui_header.load_button:
                     column_names = self.view_model.handle_load_button_pressed()
                     if column_names is None:
                         continue
                     self.ui_header.handle_load_button_pressed(column_names)
-                if event.ui_element == self.ui_header.save_button:
+                elif event.ui_element == self.ui_header.save_button:
                     export_digraph = self.ui_graph.get_focused_digraph()
                     if export_digraph is None:
                         continue
                     self.view_model.handle_save_button_pressed(export_digraph)
-                if event.ui_element == self.ui_header.help_button:
+                elif event.ui_element == self.ui_header.help_button:
                     self.ui_header.handle_help_button_pressed()
-                if self.ui_header.menu_buttons is not None and event.ui_element in self.ui_header.menu_buttons.values():
+                elif self.ui_header.menu_buttons is not None and event.ui_element in self.ui_header.menu_buttons.values():
                     self.ui_header.handle_menu_button_pressed(event.ui_element)
-                if self.ui_header.load_popup_items is not None and event.ui_element == self.ui_header.load_popup_items[
-                    'okay_button']:
+                elif self.ui_header.load_popup_items is not None and event.ui_element == self.ui_header.load_popup_items['okay_button']:
                     (must_have_pairings, optional_pairings) = self.ui_header.handle_load_popup_okay_button_pressed()
                     self.digraph = self.view_model.create_digraph(must_have_pairings, optional_pairings)
                     self.digraph_loaded(optional_pairings)
-                if self.ui_header.load_popup_items is not None and event.ui_element == self.ui_header.load_popup_items[
+                elif self.ui_header.load_popup_items is not None and event.ui_element == self.ui_header.load_popup_items[
                     'cancel_button']:
                     self.ui_header.handle_load_popup_cancel_button_pressed()
 
