@@ -122,7 +122,6 @@ class Layout:
         pos = {}
         rest_height = height / 2
 
-        # DAG -> BFS TODO
         for node in self.nodes:
             if (
                     not self.adjacency_list[self.node_map[node.id]]
