@@ -22,7 +22,7 @@ class NodeButton:
         self.font_size = self.calculate_font_size()
         self.font = pg.font.Font(None, self.font_size)  # Initialize font; None for default font
         self.last_click_time = 0
-        self.last_click_pos = (0,0)
+        self.last_click_pos = (0, 0)
 
         self.unscaled_font_size = self.font_size
         self.unscaled_radius = radius
