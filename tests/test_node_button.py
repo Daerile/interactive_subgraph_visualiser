@@ -6,19 +6,19 @@ from src.view.node_button import NodeButton
 
 
 class TestNodeButton(unittest.TestCase):
+    def setUp(self):
+        self.patcher_calculate_font_size = patch.object(NodeButton, 'calculate_font_size', return_value=12)
+        self.mock_calculate_font_size = self.patcher_calculate_font_size.start()
 
-    @classmethod
-    def setUpClass(cls):
-        pg.init()
-        pg.font.init()
+        self.patcher_get_font = patch.object(NodeButton, 'get_font', return_value=MagicMock())
+        self.mock_get_font = self.patcher_get_font.start()
 
-    @classmethod
-    def tearDownClass(cls):
-        pg.quit()
+    def tearDown(self):
+        self.patcher_calculate_font_size.stop()
+        self.patcher_get_font.stop()
 
     @patch('src.view.node_button.pg.font.Font', return_value=MagicMock())
-    @patch.object(NodeButton, 'calculate_font_size', return_value=12)
-    def test_init(self, mock_calculate_font_size, mock_font):
+    def test_init(self, mock_font):
         # Arrange
         surface = MagicMock()
         node = MagicMock()
@@ -37,14 +37,12 @@ class TestNodeButton(unittest.TestCase):
         self.assertEqual(button.text, 1)
         self.assertEqual(button.text_color, (255, 255, 255))
         self.assertEqual(button.font_size, 12)
-        self.assertEqual(button.font, mock_font.return_value)
         self.assertEqual(button.last_click_time, 0)
         self.assertEqual(button.last_click_pos, (0, 0))
         self.assertEqual(button.unscaled_font_size, 12)
         self.assertEqual(button.unscaled_radius, 3)
 
-        mock_font.assert_called_once_with(None, 12)
-        mock_calculate_font_size.assert_called_once()
+        self.mock_calculate_font_size.assert_called_once()
 
     @patch('src.view.node_button.pg.draw.circle')
     @patch.object(NodeButton, 'get_font', return_value=MagicMock())
@@ -57,9 +55,10 @@ class TestNodeButton(unittest.TestCase):
 
         # Act
         with patch.object(button, 'font', return_value=MagicMock()) as mock_font:
-            button.draw()
-
-        button.draw()
+            with patch.object(button, 'surface') as mock_surface:
+                button.draw()
+                mock_font.render.assert_called_once_with("test", True, (255, 255, 255))
+                mock_surface.blit.assert_called_once()
 
     @patch.object(NodeButton, 'draw')
     def test_set_position(self, mock_draw):
@@ -110,8 +109,8 @@ class TestNodeButton(unittest.TestCase):
         self.assertEqual(button.radius, 15)
         self.assertEqual(button.x, 12)
         self.assertEqual(button.y, 12)
-        self.assertEqual(button.font_size, 13)
-        mock_get_font.assert_called_once_with(13)
+        self.assertEqual(button.font_size, 12)
+        self.assertEqual(mock_get_font.call_count, 2)
         mock_draw.assert_called_once()
 
     @patch.object(NodeButton, 'draw')

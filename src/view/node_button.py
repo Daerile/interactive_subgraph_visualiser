@@ -1,5 +1,6 @@
 import pygame as pg
 
+
 class NodeButton:
     # Cache to hold font objects
     font_cache = {}
@@ -22,7 +23,7 @@ class NodeButton:
         self.text = node.id
         self.text_color = text_color
         self.font_size = self.calculate_font_size()
-        self.font = pg.font.Font(None, self.font_size)  # Initialize font; None for default font
+        self.font = self.get_font(self.font_size)  # Initialize font
         self.last_click_time = 0
         self.last_click_pos = (0, 0)
 
@@ -37,25 +38,24 @@ class NodeButton:
                 self.last_click_pos = event.pos
                 self.last_click_time = time
                 return 2
-            if (mouse_x - self.x)**2 + (mouse_y - self.y)**2 <= self.radius**2:
+            if (mouse_x - self.x) ** 2 + (mouse_y - self.y) ** 2 <= self.radius ** 2:
                 self.last_click_pos = event.pos
                 self.last_click_time = time
                 return 1
         return 0
 
-    # Method to calculate the font size based on the radius of the node button
+    # Method to calculate the font size based on the radius and text length
     def calculate_font_size(self):
-        min_font_size = 12
-        max_font_size = 30
-        diameter = self.radius * 2 - 3
+        max_diameter = self.radius * 2
+        font_size = max_diameter * 0.4  # Start with 40% of the diameter
+        font = self.get_font(int(font_size))
 
-        # Calculate a scaling factor based on the length of the text
-        length_factor = max(1, len(self.text) / 3)  # Adjust this division factor based on empirical results
+        # Measure text width and adjust font size
+        while font.size(self.text)[0] > max_diameter - 10 and font_size > 10:  # Ensure some padding
+            font_size -= 1
+            font = self.get_font(int(font_size))
 
-        # Calculate the initial font size based on the diameter and adjusted by the length of the text
-        font_size = max(min_font_size, min(max_font_size, (diameter / length_factor)))
-
-        return int(font_size - 3)
+        return int(font_size)
 
     # Method to draw the node button on the surface
     def draw(self):
@@ -87,10 +87,8 @@ class NodeButton:
         self.x = int(zoom_center[0] + delta_x2)
         self.y = int(zoom_center[1] + delta_y2)
 
-        new_font_size = int(self.unscaled_font_size * zoom_scale)
-        if abs(new_font_size - self.font_size) >= 3:  # Update font only on significant changes
-            self.font_size = new_font_size
-            self.font = self.get_font(self.font_size)
+        self.font_size = self.calculate_font_size()
+        self.font = self.get_font(self.font_size)
 
         self.draw()
 
