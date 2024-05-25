@@ -202,9 +202,13 @@ class CanvasElementManager:
                         new_x, new_y = button2.x, button2.y
                         diff_x = new_x - old_x
                         diff_y = new_y - old_y
+                        print(diff_x, diff_y)
                         if math.isclose(old_x, new_x, abs_tol=1) and math.isclose(old_y, new_y, abs_tol=1):
                             all_close = all_close and True
                         else:
+                            if math.isclose(diff_x / 10, 0, abs_tol=5) and math.isclose(diff_y / 10, 0, abs_tol=5):
+                                all_close = all_close and True
+                                continue
                             all_close = all_close and False
                         button.move(diff_x / 10, diff_y / 10)
                     self.draw_node_buttons()
