@@ -5,6 +5,7 @@ dependencies:
   - python=3.11
   - pytest
   - pandas
+  - numpy
   - pygame
   - networkx
   - scipy
@@ -12,3 +13,4 @@ dependencies:
   - pip:
       - pygame_gui
       - tk
+      - chardet

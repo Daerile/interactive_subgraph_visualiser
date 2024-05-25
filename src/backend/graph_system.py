@@ -1,6 +1,5 @@
 import networkx as nx
 import pandas as pd
-from collections import deque
 from src.backend.node import Node
 
 class GraphSystem:

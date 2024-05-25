@@ -1,16 +1,9 @@
 from collections import deque
 
-import pygame as pg
-import pygame_gui as pgui
 import numpy as np
-import pandas as pd
 import networkx as nx
 from random import random
-from src.view.node_button import NodeButton
 from src.backend.node import Node
-import pprint
-import cProfile
-import pstats
 
 
 # The Layout class is responsible for creating and managing the layout of the nodes and edges in the graph.

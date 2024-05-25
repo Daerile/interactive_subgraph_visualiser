@@ -1,7 +1,5 @@
-import pygame as pg
-import pygame_gui as pgui
-
 from src.view.canvas_element_manager import CanvasElementManager
+
 
 class UIGraph:
     # Initialize the UIGraph class with the given parameters

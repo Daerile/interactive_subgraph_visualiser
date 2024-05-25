@@ -1,4 +1,3 @@
-from time import sleep
 import pygame as pg
 import pygame_gui as pgui
 import networkx as nx

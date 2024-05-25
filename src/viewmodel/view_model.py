@@ -1,15 +1,6 @@
-import pygame as pg
-import pygame_gui as pgui
-import numpy as np
-import pandas as pd
 import networkx as nx
-from random import random
-from src.view.node_button import NodeButton
-from src.view.canvas_element_manager import CanvasElementManager
-from src.backend.node import Node
 from src.backend.graph_system import GraphSystem
 from src.viewmodel.loader import Loader
-import pprint
 
 
 class ViewModel:
@@ -66,5 +57,4 @@ class ViewModel:
         to_save += "\n"
         for node in export_digraph.nodes:
             to_save += node.focused_connections_to_csv()
-        pprint.pprint(to_save)
         Loader.save_file(to_save)

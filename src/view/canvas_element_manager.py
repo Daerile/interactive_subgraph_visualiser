@@ -1,5 +1,4 @@
 import pygame as pg
-import pygame_gui as pgui
 import math
 from src.view.node_button import NodeButton
 from src.view.arrow import Arrow

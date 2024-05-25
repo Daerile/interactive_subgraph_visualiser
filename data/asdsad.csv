@@ -1,0 +1,12 @@
+node_id;sub_id;connections;node_name;sub_id_value_name;alcsúcsid_megnevezes
+m761;0;;Milyen gyakran fodul el?, hogy vizelés közben a vizeletsugár elakad és újra kell indítania?;;Az esetek felében
+m761;1;;Milyen gyakran fodul el?, hogy vizelés közben a vizeletsugár elakad és újra kell indítania?;;Az esetek felében
+m761;2;;Milyen gyakran fodul el?, hogy vizelés közben a vizeletsugár elakad és újra kell indítania?;;Az esetek felében
+m761;3;;Milyen gyakran érzi úgy, hogy nehéz a vizelést visszatartania?;;Az esetek felében
+m1;0;;páciens neme;;nõ
+m1;1;m761;páciens neme;;nõ
+m1;2;m761;páciens neme;;nõ
+m4;0;;testtömeg;Kg;ismeretlen
+m152;0;;csípõkörfogat;cm;ismeretlen
+m281;0;;Vázizomtömeg index;Kg/m2;Nem számítható
+m281;1;m761;Vázizomtömeg index;Kg/m2;Nem számítható
