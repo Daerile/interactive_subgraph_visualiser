@@ -3,8 +3,8 @@ import pandas as pd
 from collections import deque
 from src.backend.node import Node
 
-
 class GraphSystem:
+    # Initializes the GraphSystem object with the given parameters and creates nodes and a graph.
     def __init__(self, dataframe: pd.DataFrame, column_names, must_have_pairings, optional_pairings):
         self.dataframe = dataframe
         self.nodes = None
@@ -17,6 +17,7 @@ class GraphSystem:
         self.create_nodes()
         self.create_graph()
 
+    # Creates nodes from the dataframe. Each row in the dataframe represents a node.
     def create_nodes(self):
         nodes = []
         for index, next_node in self.dataframe.iterrows():
@@ -32,6 +33,7 @@ class GraphSystem:
                 nodes.append(Node(next_node, self.column_names, self.must_have_pairings, self.optional_pairings))
         self.nodes = nodes
 
+    # Creates a directed graph (digraph) from the nodes.
     def create_graph(self):
         digraph = nx.DiGraph()
         for node in self.nodes:
@@ -47,6 +49,7 @@ class GraphSystem:
                             break
         self.digraph = digraph
 
+    # Returns a subgraph of the digraph that includes nodes within the given depth from the node with the given node_id.
     def get_subgraph(self, node_id, depth):
         starter_node = None
         for node in self.digraph.nodes:
@@ -61,4 +64,3 @@ class GraphSystem:
         for node in full_subgraph.nodes:
             node.create_focused_connections(full_subgraph.edges)
         return full_subgraph
-

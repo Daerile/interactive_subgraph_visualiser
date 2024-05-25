@@ -4,6 +4,7 @@ import pygame_gui.core
 
 
 class UIPanel:
+    # Initialization of the UIPanel class with the given parameters
     def __init__(self, window, manager, width, height, digraph, focused_depth, vertical_scatter, horizontal_scatter,
                  header_height, colors=None, optional_pairings=None):
         if colors is not None:
@@ -44,6 +45,7 @@ class UIPanel:
         self.popup = None
         self.create_close_button()
 
+    # The create_switch_panel method creates the switch panel for the UI panel
     def create_switch_panel(self):
         switch_panel = pgui.elements.UIPanel(
             relative_rect=pg.Rect(0, 0, self.width, 50),
@@ -76,6 +78,7 @@ class UIPanel:
 
         return item_map
 
+    # The create_edit_box method creates the edit box for the UI panel
     def create_edit_box(self):
         starting_height = self.switch_panel['panel'].get_relative_rect().height
         edit_panel = pgui.elements.UIPanel(
@@ -85,8 +88,7 @@ class UIPanel:
             container=self.base_panel
         )
 
-        button_width = (
-                                   self.width - 30) // 2  # Divides the available width into two, leaving some space between buttons
+        button_width = (self.width - 30) // 2  # Divides the available width into two, leaving some space between buttons
 
         dark_mode_button = pgui.elements.UIButton(
             relative_rect=pg.Rect(10, 10, button_width, 30),  # Positioned on the left
@@ -154,6 +156,7 @@ class UIPanel:
 
         return items_map
 
+    # The create_search_box method creates the search box for the UI panel
     def create_search_box(self):
         starting_height = self.switch_panel['panel'].get_relative_rect().height
         # Panel to contain the search elements
@@ -288,6 +291,7 @@ class UIPanel:
         }
         return return_map
 
+    # The create_close_button method creates the close button for the UI panel
     def create_close_button(self):
         if self.close_button:
             self.close_button.hide()
@@ -309,6 +313,7 @@ class UIPanel:
 
         self.close_button = close_button
 
+    # The handle_close_button_pressed method handles the event of the close button being pressed
     def handle_close_button_pressed(self):
         if self.closed:
             self.closed = False
@@ -323,6 +328,7 @@ class UIPanel:
             self.create_close_button()
             self.base_panel.hide()
 
+    # The get_all_node_info method returns all node information based on the mode
     def get_all_node_info(self):
         if self.search_mode == 'id':
             return [node.id for node in self.digraph.nodes]
@@ -330,6 +336,7 @@ class UIPanel:
             ret = [node.name for node in self.digraph.nodes if isinstance(node.name, str)]
             return ret
 
+    # The create_drop_down_menu method creates a drop-down menu for the UI panel
     def create_drop_down_menu(self, options_list, starting_option, relative_rect, manager, container, update):
         if update:
             self.search_box['dropdown'].hide()
@@ -343,6 +350,7 @@ class UIPanel:
         )
         return dropdown
 
+    # The filter_nodes_by_search method filters nodes based on the search query
     def filter_nodes_by_search(self, query):
         all_node_info = self.get_all_node_info()
         if query:
@@ -376,6 +384,7 @@ class UIPanel:
             )
             return None, None
 
+    # The create_information_box method creates the information box for the UI panel
     def create_information_box(self):
         information_box = pgui.elements.UIPanel(
             relative_rect=pg.Rect(0, 3 * self.height / 4, self.width, 3 * self.height / 4),
@@ -421,6 +430,7 @@ class UIPanel:
 
         return info_box
 
+    # The recreate_show_popup_button method recreates the show popup button for the UI panel in case of changes
     def recreate_show_popup_button(self):
         self.infos['show_popup_button'].hide()
         self.infos['show_popup_button'].kill()
@@ -432,6 +442,7 @@ class UIPanel:
         )
         self.infos['show_popup_button'] = show_popup_button
 
+    # The create_action_information_box method creates the action information box for the UI panel
     def create_action_information_box(self):
         # Determine the height position based on the previous element, e.g., search box
         starting_height = self.switch_panel['panel'].get_relative_rect().height + self.search_box[
@@ -454,6 +465,7 @@ class UIPanel:
 
         return {'action_panel': action_panel, 'action_label': action_label}
 
+    # The handle_light_mode_pressed method handles the event of the light mode button being pressed
     def handle_light_mode_pressed(self):
         self.set_action_label('Theme set to light mode')
         self.colors = {
@@ -469,6 +481,7 @@ class UIPanel:
 
         return self.colors
 
+    # The handle_dark_mode_pressed method handles the event of the dark mode button being pressed
     def handle_dark_mode_pressed(self):
         self.set_action_label('Theme set to dark mode')
         self.colors = {
@@ -484,6 +497,7 @@ class UIPanel:
 
         return self.colors
 
+    # The handle_personal_mode_pressed method handles the event of the personal mode button being pressed
     def handle_personal_mode_pressed(self):
         for color, text_entries in self.edit_box['colors'].items():
             red = int(text_entries['red'].get_text())
@@ -493,15 +507,18 @@ class UIPanel:
         self.set_action_label('Personal colors set!')
         return self.colors
 
+    # The change_color_text_entry_texts method changes the color text entry texts for the UI panel
     def change_color_text_entry_texts(self):
         for color, text_entries in self.edit_box['colors'].items():
             text_entries['red'].set_text(str(self.colors[color][0]))
             text_entries['green'].set_text(str(self.colors[color][1]))
             text_entries['blue'].set_text(str(self.colors[color][2]))
 
+    # The handle_search_bar_changed method handles the event of the search bar being changed
     def handle_search_bar_changed(self):
         return self.filter_nodes_by_search(self.search_box['search_text'].get_text())
 
+    # The handle_focus_button_pressed method handles the event of the focus button being pressed
     def handle_focus_button_pressed(self):
         selected_info = self.search_box['dropdown'].selected_option[0]
         if selected_info == 'No results found' or selected_info == 'None':
@@ -520,6 +537,7 @@ class UIPanel:
                     self.update_information_box(node)
                     break
 
+    # The handle_search_by_id_button_pressed method handles the event of the search by ID button being pressed
     def handle_search_by_id_button_pressed(self):
         self.search_mode = 'id'
         if not (self.optional_pairings is None or self.optional_pairings['node_name'] == 'None'):
@@ -537,6 +555,7 @@ class UIPanel:
             update=True
         )
 
+    # The handle_search_by_name_button_pressed method handles the event of the search by name button being pressed
     def handle_search_by_name_button_pressed(self):
         self.search_mode = 'name'
         self.search_box['search_by_id_button'].enable()
@@ -553,6 +572,7 @@ class UIPanel:
             update=True
         )
 
+    # The handle_switch_search_pressed method handles the event of the switch search button being pressed
     def handle_switch_search_pressed(self):
         if self.selected_mode == 'search':
             self.set_action_label('Already in search mode!')
@@ -561,6 +581,7 @@ class UIPanel:
         self.search_box['search_panel'].show()
         self.edit_box['edit_panel'].hide()
 
+    # The handle_switch_edit_pressed method handles the event of the switch edit button being pressed
     def handle_switch_edit_pressed(self):
         if self.selected_mode == 'edit':
             self.set_action_label('Already in edit mode!')
@@ -569,6 +590,7 @@ class UIPanel:
         self.search_box['search_panel'].hide()
         self.edit_box['edit_panel'].show()
 
+    # The handle_popup_button_pressed method handles the event of the popup button being pressed
     def handle_popup_button_pressed(self):
         # Create a popup window with appropriate dimensions
         self.popup = pgui.elements.UIWindow(
@@ -677,6 +699,7 @@ class UIPanel:
 
         self.popup.set_blocking(True)
 
+    # The update_information_box method updates the information box for the UI panel
     def update_information_box(self, selected_item, edge=False):
         if edge:
             self.infos['id_label'].set_text(f'Edge: {selected_item[0].id} - {selected_item[1].id}')
@@ -694,6 +717,7 @@ class UIPanel:
             self.selected_edge = None
         self.recreate_show_popup_button()
 
+    # The create_base_panel method creates the base panel for the UI panel
     def create_base_panel(self):
         base_panel = pgui.elements.UIPanel(
             relative_rect=pg.Rect(0, self.header_height - 5, self.width, self.height),
@@ -706,9 +730,11 @@ class UIPanel:
         )
         return base_panel
 
+    # The set_action_label method sets the action label for the UI panel
     def set_action_label(self, text):
         self.action_information['action_label'].set_text(text)
 
+    # The killall method kills all elements in the UI panel
     def killall(self):
         for element in self.infos.values():
             if element == 'No name specified':
@@ -726,28 +752,35 @@ class UIPanel:
         self.search_box = {}
         self.base_panel = None
 
+    # The get_focused_node method returns the focused node for the UI panel
     def get_focused_node(self):
         return self.selected_node
 
+    # The get_focused_depth method returns the focused depth for the UI panel
     def get_focused_depth(self):
         return int(self.search_box['depth_choose'].selected_option[0])
 
+    # The get_horizontal_scatter method returns the horizontal scatter for the UI panel
     def get_horizontal_scatter(self):
         return int(self.search_box['horizontal_scatter_choose'].selected_option[0])
 
+    # The get_vertical_scatter method returns the vertical scatter for the UI panel
     def get_vertical_scatter(self):
         return int(self.search_box['vertical_scatter_choose'].selected_option[0])
 
+    # The is_name_specified method checks if the name is specified for the UI panel
     def is_name_specified(self):
         if self.optional_pairings is None or self.optional_pairings['node_name'] == 'None':
             return False
         return True
 
+    # The sub_id_value_names_specified method checks if the sub ID value names are specified for the UI panel
     def sub_id_value_names_specified(self):
         if self.optional_pairings is None or self.optional_pairings['sub_id_value_name'] == 'None':
             return False
         return True
 
+    # The resize method resizes the UI panel based on the given parameters
     def resize(self, width, height, window, manager):
         self.window = window
         self.manager = manager
@@ -766,14 +799,18 @@ class UIPanel:
         if self.closed:
             self.base_panel.hide()
 
+    # The process_events method processes events for the UI panel
     def process_events(self, event):
         e = []
 
+    # The draw_ui method draws the UI for the UI panel
     def draw_ui(self):
         self.manager.draw_ui(self.window)
 
+    # The get_manager method returns the manager for the UI panel
     def get_manager(self):
         return self.manager
 
+    # The update method updates the UI panel based on the given time delta
     def update(self, time_delta):
         self.manager.update(time_delta)

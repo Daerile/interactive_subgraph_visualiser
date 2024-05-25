@@ -8,7 +8,15 @@ from src.view.layout import Layout
 
 
 class CanvasElementManager:
-    def __init__(self, digraph, window, manager, colors, node_radius=15, focused=False, focused_depth=None, focused_node=None, vertical_scatter=3, horizontal_scatter=3):
+    """
+    This class manages the elements on the canvas, including nodes and arrows.
+    """
+
+    def __init__(self, digraph, window, manager, colors, node_radius=15, focused=False, focused_depth=None,
+                 focused_node=None, vertical_scatter=3, horizontal_scatter=3):
+        """
+        Initialize the CanvasElementManager with the given parameters.
+        """
         self.digraph = digraph
         self.window = window
         self.manager = manager
@@ -27,17 +35,25 @@ class CanvasElementManager:
         self.layout = Layout(self.digraph, self)
 
     def move_all(self, dx, dy):
+        """
+        Move all nodes by the given dx and dy.
+        """
         for node, button in self.node_buttons:
             button.move(dx, dy)
 
     def zoom_all(self, zoom_lvl, scale_factor, cursor_pos):
-
+        """
+        Zoom all nodes based on the given zoom level, scale factor and cursor position.
+        """
         for node, button in self.node_buttons:
             button.zoom(zoom_lvl, scale_factor, cursor_pos)
         for arrow in self.arrows:
             arrow[2].zoom(scale_factor)
 
     def change_colors(self, colors):
+        """
+        Change the colors of all nodes and arrows to the given colors.
+        """
         self.colors = colors
         for node, button in self.node_buttons:
             button.change_colors(colors)
@@ -45,6 +61,9 @@ class CanvasElementManager:
             arrow[2].change_color(colors['edge'])
 
     def selected_node_changed(self, selected_button):
+        """
+        Handle the event when the selected node changes.
+        """
         if selected_button == self.selected_button:
             return
         for node, button in self.node_buttons:
@@ -56,6 +75,9 @@ class CanvasElementManager:
         self.unset_selected_edge()
 
     def selected_edge_changed(self, selected_arrow):
+        """
+        Handle the event when the selected edge changes.
+        """
         if selected_arrow == self.selected_arrow:
             return
         for arrow in self.arrows:
@@ -67,6 +89,9 @@ class CanvasElementManager:
         self.unset_selected_node()
 
     def searched_nodes_changed(self, filtered_info, mode):
+        """
+        Handle the event when the searched nodes change.
+        """
         if filtered_info is None:
             for node, button in self.node_buttons:
                 if button != self.selected_button:
@@ -90,16 +115,25 @@ class CanvasElementManager:
                         button.change_colors(self.colors)
 
     def unset_selected_node(self):
+        """
+        Unset the selected node.
+        """
         if self.selected_button is not None:
             self.selected_button.change_colors(self.colors)
             self.selected_button = None
 
     def unset_selected_edge(self):
+        """
+        Unset the selected edge.
+        """
         if self.selected_arrow is not None:
             self.selected_arrow[2].change_color(self.colors['edge'])
             self.selected_arrow = None
 
     def center_around(self, x, y, full_cem=False):
+        """
+        Center the canvas around the given x and y coordinates.
+        """
         if full_cem:
             if len(self.node_buttons) == 0:
                 return
@@ -115,6 +149,9 @@ class CanvasElementManager:
                 button.move(diff_x, diff_y)
 
     def update_focus(self, digraph, focused_depth=None, focused_node=None, vertical_scatter=3, horizontal_scatter=3):
+        """
+        Update the focus of the canvas.
+        """
         temp_cem = CanvasElementManager(
             digraph,
             self.window,
@@ -136,6 +173,9 @@ class CanvasElementManager:
         self.digraph = digraph
 
     def interpolate(self, old_node_buttons, new_node_buttons):
+        """
+        Interpolate between the old and new node buttons.
+        """
         nodes_to_remove = []
         for node, button in old_node_buttons:
             if node not in [node2 for node2, button2 in new_node_buttons]:
@@ -173,18 +213,30 @@ class CanvasElementManager:
             clock.tick(30)
 
     def draw_node_buttons(self):
+        """
+        Draw all node buttons.
+        """
         for node, button in self.node_buttons:
             button.draw()
 
     def draw_arrows(self):
+        """
+        Draw all arrows.
+        """
         for arrow in self.arrows:
             arrow[2].draw()
 
     def create_node_button(self, x, y, node):
+        """
+        Create a node button at the given x and y coordinates.
+        """
         button = NodeButton(self.window, x, y, self.NODE_RADIUS, node, self.colors['node'], self.colors['text'])
         self.node_buttons.append((node, button))
 
     def create_edges(self):
+        """
+        Create edges between nodes.
+        """
         for edge in self.digraph.edges():
             start_button, end_button = None, None
             for node, button in self.node_buttons:
@@ -196,7 +248,8 @@ class CanvasElementManager:
                 self.create_arrow(self.colors['edge'], start_button, end_button, edge[0], edge[1])
 
     def create_arrow(self, color, start_button, end_button, node_start, node_end, arrow_size=2, arrowhead_size=3):
+        """
+        Create an arrow with the given parameters.
+        """
         arrow = Arrow(self.window, start_button, end_button, color, arrow_size, arrowhead_size)
         self.arrows.append((node_start, node_end, arrow))
-
-

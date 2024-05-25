@@ -1,15 +1,17 @@
 import pygame as pg
 
-
 class NodeButton:
-    font_cache = {}  # Cache to hold font objects
+    # Cache to hold font objects
+    font_cache = {}
 
     @classmethod
+    # Class method to get font of a specific size, creates and caches it if not already present
     def get_font(cls, size):
         if size not in cls.font_cache:
             cls.font_cache[size] = pg.font.Font(None, size)
         return cls.font_cache[size]
 
+    # Constructor for the NodeButton class
     def __init__(self, surface, x, y, radius, node, color=(0, 92, 37), text_color=(255, 255, 255)):
         self.x = int(x)
         self.y = int(y)
@@ -27,6 +29,7 @@ class NodeButton:
         self.unscaled_font_size = self.font_size
         self.unscaled_radius = radius
 
+    # Method to handle click events on the node button
     def handle_click(self, event, time):
         if event.type == pg.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = event.pos
@@ -40,6 +43,7 @@ class NodeButton:
                 return 1
         return 0
 
+    # Method to calculate the font size based on the radius of the node button
     def calculate_font_size(self):
         min_font_size = 12
         max_font_size = 30
@@ -53,6 +57,7 @@ class NodeButton:
 
         return int(font_size - 3)
 
+    # Method to draw the node button on the surface
     def draw(self):
         pg.draw.circle(self.surface, self.color, (self.x, self.y), int(self.radius))
         if self.radius > 10:
@@ -60,16 +65,19 @@ class NodeButton:
             text_rect = text_surface.get_rect(center=(self.x, self.y))
             self.surface.blit(text_surface, text_rect)
 
+    # Method to set the position of the node button
     def set_position(self, x, y):
         self.x = x
         self.y = y
         self.draw()
 
+    # Method to move the node button by a certain delta
     def move(self, dx, dy):
         self.x += dx
         self.y += dy
         self.draw()
 
+    # Method to zoom the node button
     def zoom(self, zoom_lvl, zoom_scale, zoom_center=(0, 0)):
         self.radius = self.radius * zoom_scale
         delta_x = self.x - zoom_center[0]
@@ -79,7 +87,6 @@ class NodeButton:
         self.x = int(zoom_center[0] + delta_x2)
         self.y = int(zoom_center[1] + delta_y2)
 
-
         new_font_size = int(self.unscaled_font_size * zoom_scale)
         if abs(new_font_size - self.font_size) >= 3:  # Update font only on significant changes
             self.font_size = new_font_size
@@ -87,6 +94,7 @@ class NodeButton:
 
         self.draw()
 
+    # Method to change the colors of the node button
     def change_colors(self, colors, selected=False, searched=False):
         if selected:
             self.color = colors['selected_node']
@@ -97,6 +105,6 @@ class NodeButton:
         self.text_color = colors['text']
         self.draw()
 
+    # Method to return the attributes of the node as a dictionary
     def information_dict(self):
         return self.node.attributes
-

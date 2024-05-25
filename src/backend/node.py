@@ -5,6 +5,7 @@ import pandas as pd
 
 
 class Node:
+    # Initializes the Node object with the given parameters. It also initializes connections and attributes.
     def __init__(self, node: pd.Series, column_names, must_have_pairings, optional_pairings):
         self.column_names = column_names
         self.id = str(node[must_have_pairings['node_id']])
@@ -30,6 +31,7 @@ class Node:
 
         self.focused_connections = None
 
+    # Initializes the attributes of the node. Attributes include connections and any additional columns in the dataframe.
     def init_attributes(self, node):
         starter_dict = {
             'connections': self.connections
@@ -41,6 +43,7 @@ class Node:
 
         return starter_dict
 
+    # Initializes the connections of the node. Connections are determined based on the 'connections' column in the dataframe.
     def init_connections(self, node):
         try:
             if math.isnan(node[self.must_have_pairings['connections']]):
@@ -56,6 +59,7 @@ class Node:
             }
             return ret_dict
 
+    # Creates focused connections for the node based on the given edges.
     def create_focused_connections(self, edges):
         self.focused_connections = {}
         for sub_id in self.sub_ids:
@@ -67,6 +71,7 @@ class Node:
                     connections.append(edge[1].id)
             self.focused_connections.update({sub_id: connections})
 
+    # Adds connections to the node based on the given node data.
     def add_connections(self, node):
         try:
             if math.isnan(node[self.must_have_pairings['connections']]):
@@ -85,6 +90,7 @@ class Node:
             else:
                 self.connections = new_dict
 
+    # Appends a different sub_id to the node and updates the connections and attributes accordingly.
     def append_diff_sub_id(self, node: pd.Series):
         self.sub_ids.append(node[self.must_have_pairings['sub_id']])
         if self.sub_id_value_names:
@@ -94,6 +100,7 @@ class Node:
         self.add_connections(node)
         self.attributes['connections'] = self.connections
 
+    # Converts the focused connections of the node to a CSV format.
     def focused_connections_to_csv(self):
         if self.focused_connections is None:
             return None
@@ -112,6 +119,7 @@ class Node:
                 res += "\n"
             return res
 
+    # Returns a set of nodes that are connected to this node.
     def get_connected_nodes(self):
         return_set = set()
         if self.connections is None:

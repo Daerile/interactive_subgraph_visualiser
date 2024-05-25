@@ -2,8 +2,9 @@ import pygame as pg
 import pygame_gui as pgui
 import os
 
-
+# UIHeader class is responsible for creating and managing the header of the user interface.
 class UIHeader:
+    # Initialize the UIHeader with the given parameters.
     def __init__(self, window, manager, width, height, digraph):
         self.window = window
         self.width = width
@@ -13,41 +14,49 @@ class UIHeader:
         self.menu_points = None
         self.menu_buttons = None
         self.text_box = None
-        self.base_panel = self.create_base_panel()
-        self.create_buttons()
+        self.base_panel = self.create_base_panel()  # Create the base panel
+        self.create_buttons()  # Create the buttons
         self.popup = None
         self.load_popup = None
         self.load_popup_items = None
 
+    # Create the buttons for the UIHeader.
     def create_buttons(self):
+        # Define the dimensions and spacing for the buttons.
         button_width = 100
         button_height = self.height - 10
         button_spacing = 10
         # Calculate starting x position so buttons are aligned
         start_x = 10  # Start 10 pixels from the left of the panel
 
+        # Create the Load button.
         self.load_button = pgui.elements.UIButton(
             relative_rect=pg.Rect(start_x, 5, button_width, button_height),
             text='Load',
             manager=self.manager,
             container=self.base_panel)
 
-        start_x += button_width + button_spacing  # Move right for the next button
+        # Move right for the next button
+        start_x += button_width + button_spacing
 
+        # Create the Save button.
         self.save_button = pgui.elements.UIButton(
             relative_rect=pg.Rect(start_x, 5, button_width, button_height),
             text='Save',
             manager=self.manager,
             container=self.base_panel)
 
+        # Move right for the next button
         start_x += button_width + button_spacing
 
+        # Create the Help button.
         self.help_button = pgui.elements.UIButton(
             relative_rect=pg.Rect(start_x, 5, button_width, button_height),
             text='Help',
             manager=self.manager,
             container=self.base_panel)
 
+    # Create the base panel for the UIHeader.
     def create_base_panel(self):
         base_panel = pgui.elements.UIPanel(
             relative_rect=pg.Rect((0, 0), (self.width, self.height)),
@@ -61,16 +70,16 @@ class UIHeader:
         )
         return base_panel
 
-    # Define the handle_help_button_pressed function
+    # Handle the event of the Help button being pressed.
     def handle_help_button_pressed(self):
-        # Create a popup window
+        # Create a popup window for the Help menu.
         self.popup = pgui.elements.UIWindow(
             rect=pg.Rect(0, 0, 800, 800),
             manager=self.manager,
             window_display_title='Help menu'
         )
 
-        # Create a left panel inside the popup
+        # Create a left panel inside the popup for the Help menu.
         left_panel = pgui.elements.UIPanel(
             relative_rect=pg.Rect(0, 0, 200, 800),
             starting_height=0,
@@ -178,7 +187,7 @@ class UIHeader:
 
             self.menu_buttons[point] = button
 
-        # Create a right panel inside the popup
+        # Create a right panel inside the popup for the Help menu.
         right_panel = pgui.elements.UIPanel(
             relative_rect=pg.Rect(200, 0, 600, 800),  # Starts at x=200, spans 600 wide
             starting_height=0,
@@ -192,7 +201,7 @@ class UIHeader:
             }
         )
 
-        # Create a text box inside the right panel
+        # Create a text box inside the right panel for the Help menu.
         self.text_box = pgui.elements.UITextBox(
             relative_rect=pg.Rect(0, 0, 600, 800),
             html_text=self.menu_points['Welcome'],
@@ -202,28 +211,31 @@ class UIHeader:
 
         self.popup.set_blocking(True)
 
+    # Handle the event of a menu button being pressed.
     def handle_menu_button_pressed(self, button):
-        # Get the text of the button that was pressed
+        # Get the text of the button that was pressed.
         text = button.text
 
-        # Get the corresponding text from the menu_points dictionary
+        # Get the corresponding text from the menu_points dictionary.
         menu_text = self.menu_points[text]
 
-        # Set the text of the text box in the right panel
+        # Set the text of the text box in the right panel.
         self.text_box.set_text(menu_text)
 
+    # Handle the event of the Load button being pressed.
     def handle_load_button_pressed(self, column_names):
+        # Define the columns that must be present in the loaded file.
         must_have_columns = ['node_id', 'sub_id', 'connections']
         optional_columns = ['node_name', 'sub_id_value_name']
 
-        # Initialize the load popup window
+        # Initialize the load popup window.
         self.load_popup = pgui.elements.UIWindow(
             rect=pg.Rect(0, 0, 450, 500),
             manager=self.manager,
             window_display_title='Load a Graph'
         )
 
-        # Create a panel inside the popup window
+        # Create a panel inside the popup window.
         panel = pgui.elements.UIPanel(
             relative_rect=pg.Rect(0, 0, 450, 500),
             starting_height=0,
@@ -237,7 +249,7 @@ class UIHeader:
             }
         )
 
-        # Add description text area
+        # Add description text area.
         description_text_area = pgui.elements.UITextBox(
             relative_rect=pg.Rect(10, 10, 430, 80),
             html_text='<b>Please pair the row names.</b><br>Every row that\'s not paired will be in the "other" category.',
@@ -245,7 +257,7 @@ class UIHeader:
             container=panel
         )
 
-        # Create a list of items to populate the dropdowns
+        # Create a list of items to populate the dropdowns.
         items = ['None']
         for column in column_names:
             items.append(column)
@@ -253,7 +265,7 @@ class UIHeader:
         y_position = 100
         must_have_dropdowns = []
 
-        # Create dropdowns for must-have columns
+        # Create dropdowns for must-have columns.
         for i, column_name in enumerate(must_have_columns):
             label = pgui.elements.UILabel(
                 relative_rect=pg.Rect(10, y_position + i * 40, 200, 30),
@@ -276,7 +288,7 @@ class UIHeader:
 
         size = len(must_have_columns)
 
-        # Create dropdowns for optional columns
+        # Create dropdowns for optional columns.
         for i, column_name in enumerate(optional_columns):
             label = pgui.elements.UILabel(
                 relative_rect=pg.Rect(10, y_position + (i + size) * 40, 200, 30),
@@ -295,7 +307,7 @@ class UIHeader:
             optional_dropdowns.append(dropdown)
             last_pos = last_pos + 40 + i * 40
 
-        # Add Okay button
+        # Add Okay button.
         okay_button = pgui.elements.UIButton(
             relative_rect=pg.Rect(10, last_pos + 40, 200, 50),
             text='Okay',
@@ -304,7 +316,7 @@ class UIHeader:
         )
         okay_button.disable()
 
-        # Add Cancel button
+        # Add Cancel button.
         cancel_button = pgui.elements.UIButton(
             relative_rect=pg.Rect(220, last_pos + 40, 200, 50),
             text='Cancel',
@@ -319,7 +331,7 @@ class UIHeader:
             container=panel
         )
 
-        # Store the popup items
+        # Store the popup items.
         self.load_popup_items = {
             'must_have': must_have_dropdowns,
             'optional': optional_dropdowns,
@@ -329,6 +341,7 @@ class UIHeader:
         }
         self.load_popup.set_blocking(True)
 
+    # Handle the event of a must-have dropdown being changed.
     def handle_must_have_dropdown_changed(self):
         for dropdown in self.load_popup_items['must_have']:
             if dropdown.selected_option[0] == 'None':
@@ -345,6 +358,7 @@ class UIHeader:
         self.load_popup_items['okay_button'].enable()
         self.load_popup_items['status_label'].set_text('')
 
+    # Handle the event of the Okay button being pressed in the load popup.
     def handle_load_popup_okay_button_pressed(self):
         must_have_columns = ['node_id', 'sub_id', 'connections']
         optional_columns = ['node_name', 'sub_id_value_name']
@@ -369,6 +383,7 @@ class UIHeader:
         self.load_popup.kill()
         return must_have_pairings, optional_pairings
 
+    # Resize the UIHeader to the given width and height.
     def resize(self, width, height, window, manager):
         self.window = window
         self.manager = manager
@@ -380,15 +395,18 @@ class UIHeader:
         self.base_panel = self.create_base_panel()
         self.create_buttons()
 
+    # Handle the event of the Cancel button being pressed in the load popup.
     def handle_load_popup_cancel_button_pressed(self):
         self.load_popup.kill()
 
+    # Kill all the elements in the UIHeader.
     def killall(self):
         self.load_button.kill()
         self.save_button.kill()
         self.help_button.kill()
         self.base_panel.kill()
 
+    # Process the given event.
     def process_events(self, event):
         self.manager.process_events(event)
 

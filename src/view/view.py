@@ -12,7 +12,9 @@ import time
 import os
 import json
 
+
 class View:
+    # Constructor for the View class
     def __init__(self, digraph: nx.DiGraph, focused_graph: nx.DiGraph = None, focused=False):
         pg.init()
 
@@ -82,6 +84,7 @@ class View:
         self.zoom_lvl = 0
         self.zoom_scale = 1.1 ** self.zoom_lvl
 
+    # Method to run the main loop of the application
     def run(self):
         clock = pg.time.Clock()
         running = True
@@ -101,6 +104,7 @@ class View:
         pg.quit()
         sys.exit()
 
+    # Method to handle all the events in the application
     def handle_events(self):
         running = True
         for event in pg.event.get():
@@ -242,12 +246,14 @@ class View:
                     self.ui_header.handle_help_button_pressed()
                 elif self.ui_header.menu_buttons is not None and event.ui_element in self.ui_header.menu_buttons.values():
                     self.ui_header.handle_menu_button_pressed(event.ui_element)
-                elif self.ui_header.load_popup_items is not None and event.ui_element == self.ui_header.load_popup_items['okay_button']:
+                elif self.ui_header.load_popup_items is not None and event.ui_element == \
+                        self.ui_header.load_popup_items['okay_button']:
                     (must_have_pairings, optional_pairings) = self.ui_header.handle_load_popup_okay_button_pressed()
                     self.digraph = self.view_model.create_digraph(must_have_pairings, optional_pairings)
                     self.digraph_loaded(optional_pairings)
-                elif self.ui_header.load_popup_items is not None and event.ui_element == self.ui_header.load_popup_items[
-                    'cancel_button']:
+                elif self.ui_header.load_popup_items is not None and event.ui_element == \
+                        self.ui_header.load_popup_items[
+                            'cancel_button']:
                     self.ui_header.handle_load_popup_cancel_button_pressed()
 
             elif event.type == pgui.UI_TEXT_ENTRY_CHANGED:
@@ -267,29 +273,35 @@ class View:
 
         return running
 
+    # Method to handle the event of light mode being pressed
     def light_mode_pressed(self):
         colors = self.ui_panel.handle_light_mode_pressed()
         self.colors = colors
         self.ui_graph.change_colors(colors)
 
+    # Method to handle the event of dark mode being pressed
     def dark_mode_pressed(self):
         colors = self.ui_panel.handle_dark_mode_pressed()
         self.colors = colors
         self.ui_graph.change_colors(colors)
 
+    # Method to handle the event of personal mode being pressed
     def personal_mode_pressed(self):
         colors = self.ui_panel.handle_personal_mode_pressed()
         self.colors = colors
         self.ui_graph.change_colors(colors)
 
+    # Method to handle the event of a node button being clicked
     def node_button_clicked(self, button: NodeButton):
         self.ui_panel.update_information_box(button.node)
         self.ui_graph.handle_node_selected(button)
 
+    # Method to handle the event of an edge being clicked
     def edge_clicked(self, arrow):
         self.ui_panel.update_information_box(arrow, edge=True)
         self.ui_graph.handle_edge_selected(arrow)
 
+    # Method to handle the event of the focus being changed
     def focus_changed(self, focused_digraph):
         self.zoom_lvl = 0
         focused_depth = self.ui_panel.get_focused_depth()
@@ -316,6 +328,7 @@ class View:
         self.ui_panel.update(0)
         self.ui_panel.draw_ui()
 
+    # Method to handle the event of a digraph being loaded
     def digraph_loaded(self, optional_pairings):
         self.zoom_lvl = 0
         self.ui_panel.killall()

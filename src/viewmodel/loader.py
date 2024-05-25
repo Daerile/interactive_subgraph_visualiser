@@ -9,12 +9,20 @@ class Loader:
 
     @classmethod
     def init_root(cls):
+        """
+        Initialize the root Tkinter object if it has not been initialized yet.
+        This is used for the file dialog operations.
+        """
         if not hasattr(cls, 'root'):
             cls.root = tk.Tk()
             cls.root.withdraw()
 
     @classmethod
     def save_file(cls, data_string):
+        """
+        Save a string of data to a file. The data string is assumed to be in CSV format.
+        A file dialog is used to ask the user where to save the file.
+        """
         cls.init_root()
         file_path = filedialog.asksaveasfilename(
             filetypes=(('CSV files', '*.csv'),),
@@ -30,6 +38,10 @@ class Loader:
 
     @classmethod
     def load_file(cls):
+        """
+        Load a file using a file dialog. The file types supported are CSV and Excel.
+        The file is read using the appropriate pandas function based on its type.
+        """
         cls.init_root()
         filetypes = (
             ('CSV files', '*.csv'),
@@ -46,6 +58,10 @@ class Loader:
 
     @classmethod
     def read_file(cls, file_path, file_type):
+        """
+        Read a file given its path and type. The file types supported are CSV and Excel.
+        For CSV files, the encoding is detected before reading the file.
+        """
         if file_type == 'csv':
             with open(file_path, 'rb') as f:
                 data = f.read()

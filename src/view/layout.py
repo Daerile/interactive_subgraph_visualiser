@@ -13,7 +13,9 @@ import cProfile
 import pstats
 
 
+# The Layout class is responsible for creating and managing the layout of the nodes and edges in the graph.
 class Layout:
+    # The constructor initializes the layout with a given directed graph and a CanvasElementManager instance.
     def __init__(self, digraph: nx.DiGraph, cem):
         self.WIDTH = 3000
         self.HEIGHT = 3000
@@ -31,12 +33,14 @@ class Layout:
         self.cem = cem
         self.create_view(digraph)
 
+    # The create_view method creates the view of the graph based on whether the CanvasElementManager is focused or not.
     def create_view(self, digraph: nx.DiGraph):
         if not self.cem.focused:
             self.create_full_elems()
         else:
             self.create_focused_elems(digraph)
 
+    # The create_focused_elems method creates the elements of the graph when the CanvasElementManager is focused.
     def create_focused_elems(self, digraph: nx.DiGraph):
         self.WIDTH = len(self.cem.digraph.nodes) * (self.cem.horizontal_scatter * 50)
         self.HEIGHT = len(self.cem.digraph.nodes) * (self.cem.vertical_scatter * 50)
@@ -65,6 +69,7 @@ class Layout:
         self.cem.create_edges()
         self.cem.center_around(center_pos[0], center_pos[1])
 
+    # The create_from_layer method creates the elements of the graph from a given layer.
     def create_from_layer(self, start_node, center_pos, x_breakpoints_forwards, x_breakpoints_backwards, forward=True):
         layer_before = []
         y_breakpoints = []
@@ -95,6 +100,7 @@ class Layout:
                 for ls in y_breakpoints:
                     y_breakpoints_before.extend(ls)
 
+    # The create_buttons method creates the buttons for the nodes in the graph.
     def create_buttons(self, box_left, box_right, box_top, box_bottom, nodes):
         y_breakpoints = []
         n = len(nodes)
@@ -111,6 +117,7 @@ class Layout:
         print(f'breakpoints: {y_breakpoints}')
         return y_breakpoints
 
+    # The create_full_elems method creates the full elements of the graph.
     def create_full_elems(self):
         height = 600 + 3 * len(self.nodes) + len(self.edge_list)
         width = 600 + 3 * len(self.nodes) + len(self.edge_list)
@@ -118,6 +125,7 @@ class Layout:
         self.fruchterman_reingold(width, height, self.edge_list, pos)
         self.cem.create_edges()
 
+    # The init_positions method initializes the positions of the nodes in the graph.
     def init_positions(self, height, width):
         pos = {}
         rest_height = height / 2
@@ -141,6 +149,7 @@ class Layout:
             self.cem.create_node_button(x, y, node)
         return pos
 
+    # The fruchterman_reingold method applies the Fruchterman-Reingold force-directed algorithm to layout the graph.
     def fruchterman_reingold(self, width, height, edge_list, pos, k=None, t=1000, shift=0, focused=False):
         if k is None:
             if len(pos.keys()) == 0:
