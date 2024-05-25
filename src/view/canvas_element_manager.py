@@ -101,6 +101,8 @@ class CanvasElementManager:
 
     def center_around(self, x, y, full_cem=False):
         if full_cem:
+            if len(self.node_buttons) == 0:
+                return
             center_node = self.node_buttons[0][1]
             diff_x = ((1280 + 300) / 2) - center_node.x
             diff_y = (720 / 2) - center_node.y

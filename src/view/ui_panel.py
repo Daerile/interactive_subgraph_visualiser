@@ -85,7 +85,8 @@ class UIPanel:
             container=self.base_panel
         )
 
-        button_width = (self.width - 30) // 2  # Divides the available width into two, leaving some space between buttons
+        button_width = (
+                                   self.width - 30) // 2  # Divides the available width into two, leaving some space between buttons
 
         dark_mode_button = pgui.elements.UIButton(
             relative_rect=pg.Rect(10, 10, button_width, 30),  # Positioned on the left
@@ -431,7 +432,6 @@ class UIPanel:
         )
         self.infos['show_popup_button'] = show_popup_button
 
-
     def create_action_information_box(self):
         # Determine the height position based on the previous element, e.g., search box
         starting_height = self.switch_panel['panel'].get_relative_rect().height + self.search_box[
@@ -633,7 +633,8 @@ class UIPanel:
                                 html_text=f'{subkey_text}:',
                                 manager=self.manager,
                                 container=panel,
-                                object_id=pygame_gui.core.ObjectID(class_id='@info_labels', object_id='#info_label_' + str(i))
+                                object_id=pygame_gui.core.ObjectID(class_id='@info_labels',
+                                                                   object_id='#info_label_' + str(i))
                             )
                             y_offset += label.rect.height + 5
                             dropdown = pgui.elements.UIDropDownMenu(

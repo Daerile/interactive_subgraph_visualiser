@@ -11,6 +11,21 @@ def load_dataframe(file_name):
     return pd.read_csv(filepath, sep=';', encoding='cp1250')
 
 class GraphSystemTest(unittest.TestCase):
+    def test_create_graph_from_empty(self):
+        dataframe = pd.DataFrame()
+
+        must_have_pairings = {
+            'node_id': 'node_id',
+            'sub_id': 'sub_id',
+            'connections': 'connections'
+        }
+        optional_pairings = {
+            'node_name': 'None',
+            'sub_id_value_name': 'None'
+        }
+        gs = GraphSystem(dataframe, dataframe.columns, must_have_pairings, optional_pairings)
+        self.assertEqual(len(gs.digraph.nodes), 0)
+        self.assertEqual(len(gs.digraph.edges), 0)
     def test_create_basic_graph(self):
         dataframe = load_dataframe('basic_graph.csv')
 

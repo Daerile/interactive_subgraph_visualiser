@@ -51,7 +51,12 @@ class Loader:
                 data = f.read()
             encoding_result = chardet.detect(data)
             encoding = encoding_result['encoding']
-            return pd.read_csv(file_path, sep=';', encoding=encoding)
+            try:
+                read_data = pd.read_csv(file_path, sep=';', encoding=encoding)
+                return read_data
+            except pd.errors.EmptyDataError:
+                print("File is empty.")
+                return None
         elif file_type == 'xlsx':
             return pd.read_excel(file_path)
         else:

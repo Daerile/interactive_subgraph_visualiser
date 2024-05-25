@@ -378,7 +378,6 @@ class UIHeader:
         # Hide and kill old elements
         self.killall()
         self.base_panel = self.create_base_panel()
-
         self.create_buttons()
 
     def handle_load_popup_cancel_button_pressed(self):
