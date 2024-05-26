@@ -500,9 +500,15 @@ class UIPanel:
     # The handle_personal_mode_pressed method handles the event of the personal mode button being pressed
     def handle_personal_mode_pressed(self):
         for color, text_entries in self.edit_box['colors'].items():
-            red = int(text_entries['red'].get_text())
-            green = int(text_entries['green'].get_text())
-            blue = int(text_entries['blue'].get_text())
+            red = int(text_entries['red'].get_text()) if text_entries['red'].get_text().isnumeric() else 0
+            green = int(text_entries['green'].get_text()) if text_entries['green'].get_text().isnumeric() else 0
+            blue = int(text_entries['blue'].get_text()) if text_entries['blue'].get_text().isnumeric() else 0
+            red = red if red < 256 else 255
+            red = red if red > -1 else 0
+            green = green if green < 256 else 255
+            green = green if green > -1 else 0
+            blue = blue if blue < 256 else 255
+            blue = blue if blue > -1 else 0
             self.colors[color] = (red, green, blue)
         self.set_action_label('Personal colors set!')
         return self.colors
@@ -789,7 +795,6 @@ class UIPanel:
 
         self.killall()
         self.base_panel = self.create_base_panel()
-        self.switch_panel = self.create_switch_panel()
         self.switch_panel = self.create_switch_panel()
         self.infos = self.create_information_box()
         self.search_box = self.create_search_box()
