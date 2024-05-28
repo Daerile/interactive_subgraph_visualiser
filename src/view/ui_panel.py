@@ -655,7 +655,7 @@ class UIPanel:
                                 for item in sublist:
                                     for node in self.digraph.nodes:
                                         if node.id == item:
-                                            sublist[sublist.index(item)] = str(str(item) + ': ' + node.name)
+                                            sublist[sublist.index(item)] = str(str(item) + ': ' + str(node.name))
                             label = pgui.elements.UITextBox(
                                 relative_rect=pg.Rect(20, y_offset, 560, -1),
                                 html_text=f'{subkey_text}:',

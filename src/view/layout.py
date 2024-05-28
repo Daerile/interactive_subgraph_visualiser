@@ -130,15 +130,12 @@ class Layout:
             ):
                 x = random() * width
                 y = random() * rest_height
-                child_num = len(self.adjacency_list[self.node_map[node.id]]) + len(self.complement_adjacency_list[self.node_map[node.id]])
                 self.cem.create_node_button(x, y, node)
                 continue
 
             x = random() * width
             y = random() * rest_height + rest_height
             pos[node] = (x, y)
-            child_num = len(self.adjacency_list[self.node_map[node.id]]) + len(
-                self.complement_adjacency_list[self.node_map[node.id]])
             self.cem.create_node_button(x, y, node)
         return pos
 

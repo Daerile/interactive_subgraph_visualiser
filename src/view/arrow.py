@@ -50,7 +50,7 @@ class Arrow:
         if event.type == pg.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = event.pos
             num = abs((self.button_end.y - self.button_start.y) * mouse_x - (
-                        self.button_end.x - self.button_start.x) * mouse_y + self.button_end.x * self.button_start.y - self.button_end.y * self.button_start.x)
+                        self.button_end.x - self.button_start.x) * mouse_y +self.button_end.x * self.button_start.y - self.button_end.y * self.button_start.x)
             den = ((self.button_end.y - self.button_start.y) ** 2 + (
                         self.button_end.x - self.button_start.x) ** 2) ** 0.5
             if den == 0:
